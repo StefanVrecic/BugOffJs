@@ -1,0 +1,83 @@
+body {
+    margin: 40px;
+  }
+  
+  .wrapper {
+    display: grid;
+    column-gap: 25px;
+    justify-content: space-around;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    column-gap: 25px;
+    margin-left: 125px;
+    margin-right: 25px;
+    height: 80vh;
+    /* display: table; */
+  }
+
+  .box {
+    box-sizing: border-box;
+    color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    text-justify: center;
+    background-color: #EFF1F3;
+    display: table;
+    border-collapse: collapse; 
+    
+    /* background-color: green; */
+  }
+
+  .box-contents {
+      padding-top: 3rem;
+    display: table-row;
+    height: 80vh;
+    z-index: 99;
+    /* padding-top: 12px; */
+    /* border: red solid 4px; */
+    color: black;
+    font-size: 4rem;
+  }
+  .space {
+      height: 1.5rem;
+      display: table-row;
+  }
+
+  .box-title {
+      /* background-color: #5885cc; */
+      height: 4.5rem;
+      font-size: 2rem;
+      display: table-cell;
+      vertical-align: middle;
+        margin-bottom: 20px;
+      /* width: 100%; */
+  }
+
+  .open {
+    background-color: #5885CC;
+  }
+
+  .progress {
+    background-color: #e86f55;
+  }
+
+  .test {
+    background-color: #8eaa5b;
+  }
+
+  .reopened {
+    background-color: #84531c;
+  }
+
+  .closed {
+    background-color: #61c6c1;
+  }
+
+  .box-contents--card {
+      margin-top: .75rem;
+      margin-bottom: .75rem;
+      margin-left: 0.6rem;
+      margin-right: 0.6rem;
+      /* padding-top: 10px; */
+      border: black solid 2px;
+  }
