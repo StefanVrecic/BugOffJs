@@ -1,0 +1,13 @@
+.box {
+    box-sizing: border-box;
+    color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    text-justify: center;
+    background-color: #EFF1F3;
+    display: table;
+    border-collapse: collapse; 
+    
+    /* background-color: green; */
+  }

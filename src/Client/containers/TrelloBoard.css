@@ -1,0 +1,23 @@
+body {
+    margin: 40px;
+  }
+  
+  .wrapper {
+    display: grid;
+    column-gap: 25px;
+    justify-content: space-around;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    column-gap: 25px;
+    margin-left: 125px;
+    margin-right: 25px;
+    height: 80vh;
+    /* display: table; */
+  }
+
+
+
+
+
+
+
+

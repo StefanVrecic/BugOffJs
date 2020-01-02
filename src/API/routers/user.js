@@ -5,8 +5,10 @@ const User = require('../models/user');
 const auth = require('../middleware/auth');
 // const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account')
 const router = new express.Router();
+var cors = require('cors');
+router.use(cors());
 
-router.post('/users', async (req, res) => {
+router.post('/users', cors(), async (req, res) => {
     const user = new User(req.body)
 
     try {

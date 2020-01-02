@@ -1,0 +1,10 @@
+.box-contents--card {
+    font-size: 2rem;
+    margin-top: .75rem;
+    margin-bottom: .75rem;
+    margin-left: 0.6rem;
+    margin-right: 0.6rem;
+    /* padding-top: 10px; */
+    border: black solid 2px;
+    text-align: center;
+}

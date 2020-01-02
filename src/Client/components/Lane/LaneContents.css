@@ -1,0 +1,10 @@
+.box-contents {
+    padding-top: 3rem;
+  display: table-row;
+  height: 80vh;
+  z-index: 99;
+  /* padding-top: 12px; */
+  /* border: red solid 4px; */
+  color: black;
+  font-size: 4rem;
+}

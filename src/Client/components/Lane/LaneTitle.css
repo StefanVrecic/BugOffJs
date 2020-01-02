@@ -1,0 +1,29 @@
+.open {
+    background-color: #5885CC;
+  }
+
+  .progress {
+    background-color: #e86f55;
+  }
+
+  .test {
+    background-color: #8eaa5b;
+  }
+
+  .reopened {
+    background-color: #84531c;
+  }
+
+  .closed {
+    background-color: #61c6c1;
+  }
+
+  .box-title {
+    /* background-color: #5885cc; */
+    height: 4.5rem;
+    font-size: 2rem;
+    display: table-cell;
+    vertical-align: middle;
+      margin-bottom: 20px;
+    /* width: 100%; */
+}
