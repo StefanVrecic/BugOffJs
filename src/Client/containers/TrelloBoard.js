@@ -11,12 +11,23 @@
     class TrelloBoard extends Component {
 
         state = {
-            cardModal: true
+            cardModal: true,
+            modalTitle: "default"
+        }
+
+        setModalTitle = (name) => {
+            this.setState({modalTitle : name});
         }
 
         closeModalHandler = () => {
             this.setState({cardModal : false}); 
         }
+
+        cardClickedHandler = (name) => {
+            this.setModalTitle(name);
+            this.openModalHandler();
+        }
+
         openModalHandler = () => {
             this.setState({cardModal : true}); 
         }
@@ -45,31 +56,31 @@
 
                     <div className="wrapper">
                 <Modal show = {this.state.cardModal} modalClosed = {this.closeModalHandler} status="In Progress"
-                    title="Name of the Bug">
+                    title={this.state.modalTitle}>
                 </Modal>
 
     <Lane color={this.colors[0]}  title={this.titles[0]}>
-            <Card clicked = {this.openModalHandler} >Column 1 card 1</Card>
-            <Card clicked = {this.openModalHandler} >Column 1 card 2</Card>
+            <Card clicked = {this.cardClickedHandler} >Column 1 card 1</Card>
+            <Card clicked = {this.cardClickedHandler} >Column 1 card 2</Card>
     </Lane>
 
     <Lane color={this.colors[1]} title={this.titles[1]}>
-        <Card clicked = {this.openModalHandler} >Column 2 card 1</Card>
-        <Card clicked = {this.openModalHandler} >Column 2 card 2</Card>
-        <Card clicked = {this.openModalHandler} >Column 2 card 3</Card>
-        <Card clicked = {this.openModalHandler} >Column 2 card 4</Card>
+        <Card clicked = {this.cardClickedHandler} >Column 2 card 1</Card>
+        <Card clicked = {this.cardClickedHandler} >Column 2 card 2</Card>
+        <Card clicked = {this.cardClickedHandler} >Column 2 card 3</Card>
+        <Card clicked = {this.cardClickedHandler} >Column 2 card 4</Card>
     </Lane>
 
     <Lane color={this.colors[2]} title={this.titles[2]}>
-            <Card clicked = {this.openModalHandler} >Column 3 card 1</Card>
+            <Card clicked = {this.cardClickedHandler} >Column 3 card 1</Card>
     </Lane>
 
     <Lane color={this.colors[3]} title={this.titles[3]}>
-                <Card clicked = {this.openModalHandler} >Column 4 Card 1</Card>
+                <Card clicked = {this.cardClickedHandler} >Column 4 Card 1</Card>
     </Lane>
 
     <Lane color={this.colors[4]} title={this.titles[4]}>
-            <Card clicked = {this.openModalHandler} >Column 5 Card 1</Card>
+            <Card clicked = {this.cardClickedHandler} >Column 5 Card 1</Card>
     </Lane>
 
     </div>
