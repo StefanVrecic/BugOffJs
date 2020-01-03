@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './Card.css';
 
 
 
-const Card = ( props ) => {
+class Card extends Component {
+    state = {
+        column: 2
+    }
+    componentDidMount() {
+        this.setState({column: this.props.column});
+    }
     
-    return (
-        <div className="box-contents--card droppable" draggable="true" onClick = {() => props.clicked(props.children) }>
-        {props.children}
+    render() {
+
+        return (
+            <div className="box-contents--card droppable" draggable="true" 
+            onClick = {() => this.props.clicked(this.props.children, this.state.column) }>
+        {this.props.children}
        </div>
     );
+}
 };
 
 export default Card;

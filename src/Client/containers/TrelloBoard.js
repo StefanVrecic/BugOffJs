@@ -5,26 +5,33 @@
     import Modal from '../components/UI/Modal/Modal';
     import Axios from 'axios';
 
+
 //     import Backend from '../../API/index'; 
 //     Backend.connectBack();
 
     class TrelloBoard extends Component {
 
         state = {
-            cardModal: true,
-            modalTitle: "default"
+            cardModal: false,
+            modalTitle: "default",
+            modalStatus: "default"
         }
 
         setModalTitle = (name) => {
             this.setState({modalTitle : name});
         }
 
+        setModalStatus = (status) => {
+            this.setState({modalStatus : status})
+        }
+
         closeModalHandler = () => {
             this.setState({cardModal : false}); 
         }
 
-        cardClickedHandler = (name) => {
+        cardClickedHandler = (name, col) => {
             this.setModalTitle(name);
+            this.setModalStatus(this.titles[col]);
             this.openModalHandler();
         }
 
@@ -47,18 +54,33 @@
         colors = ['open', 'progress', 'test', 'reopened', 'closed'];
         cards = [ [], [], [], [], []];
         DROP_COLOUR = "#BFC0C2";
+        
         // this is where I want to call my API!
+    
+        lanes = [];
 
+     
 
         render () {
-                // this.axiosConnect();
+            {
+                let i = 0;
+                for (const t of this.titles) {
+                    this.lanes.push(<Lane color={this.colors[i]} title = {t}>
+                            <Card clicked = {this.cardClickedHandler} column={i} >Column {i} card</Card>
+                            </Lane>);
+                    i++;
+                }
+            }
+           
+            
             return (
 
                     <div className="wrapper">
-                <Modal show = {this.state.cardModal} modalClosed = {this.closeModalHandler} status="In Progress"
-                    title={this.state.modalTitle}>
+                        {this.lanes}
+                <Modal 
+                show = {this.state.cardModal} modalClosed = {this.closeModalHandler} 
+                status={this.state.modalStatus} title={this.state.modalTitle}>
                 </Modal>
-
     <Lane color={this.colors[0]}  title={this.titles[0]}>
             <Card clicked = {this.cardClickedHandler} >Column 1 card 1</Card>
             <Card clicked = {this.cardClickedHandler} >Column 1 card 2</Card>

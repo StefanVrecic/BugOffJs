@@ -10,7 +10,7 @@ const Lane = ( props ) => {
         <div className= "box" ondrop="drop(event)" ondragover="allowDrop(event)" >
             <LaneTitle color={props.color}>{props.title}</LaneTitle>
                 <Space/>
-    <LaneContents>
+    <LaneContents>  
         {props.children}
      </LaneContents>
         </div>
