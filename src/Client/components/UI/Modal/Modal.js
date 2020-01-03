@@ -6,7 +6,7 @@ import Backdrop from '../Backdrop/Backdrop';
 
 class Modal extends Component {
 
-    shouldComponentUpdate (nextProps, nextState) {
+shouldComponentUpdate (nextProps, nextState) {
         if (nextProps.show !== this.props.show || nextProps.children !== this.props.children) {
             return true;
         }
@@ -27,7 +27,9 @@ class Modal extends Component {
                         <div className = "modalTitle">
                             <span className="modalTitle-header">{this.props.title}</span>
                             <br></br>
-                            <span className="modalTitle-status">({this.props.status})</span>
+                            <span className={`modalTitle-status 
+                            titleColor-${this.props.color}`
+                            }>({this.props.status})</span>
                         </div>
                         <div className = "modalTabOne">
                             Tab

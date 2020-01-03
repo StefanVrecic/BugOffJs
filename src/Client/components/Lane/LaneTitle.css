@@ -2,20 +2,37 @@
     background-color: #5885CC;
   }
 
+.titleColor-0 {
+  color: #5885CC;
+}
+
   .progress {
     background-color: #e86f55;
   }
+  .titleColor-1 {
+    color: #e86f55;
+  }
+  
 
   .test {
     background-color: #8eaa5b;
+  }
+  .titleColor-2 {
+    color: #8eaa5b;
   }
 
   .reopened {
     background-color: #84531c;
   }
+  .titleColor-3 {
+    color: #84531c;
+  }
 
   .closed {
     background-color: #61c6c1;
+  }
+  .titleColor-4 {
+    color: #61c6c1;
   }
 
   .box-title {

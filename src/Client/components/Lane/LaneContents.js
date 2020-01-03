@@ -4,7 +4,7 @@ import './LaneContents.css';
 
 const LaneContents = ( props ) => {
     return (
-        <div className="box-contents" >
+        <div className="box-contents">
             {props.children}
         </div>
     );
