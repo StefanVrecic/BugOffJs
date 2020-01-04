@@ -31,16 +31,20 @@ app.listen(port, () => {
     console.log('Server is up on port ' + port)
 })
 
-const Bug = require('./models/bug');
-const User = require('./models/user');
 
-const main = async () => {
-    const user = await User.findById("5e1010ec9a353812f0e6b025");
-    await user.populate('bugs').execPopulate();
-    console.log(user.bugs);
-}
+
+// const Bug = require('./models/bug');
+// const User = require('./models/user');
+
+
+
+// const main = async () => {
+//     const user = await User.findById("5e1010ec9a353812f0e6b025");
+//     await user.populate('bugs').execPopulate();
+//     console.log(user.bugs);
+// }
     
-    main();
+//     main();
 
 // const User = require('./models/user');
 

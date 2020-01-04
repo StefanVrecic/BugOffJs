@@ -21,7 +21,7 @@ router.post('/bugs',  cors(), async (req, res) => {
     }
 })
 
-router.get('/bugs', cors(), async (req, res) => {
+router.get('/bugs', cors(), auth, async (req, res) => {
     try {
         await req.user.populate({
             path: 'bugs',
@@ -32,8 +32,7 @@ router.get('/bugs', cors(), async (req, res) => {
     }
 });
 
-// auth
-
+// add auth
 router.get('/bugs/:id', async (req, res) => {
     try {
         const bug = await Bug.findOne({ _id: req.params.id})

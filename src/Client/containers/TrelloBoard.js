@@ -12,8 +12,60 @@
         constructor(props) {
             super(props);
             this.child = React.createRef();
+            this.db_login("vstefan@hotmail.co.uk", "vstefan");
         }
-        
+        // this.db_loadCards();
+
+
+        db_login(user, userPassword) {
+
+                Axios.post("http://localhost:8080/users/login", {
+        "email": user, "password": userPassword}
+        )
+        .then(
+        function (response) { 
+            console.log("success login - call loadCards()"); 
+            console.log(response.data.token);
+            // need to store this token
+            window.localStorage.setItem("login-token", response.data.token);
+        })
+        .then(() => {
+            this.db_loadCards();
+        }
+        )
+        .catch(
+            function (error) {
+            console.log("fail login"); 
+            console.log(error.config.data);
+        })
+
+        }
+
+        db_loadCards() {
+
+            Axios.get(
+                "http://localhost:8080/bugs/",
+                {headers: {
+                    "Authorization" : "Bearer "+window.localStorage.getItem("login-token")
+                  }
+                }
+              )
+              .then((response) => {
+                  var response = response.data;
+                  console.log("success loading cards");
+                  console.log(response);
+                },
+                (error) => {
+                  var status = error.response.status
+                  alert("fail loadCards")
+                }
+              );
+
+
+              
+        }
+
+
         initNames = ['Stacey', 'Jessie', 'Maddie', 'Katie', 'Danielle'];
         state = {
             cardModal: false,
@@ -97,9 +149,7 @@
             this.initCards();
         }
 
-        db_loadCards() {
-            
-        }
+       
 
         db_updateStatus(id) {
             // const status = this.getCardStatus(id);
@@ -118,7 +168,7 @@
         }
 
         db_createTasks() {
-            return;
+                
             // drop db
             // post tasks to db
             
@@ -181,7 +231,8 @@
             // </Lane>);
 
 
-            this.setState({ idArray: [...idArray] }, this.db_createTasks);
+            this.setState({ idArray: [...idArray] });
+            // this.setState({ idArray: [...idArray] }, this.db_createTasks);
             this.setState({ dataArray: [...dataArray] });
             this.setState({ laneArray: [...laneArray] });
             this.setState({ testInit: true});
