@@ -35,7 +35,7 @@ button:hover {
 }
 
 /* Extra styles for the cancel button */
-.cancelbtn {
+.signupbtn {
   padding: 14px 20px;
   background-color: #f44336;
 }
@@ -100,6 +100,10 @@ hr {
   content: "";
   clear: both;
   display: table;
+}
+
+.signup {
+  height: 50%;
 }
 
 /* Change styles for cancel button and signup button on extra small screens */

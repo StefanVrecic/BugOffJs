@@ -86,14 +86,18 @@ button:hover {
   background-color: #f44336;
 }
 .signupbtn {
-    background-color: green;
+    background-color: #f44336;
+    text-align: center;
+    letter-spacing: 1px;
+    font-weight: 700;
+
 }
 
 /* Float cancel and signup buttons and add an equal width */
-.cancelbtn, .signupbtn {
+/* .cancelbtn, .signupbtn {
   float: left;
   width: 50%;
-}
+} */
 
 /* Add padding to container elements */
 .container {
