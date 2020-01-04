@@ -4,14 +4,15 @@
     import Lane from '../components/Lane/Lane';
     import Modal from '../components/UI/Modal/Modal';
     import Axios from 'axios';
-
-
+    // import { connect } from 'react-redux';
+    import uniqid from 'uniqid';
     class TrelloBoard extends Component {
         constructor(props) {
             super(props);
             this.child = React.createRef();
         }
-
+        
+        initNames = ['Stacey', 'Jessie', 'Maddie', 'Katie', 'Danielle'];
         state = {
             cardModal: false,
             modalTitle: "default",
@@ -19,7 +20,10 @@
             modalStatusNumber: -1,
             cards: [ [], [], [], [], []], // this should actually be lanes?
             lanes: [],
-            testInit: false
+            testInit: false,
+            idArray: [],
+            dataArray: [],
+            laneArray: [ [], [], [], [], [] ]
             
         }
 
@@ -35,10 +39,28 @@
             this.setState({cardModal : false}); 
         }
 
-        cardClickedHandler = (name, col) => {
-            this.setModalTitle(name);
-            this.setModalStatus(this.titles[col]);
-            this.setState({modalStatusNumber: col})
+        getCardStatus = (id)  => {
+            let c = 0;  let col = -1;
+            for (const l of this.state.laneArray) {
+                for (const item of l) {
+                    const itemString = item + "";
+                    if (itemString == id) {
+                        col = c;
+                        return col
+                    }
+                }
+                c++;
+            }
+        }
+
+        cardClickedHandler = (id) => {
+            const cardPos = this.cardPositionInArray(id);
+            const data = this.getCardData(cardPos);
+            const cardStatus = this.titles[this.getCardStatus(id)];
+            // alert(data);
+            this.setModalTitle(data);            
+            this.setModalStatus(cardStatus);
+            // this.setState({modalStatusNumber: col})
 
             this.openModalHandler();
         }
@@ -59,6 +81,7 @@
         // columns_nodelist = document.querySelectorAll('.box');
         // columns = Array.from(columns_nodelist);
         titles = ['Open', 'In progress', 'To be tested', 'Re-opened', 'Closed'];
+        // titles = ['Number closed', 'Setting Day2', 'Day2 set up', 'Lost lead', 'Closed'];
         colors = ['open', 'progress', 'test', 'reopened', 'closed'];
         DROP_COLOUR = "#BFC0C2";
         
@@ -73,113 +96,151 @@
         initCards() {
             
             if (!this.state.testInit) {
-                let initCards = [ [], [], [], [], []];
-                let initLanes = [];
                 let i = 0;
-                let n = 0;
+                // let n = 0;
+
+                let idArray = [];
+                let dataArray = [];
+                let laneArray = [ [], [], [], [], [] ];
 
             for (const t of this.titles) {
-                n = 0;
-                const keyName = i+"-"+n;
+                // n = 0;
+                const storeID = uniqid();
+                const cardName = this.initNames[i];
+                const dataToStore = [];
                 const card = (<Card clicked = {this.cardClickedHandler}
-                                    ref={this.child}
-                                    keyID = {keyName}
-                                    column={i} >Column {i} card</Card>);
-                
-                        initCards[i].push(card);
+                                    uniqueID = {storeID} >{cardName}</Card>);
 
-                
-                const lane = (<Lane color={this.colors[i]} columnNumber={i} 
-                    title = {t} transfer={this.transferCards}>
-                             {card}
-                </Lane>);
-                initLanes.push(lane);
+                       
+                        dataToStore.push(storeID);
+                        dataToStore.push(cardName);
+
+                        idArray.push(storeID); // idArray = [a, b, c, d, e]
+                        dataArray.push(dataToStore); // = [ [a,blahblah] [b,blahblah] [c,blahblah] [d,blah] [e,blah]]
+                        laneArray[i].push(storeID); // = [ [a] [b] [c] [d] [e] ]
+
                 i++;
                 
             }
+            
 
-            this.setState({ cards: [...initCards] });
-            this.setState({ lanes: [...initLanes] });
+            // const lane = (<Lane color={this.colors[i]} columnNumber={i} 
+            //     title = {t} transfer={this.transferCards}>
+            //              {card}
+            // </Lane>);
+
+
+            this.setState({ idArray: [...idArray] });
+            this.setState({ dataArray: [...dataArray] });
+            this.setState({ laneArray: [...laneArray] });
             this.setState({ testInit: true});
         }
 
         }
+        cardPositionInArray(id) {
+            const idArray = [...this.state.idArray];
+            const index = idArray.indexOf(id);
+            return index;
+        }
+        
+        getCardData(pos) {
+            const dataArray = [...this.state.dataArray];
+            return dataArray[pos][1];
+        }
 
+        assertArraysAligned(id, pos) {
+            // to-do
+        }
 
-
-        transferCards = (dragStartColumn, dragStartIndex, dragDestinationColumn, name) =>  {
+        changeLane(id, destination) {
             
+
+            const laneArray_temp = [...this.state.laneArray];
+            let c = 0; let i = -1; let col = -1;
             
+            loop2:
+            for (const l of laneArray_temp) {
+                let index = 0;
+                for (const item of l) {
+                    const itemString = item + "";
+                    if (itemString == id) {
+                        i = index;
+                        col = c;
+                        break loop2;
+                    }
+                    index++;
+                }
+                c++;
+            }
 
-            const tempCards = [...this.state.cards];
+            const cutCard = laneArray_temp[col].splice(i, 1); // cutting from original lane
+            laneArray_temp[destination].push(cutCard);
 
-            // const spliced
-            tempCards[dragStartColumn].splice(dragStartIndex, 1);
-            // now all the cards after this one will have the incorrect position so we will to have update them all
-            // but then I don't have access to the rest of the data in the lane ater that... fuck!
+            this.setState({ laneArray: [...laneArray_temp] });
+        }
+
+
+        transferCards = (id, dropColumn) =>  {
+                const cardPos = this.cardPositionInArray(id);
+                const data = this.getCardData(cardPos);
+                this.changeLane(id, dropColumn);
+                
             
-            const keyName = dragDestinationColumn+"-"+(tempCards[dragDestinationColumn].length);
-
-            const newCard = (<Card clicked = {this.cardClickedHandler}
-                keyID = {keyName} ref={this.child} index={tempCards[dragDestinationColumn].length-1}
-                column={dragDestinationColumn} name={name}>{name}</Card>);
-
-           
-
-            tempCards[dragDestinationColumn].push(newCard);
-
-            // for (const c of tempCards[dragStartColumn]) {
-            //     c.child.shiftDown();
-            // }
-
-            // alert("col: " + dragDestinationColumn + " | item: " + (tempCards[dragDestinationColumn].length-1) + 
-            //     " | destCol: " + dragDestinationColumn);
-
-
-            // spliced[0] needs to update its column index
-
-
-            const tempLanes = [...this.state.lanes];
-
-            const i = dragStartColumn;
-
-            const originalLane = (<Lane color={this.colors[i]} columnNumber={i} 
-                title = {this.titles[i]} transfer={this.transferCards}>
-                         {tempCards[dragStartColumn]}
-            </Lane>);
-
-const d = dragDestinationColumn;
-
-            const destinationLane = (<Lane color={this.colors[d]} columnNumber={d} 
-                title = {this.titles[d]} transfer={this.transferCards}>
-                        {tempCards[dragDestinationColumn]} 
-            </Lane>);
-            // problem 2 lines tempCards[..]..
-            
-            alert(tempCards[2].length);
-            tempLanes[dragStartColumn] = originalLane;
-            tempLanes[dragDestinationColumn] = destinationLane;
-
-            this.setState( { cards: tempCards });
-            this.setState( { lanes: tempLanes });
-
-            // alert(array.length + " nuber of columns");
             
         }
 
      
 
         render () {
+            let i = 0;
+            let c = 0;
+         const laneArray = [...this.state.laneArray];
+         const idArray = [...this.state.idArray];
+         const dataArray = [...this.state.dataArray];
+         let idIndex = -1;
+         let data = "default";
+         let cardComponent = "";
+         let renderLanes = [[],[],[],[],[]];
+         let oneLaneCards = [];
 
-         
-        //    alert(this.state.cards[0] + " /// " + this.state.cards[1] + " /// " + this.state.cards[2] + " /// " +
-        //    this.state.cards[3] + " /// " + this.state.cards[4] + " /// " );
+         for (const l of laneArray) {
+             i = 0; idIndex = -1; data = "default"; cardComponent = "";
+             oneLaneCards = [];
+             // should be between here and the end
+             for (const cardIdObj of l) {
+                 
+                 if (l.length === 0) {
+                     continue;
+                    }
+                    
+                const cardId = cardIdObj + ""; // not sure why this is
+
+                 idIndex = idArray.indexOf(cardId);
+                 
+                 data = dataArray[idIndex][1]; // update to [1]
+                 
+                 cardComponent = ( <Card clicked = {this.cardClickedHandler}
+                    uniqueID = {cardId}>{data}</Card>);
+                    
+                oneLaneCards.push(cardComponent);
+                
+                    
+                 i++;
+             }
+                const lane = (<Lane color={this.colors[c]} columnNumber={c} 
+                title = {this.titles[c]} transfer={this.transferCards}>
+                         {oneLaneCards}
+            </Lane>);
+                renderLanes.push(lane);
+             c++;
+         }
+
 
             
             return (
 
                     <div className="wrapper">
-                        {this.state.lanes}
+                        {renderLanes}
                 <Modal 
                 show = {this.state.cardModal} modalClosed = {this.closeModalHandler} 
                 status={this.state.modalStatus} title={this.state.modalTitle}

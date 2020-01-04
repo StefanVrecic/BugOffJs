@@ -33,17 +33,14 @@ import Space from './Space';
     onDrop(ev, cat)  {
         
         let id = ev.dataTransfer.getData("id");
-        let name = ev.dataTransfer.getData("name");
 
-        const draggedCardColumn = id.split("-");
-
-        if (+draggedCardColumn[0] === this.state.columnNumber) {
-            return alert("dragging and dropping to same col");
-        }
+        // if (+draggedCardColumn[0] === this.state.columnNumber) {
+        //     return alert("dragging and dropping to same col");
+        // }
 
         // let TrelloBoard know to remove the card and put it in the other column
-        alert("col: " + +draggedCardColumn[0] + " | item: " + +draggedCardColumn[1] + " | destCol:" + +this.state.columnNumber);
-        this.props.transfer(+draggedCardColumn[0], +draggedCardColumn[1], this.state.columnNumber, name);
+        this.props.transfer(id, this.state.columnNumber);
+    
     }
 
     componentDidMount() {
@@ -51,7 +48,6 @@ import Space from './Space';
     }
 
      render() {
-        // alert(this.props.color);
 
         return (
             <div className= "box" 

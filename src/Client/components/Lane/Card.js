@@ -1,61 +1,39 @@
 import React, { Component } from 'react';
 import './Card.css';
-
+import ReactDOM from 'react-dom';
 
 
 class Card extends Component {
     state = {
-        column: 2,
-        index: -1,
-        name: "default"
+        uniqueID: "default"
     }
 
     componentDidMount() {
-        this.setState({column: this.props.column});
-        this.setState({title: this.props.children});
-        this.setState({index: this.props.index});
-        this.setState({name: this.props.name});
+        this.setState({uniqueID: this.props.uniqueID});
     }
     
+
     onDragEnd = (ev) => {
         ev.preventDefault();
     }
     
     onDragStart = (ev, id) => {
-        console.log('dragstart:',id);
+        console.log("dragstart: " + id);
         ev.dataTransfer.setData("id", id);
         ev.dataTransfer.setData("name", this.props.children);
     }
 
-    updateIndex(newIndex) {
-        this.setState({ index: newIndex });
-    }
-
-    shiftDown() {
-        // alert("index " + this.state.index + " name \n" + this.props.name);
-        // this.setState({ index: this.state.index - 1});
-        // alert("index " + this.state.index + " name \n" + this.props.name);
-    }
-
-    updateColumn(newColumn) {
-        this.setState({ column: newColumn });
-    }
-
-    setTitle() {
-        this.setState({ title: this.props.children})
-    }
-
+    // cardClicked = (id) => {}
     
     render() {
-            
             return (
             <div 
-            key = {this.props.keyID}
+            uniqueID = {this.props.uniqueID}
             className="box-contents--card droppable" 
             draggable="true" 
-            onClick = {() => this.props.clicked(this.props.children, this.state.column) }
-            onDragStart = {(e) => this.onDragStart(e, this.props.keyID)}
-                onDragEnd = {(e) => this.onDragEnd(e)}
+            onClick = {() => this.props.clicked(this.props.uniqueID) }
+            onDragStart = {(e) => this.onDragStart(e, this.props.uniqueID)}
+            onDragEnd = {(e) => this.onDragEnd(e)}
             >
         {this.props.children}
        </div>

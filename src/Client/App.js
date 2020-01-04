@@ -7,7 +7,7 @@ function App() {
   return (
 
     <div className="App" > 
-    <TrelloBoard></TrelloBoard>
+      <TrelloBoard></TrelloBoard>
     </div>
     
   );

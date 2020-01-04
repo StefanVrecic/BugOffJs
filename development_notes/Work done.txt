@@ -1,0 +1,176 @@
+6:29 PM 31/12/2019
+Starting with project set-up and Kanban board with drag and drop UI
+
+8:58 PM 31/12/2019
+Built a basic trello board
+
+9:26 PM 31/12/2019
+Adding event listener to drag and drop, get dynamically rendered elements responding
+
+11:43 PM 31/12/2019
+Previously statically rendered cards delete on click. Want to implement drag n drop. Doesn't delete correct card that has been dynamically rendered.
+ => deleteCardIndex incorrect for added cards (12:10 AM 1/01/2020)
+
+12:35 AM 1/01/2020
+ => now I had two divs where I only wanted one. I should've looked at the developer tool first. Waste of an hour. This should've been so obvious by the output I was getting...
+ => did something like this now:
+const htmlText = `test-test-${num++}`
+    const element = document.createElement("div");
+    element.classList.add("droppable");
+    element.classList.add("box-contents--card");
+    // box-contents--card droppable
+    element.innerText = htmlText; 
+
+12:51 AM 1/01/2020
+Added spacing at top before cards start. Could make sure that the space between cards is not clickable.
+
+1:02 AM 1/01/2020
+Clicking title no longer adds card
+
+2:35 AM 1/01/2020
+Added drag and drop - however cards only drop to the bottom of the list, cannot insert between other cards or re-order
+
+4:27 AM 1/01/2020
+Built crappy landing page, copied logo and some html/css 
+ => going to link sign up with backend
+ => need JS for login instead of just signup
+
+5:06 AM 1/01/2020
+Slowly setting up the backbone of the back-end. Next task is to set up some routes with postman.
+
+7:49 AM 1/01/2020
+Set up standalone database to setup routes etc before integrating with front-end. Tired af.
+
+8:03 AM 1/01/2020
+Set up logging in on the backend. Need to disallow multiple logins from the same client.
+
+6:58 PM 1/01/2020
+Woke up, starting work
+
+7:39 PM 1/01/2020
+Establised basic create and update bug routes, can now work on linking up front-end with back-end. Going to write a few tests then / after. Routes still need a lot of work afterwards. Task - on the front end, click a button, hardcode a bug to submit, add to database and display.
+
+10:35 PM 1/01/2020
+Bleh. Realised I've already used what I need to use to link it up. Using axios / fetch. Managed to set up a basic request that could easily be tied into front-end, that generates a response from my routers. PITA, going to set up some axios requests in my front-end to tie into the backend..
+
+11:50 PM 1/01/2020
+Tried to tie up front and back as I did in the other project, but using JS requests instead of form POST. Unfortunately, I forgot that axios lives in node.js and not in the browser, so I'm not able to tie in Axios as I thought I could.
+
+12:23 AM 2/01/2020
+Yessssssssssssssssssssssssss! Used fetch and tied in the back-end to create a user when I click on a div on the front end! 
+Might move my app to React. I need to do a lot of re-factoring. Gonna try make cards based on names in db.
+
+1:10 AM 2/01/2020
+Trying to push my code to Git but I'm clueless something is wrong. I did some work in another folder, think I deleted the previous git folder, created a new one and I'm so confused:
+git push -u origin master:
+fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+1:37 AM 2/01/2020
+Updates rejected because they contain work that I do not have locally. Screw it, deleted repo and made a new one.
+
+2:29 AM 2/01/2020
+Set up react project, have components <Card> and <TrelloBoard> ... converting logic from initial js build to React
+
+3:28 AM 2/01/2020
+Setting up the React components, no interactivity so far. Trying to integrate the front and backend. Guess I should have a seperate terminal for the server and the React?
+
+5:48 AM 2/01/2020
+No idea why I was trying to import my backend into my frontend rofl, but I am now trying to send requests via Axios, getting CORS errors. React is on port 3000 and express is on 8080
+
+6:02 AM 2/01/2020
+Figured out how to allow CORS -- would need to set up a whitelist later on.
+Need to work on the front end a little now - getting the drag and drop working as it was earlier, a few 'add card' widgets or something, and tracking the location of the cards. Then integrate this with the database and add authentication. That way the next time the user logs in, the state persists. Feeling quite tired, so gonna leave these posts for later when I'm feeling fresh to expand my knowledge:
+
+7:36 PM 2/01/2020
+Create an "Add a card" design like this: https://images.thoughtbot.com/how-we-trello/trello.png
+Design a modal like this - for when submitting a new card or viewing one already placed:
+https://trello.com/c/72Ow76vy/3-sketch-site-banner
+Off to gym.
+
+10:27 PM 2/01/2020
+Got basic modal designed, needs styling. Will put in some lorem ipsum filler. Still need to do the "Add a card" section.
+
+12:00 AM 3/01/2020
+Still developing modal, set up a space for title, status, a tab of options and below will go a description. The modal opens when a card is clicked and closes when the backdrop is clicked. Need to work on making the modal display the information from the card. Going to add State to the card. 
+
+12:30 AM 3/01/2020
+Modal displays card's name when card is clicked. Now for status.
+
+1:03 AM 3/01/2020
+Can't figure out how to loop through an array and put those elements together and then render them... Also now my app is complaining about express wtf?
+
+1:08 AM 3/01/2020
+That's right you use an array. 30 minutes wasted...
+
+1:30 AM 3/01/2020
+Modal now displays status of card. To implement: drag and drop and the control panel tab in the modal
+https://trello.com/c/72Ow76vy/3-sketch-site-banner
+
+3:38 AM 3/01/2020
+Almost got the drag and drop going. Not sure if I should make Lane.js a functional or stateful component.
+
+4:45 AM 3/01/2020
+Almost got the transfer going... Just realised that I was meant to use an arrow function... Was referring to the wrong 'this'... 30 minutes wasted!
+
+5:09 AM 3/01/2020
+Cards dragging and dropping but behaviour is kaput
+
+5:16 AM 3/01/2020
+Uh just had a thought -- I am keeping track of the card's position both in the card and the trelloboard.
+
+6:00 AM 3/01/2020
+Current solution is not going to work. Once I have 2 or more cards in a column, if I take away one of the first ones, then the ones below it will not know how to update their position and therefore when they are dragged they will not be able give the right drag data. I am going to re-create the lanes based on the card array..
+
+7:38 AM 3/01/2020
+5 hours coding later and I can't figure this out. I'll have to re-think this tomorrow. I might focus on getting the sign up process set up instead to clear my head of this drag and drop.
+
+Read this:
+https://redux.js.org/recipes/structuring-reducers/normalizing-state-shape/#designing-a-normalized-state
+See if should implement
+And 
+https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-array-index-key.md
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://flaviocopes.com/how-to-serve-react-from-same-origin/
+https://daveceddia.com/create-react-app-express-backend/
+https://stackoverflow.com/questions/51367424/how-to-set-react-app-and-api-on-same-port
+https://stackoverflow.com/questions/48304513/backend-and-frontend-on-same-port
+https://stackoverflow.com/questions/37694551/do-client-and-server-need-to-use-same-port-to-connect
+https://stackoverflow.com/questions/50591374/mern-stack-express-and-react-on-same-port
+
+Questions to consider - what's the best way for React and Express to communicate
+
+
+
+
+
+
+
+https://www.udemy.com/course/the-complete-nodejs-developer-course-2/learn/lecture/13728930#questions/7784794
+https://www.udemy.com/course/the-complete-nodejs-developer-course-2/learn/lecture/13728930#questions/7784794
+https://www.udemy.com/course/the-complete-nodejs-developer-course-2/learn/lecture/13728930#questions/7784794
+
+/users/stefan/mongodb/bin/mongod.exe --dbpath=/users/stefan/mongodb-data
+
+/users/stefan/mongodb/bin/mongod.exe --dbpath=/users/stefan/mongodb-data
+
+/users/stefan/mongodb/bin/mongod.exe --dbpath=/users/stefan/mongodb-data
+
+/users/stefan/mongodb/bin/mongod.exe --dbpath=/users/stefan/mongodb-data
+
+C:\Users\Stefan\Desktop\reactApp\burger-builder-starting-setup
+C:\Users\Stefan\Desktop\reactApp\burger-builder-starting-setup
+C:\Users\Stefan\Desktop\reactApp\burger-builder-starting-setup
+C:\Users\Stefan\Desktop\reactApp\burger-builder-starting-setup
