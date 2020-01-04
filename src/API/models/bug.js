@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const statuses = ['open', 'progress', 'testing', 'reopened', 'closed'];
 
-const taskSchema = new mongoose.Schema({
+const bugSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -17,19 +17,15 @@ const taskSchema = new mongoose.Schema({
             }
         }
     },
-    // FOR LATER
-    // description: type: string | reproducable: type: boolean | severity: type: number (1-5)
-    // status: type: string (5 to choose from) | OS: type: string | due: type: date | etc.. 
-    // | dateDiscovered: type: data|
-    team: { // team
+    owner: { // team
         type: mongoose.Schema.Types.ObjectId,
-        required: false,
+        required: true,
         ref: 'User'
     }
 }, {
     timestamps: true
 })
 
-const Bug = mongoose.model('Bug', taskSchema)
+const Bug = mongoose.model('Bug', bugSchema)
 
 module.exports = Bug

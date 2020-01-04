@@ -5,11 +5,11 @@ import ReactDOM from 'react-dom';
 
 class Card extends Component {
     state = {
-        uniqueID: "default"
+        uniqueid: "default"
     }
 
     componentDidMount() {
-        this.setState({uniqueID: this.props.uniqueID});
+        this.setState({uniqueid: this.props.uniqueid});
     }
     
 
@@ -28,11 +28,11 @@ class Card extends Component {
     render() {
             return (
             <div 
-            uniqueID = {this.props.uniqueID}
+            uniqueid = {this.props.uniqueid}
             className="box-contents--card droppable" 
             draggable="true" 
-            onClick = {() => this.props.clicked(this.props.uniqueID) }
-            onDragStart = {(e) => this.onDragStart(e, this.props.uniqueID)}
+            onClick = {() => this.props.clicked(this.props.uniqueid) }
+            onDragStart = {(e) => this.onDragStart(e, this.props.uniqueid)}
             onDragEnd = {(e) => this.onDragEnd(e)}
             >
         {this.props.children}

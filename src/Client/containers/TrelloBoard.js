@@ -6,6 +6,8 @@
     import Axios from 'axios';
     // import { connect } from 'react-redux';
     import uniqid from 'uniqid';
+    // import mongoose from 'mongoose';
+    
     class TrelloBoard extends Component {
         constructor(props) {
             super(props);
@@ -57,7 +59,7 @@
             const cardPos = this.cardPositionInArray(id);
             const data = this.getCardData(cardPos);
             const cardStatus = this.titles[this.getCardStatus(id)];
-            // alert(data);
+            
             this.setModalTitle(data);            
             this.setModalStatus(cardStatus);
             // this.setState({modalStatusNumber: col})
@@ -86,11 +88,59 @@
         DROP_COLOUR = "#BFC0C2";
         
 
-
+        componentDidUpdate() {
+            
+        }
         
 
         componentDidMount() {
             this.initCards();
+        }
+
+        db_loadCards() {
+            
+        }
+
+        db_updateStatus(id) {
+            // const status = this.getCardStatus(id);
+
+            // Axios.post("http://localhost:8080/bugs/", {
+            //         "status": status}
+            //         )
+            //         .then(function (response){
+            //             console.log("success");
+            //             console.log(response);
+            //         })
+            //         .catch(function (error) {
+            //             console.log("fail");
+            //             console.log(error.config.data);
+            //         })
+        }
+
+        db_createTasks() {
+            return;
+            // drop db
+            // post tasks to db
+            
+            // var newId = new mongoose.mongo.ObjectId('5e1010ec9a353812f0e6b025');
+
+            const idArray = [...this.state.idArray];
+            var i = 0;
+            for (i = 0; i < idArray.length; i++) {
+                
+                Axios.post("http://localhost:8080/bugs", {
+                    "name": idArray[i], "owner": "Stefan"}
+                    )
+                    .then(function (response){
+                        console.log("success");
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log("fail");
+                        console.log(error.config.data);
+                    })
+                }
+                    
         }
 
         initCards() {
@@ -105,15 +155,16 @@
 
             for (const t of this.titles) {
                 // n = 0;
-                const storeID = uniqid();
+                const storeID = uniqid.process();
                 const cardName = this.initNames[i];
                 const dataToStore = [];
                 const card = (<Card clicked = {this.cardClickedHandler}
-                                    uniqueID = {storeID} >{cardName}</Card>);
+                                    uniqueid = {storeID} >{cardName}</Card>);
 
                        
                         dataToStore.push(storeID);
                         dataToStore.push(cardName);
+                        dataToStore.push("description");
 
                         idArray.push(storeID); // idArray = [a, b, c, d, e]
                         dataArray.push(dataToStore); // = [ [a,blahblah] [b,blahblah] [c,blahblah] [d,blah] [e,blah]]
@@ -130,13 +181,16 @@
             // </Lane>);
 
 
-            this.setState({ idArray: [...idArray] });
+            this.setState({ idArray: [...idArray] }, this.db_createTasks);
             this.setState({ dataArray: [...dataArray] });
             this.setState({ laneArray: [...laneArray] });
             this.setState({ testInit: true});
+
+            
         }
 
         }
+
         cardPositionInArray(id) {
             const idArray = [...this.state.idArray];
             const index = idArray.indexOf(id);
@@ -176,7 +230,9 @@
             const cutCard = laneArray_temp[col].splice(i, 1); // cutting from original lane
             laneArray_temp[destination].push(cutCard);
 
-            this.setState({ laneArray: [...laneArray_temp] });
+            this.setState({ laneArray: [...laneArray_temp] },
+                this.db_updateStatus(id));
+
         }
 
 
@@ -184,7 +240,12 @@
                 const cardPos = this.cardPositionInArray(id);
                 const data = this.getCardData(cardPos);
                 this.changeLane(id, dropColumn);
+
                 
+                console.log("posting to db");
+                
+                
+            // this.db_createTasks();
             
             
         }
@@ -220,7 +281,7 @@
                  data = dataArray[idIndex][1]; // update to [1]
                  
                  cardComponent = ( <Card clicked = {this.cardClickedHandler}
-                    uniqueID = {cardId}>{data}</Card>);
+                    uniqueid = {cardId}>{data}</Card>);
                     
                 oneLaneCards.push(cardComponent);
                 
