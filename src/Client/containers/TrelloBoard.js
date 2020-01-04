@@ -75,36 +75,14 @@
             const dataArray = []; var dataArrayItem = [];
             // alert(data);
             for (const dataItem of loadedData) {
+                // alert(JSON.stringify(dataItem));
                 const data = [];
                 dataArrayItem = [];
                 dataArrayItem.push(dataItem._id);
 
-                // loop through pre-defined properties
-                // for each property, create an array
-                // if the data from db contains that property, push it . Otherwise push undefined
-                // push this array into a main dataArray
-                // when reading this data: 
-                const dataItemProperties = [];
-                // this.propertiesManaged = [description, tite, status] - put global
-                for (const property of this.propertiesManaged) {
-                    if (dataItem.property) {
-                        dataItemProperties.push(dataItem.property);
-                    } else {
-                        dataItemProperties.push(undefined);
-                    }
-                }
-                // dataProperties.push(dataItemProperties);
-                // to access - plug in the id
-                // const cardPos = this.cardPositionInArray(id);
-                // const cardProperties = dataArray[cardPos]
-                // now we have all the data for the given card
-                // propertyToChange will be pre-defined by a button, an input field etc
-                // cardProperties[this.propertiesManaged.indexOf('propertyToChange')] = newValue ||
-                // getValue = cardProperties[this.propertiesManaged.indexOf('propertyToChange')]
-
-
-                data.push("item");
-                data.push(dataItem.name);
+                // data.push("item");
+                dataArrayItem.push(dataItem.name);
+                dataArrayItem.push(dataItem.status);
                 // dataArrayItem.push(dataItem.name); // push other data that is not id
                 const lane = this.statusToLaneNumber(dataItem.status);
                 
@@ -136,6 +114,23 @@
             dataArray: [],
             laneArray: [ [], [], [], [], [] ]
             
+        }
+        
+        db_updateCardStatus(id) {
+             const status_int = this.getCardStatus(id);
+             const status_string = this.titles[status_int];
+            // alert(id + " / " + status_string);
+            Axios.patch(`http://localhost:8080/bugs/${id}`, {
+                    "status": status_string}
+                    )
+                    .then(function (response){
+                        console.log("updated status");
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log("failed status update");
+                        console.log(error.config.data);
+                    })
         }
 
         setModalTitle = (name) => {
@@ -208,21 +203,7 @@
 
        
 
-        db_updateStatus(id) {
-            // const status = this.getCardStatus(id);
-
-            // Axios.post("http://localhost:8080/bugs/", {
-            //         "status": status}
-            //         )
-            //         .then(function (response){
-            //             console.log("success");
-            //             console.log(response);
-            //         })
-            //         .catch(function (error) {
-            //             console.log("fail");
-            //             console.log(error.config.data);
-            //         })
-        }
+        
 
         db_createTasks() {
                 
@@ -339,7 +320,7 @@
             laneArray_temp[destination].push(cutCard);
 
             this.setState({ laneArray: [...laneArray_temp] },
-                this.db_updateStatus(id));
+                this.db_updateCardStatus(id));
 
         }
 
@@ -354,8 +335,6 @@
                 
                 
             // this.db_createTasks();
-            
-            
         }
 
      
@@ -424,4 +403,30 @@
     }
 
     export default TrelloBoard;
+// loop through pre-defined properties
+                // for each property, create an array
+                // if the data from db contains that property, push it . Otherwise push undefined
+                // push this array into a main dataArray
+                // when reading this data: 
 
+                // const dataItemProperties = [];
+                // this.propertiesManaged = [description, tite, status] - put global
+                // for (const property of this.propertiesManaged) {
+                    // if (dataItem.property) {
+                        // dataItemProperties.push(dataItem.property);
+                    // } else {
+                        // dataItemProperties.push(undefined);
+                    // }
+                // }
+                
+                // dataProperties.push(dataItemProperties);
+                // to access - plug in the id
+                
+                // const cardPos = this.cardPositionInArray(id);
+                // const cardProperties = dataArray[cardPos]
+                
+                // now we have all the data for the given card
+                // propertyToChange will be pre-defined by a button, an input field etc
+                
+                // cardProperties[this.propertiesManaged.indexOf('propertyToChange')] = newValue ||
+                // const getValue = cardProperties[this.propertiesManaged.indexOf('propertyToChange')]

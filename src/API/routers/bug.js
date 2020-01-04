@@ -33,7 +33,7 @@ router.get('/bugs', cors(), auth, async (req, res) => {
 });
 
 // add auth
-router.get('/bugs/:id', async (req, res) => {
+router.get('/bugs/:id', cors(), async (req, res) => {
     try {
         const bug = await Bug.findOne({ _id: req.params.id})
 
@@ -47,8 +47,8 @@ router.get('/bugs/:id', async (req, res) => {
         res.status(400).send(e)
     } 
 });
-
-router.patch('/bugs/:id', async (req, res) => {
+// add auth
+router.patch('/bugs/:id', cors(), async (req, res) => {
     
     const updates = Object.keys(req.body);
     // const allowedUpdates = ['description', 'completed'] // need to enforce updates by keys
@@ -57,10 +57,8 @@ router.patch('/bugs/:id', async (req, res) => {
     // if (!isValidOperation) {
     //     return res.status(400).send({ error: 'Invalid updates!' })
     // }
-
     try {
-        const bug = await Bug.findOne({ _id: req.params.id})
-
+        const bug = await Bug.findOne({ _id: req.params.id});
         if (!bug) {
             return res.status(404).send("Bug does not exist")
         }

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const statuses = ['open', 'progress', 'testing', 'reopened', 'closed'];
+const statuses = ['Open', 'In progress', 'To be tested', 'Re-opened', 'Closed'];
 
 const bugSchema = new mongoose.Schema({
     name: {
