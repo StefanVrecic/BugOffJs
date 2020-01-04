@@ -11,7 +11,6 @@
     class TrelloBoard extends Component {
         constructor(props) {
             super(props);
-            this.child = React.createRef();
             this.db_login("vstefan@hotmail.co.uk", "vstefan");
         }
         // this.db_loadCards();
@@ -54,6 +53,7 @@
                   var response = response.data;
                   console.log("success loading cards");
                   console.log(response);
+                    this.processLoadedCards(response);
                 },
                 (error) => {
                   var status = error.response.status
@@ -64,6 +64,63 @@
 
               
         }
+        // titles = ['Open', 'In progress', 'To be tested', 'Re-opened', 'Closed'];
+        statusToLaneNumber(status) {
+            return this.titles.indexOf(status);
+        }
+
+        processLoadedCards(loadedData) {
+            const idArray = [];
+            const laneArray = [ [], [], [], [], [] ];
+            const dataArray = []; var dataArrayItem = [];
+            // alert(data);
+            for (const dataItem of loadedData) {
+                const data = [];
+                dataArrayItem = [];
+                dataArrayItem.push(dataItem._id);
+
+                // loop through pre-defined properties
+                // for each property, create an array
+                // if the data from db contains that property, push it . Otherwise push undefined
+                // push this array into a main dataArray
+                // when reading this data: 
+                const dataItemProperties = [];
+                // this.propertiesManaged = [description, tite, status] - put global
+                for (const property of this.propertiesManaged) {
+                    if (dataItem.property) {
+                        dataItemProperties.push(dataItem.property);
+                    } else {
+                        dataItemProperties.push(undefined);
+                    }
+                }
+                // dataProperties.push(dataItemProperties);
+                // to access - plug in the id
+                // const cardPos = this.cardPositionInArray(id);
+                // const cardProperties = dataArray[cardPos]
+                // now we have all the data for the given card
+                // propertyToChange will be pre-defined by a button, an input field etc
+                // cardProperties[this.propertiesManaged.indexOf('propertyToChange')] = newValue ||
+                // getValue = cardProperties[this.propertiesManaged.indexOf('propertyToChange')]
+
+
+                data.push("item");
+                data.push(dataItem.name);
+                // dataArrayItem.push(dataItem.name); // push other data that is not id
+                const lane = this.statusToLaneNumber(dataItem.status);
+                
+                idArray.push(dataItem._id);
+                dataArray.push(dataArrayItem);
+                laneArray[lane].push(dataItem._id);
+                
+                
+            }
+            this.setState({ idArray: [...idArray] });
+            // this.setState({ idArray: [...idArray] }, this.db_createTasks);
+            this.setState({ dataArray: [...dataArray] });
+            this.setState({ laneArray: [...laneArray] });
+            this.setState({ testInit: true});
+        }
+        
 
 
         initNames = ['Stacey', 'Jessie', 'Maddie', 'Katie', 'Danielle'];
@@ -146,7 +203,7 @@
         
 
         componentDidMount() {
-            this.initCards();
+            // this.initCards();
         }
 
        
