@@ -3,6 +3,7 @@ import './Lane.css';
 import LaneContents from './LaneContents';
 import LaneTitle from './LaneTitle';
 import Space from './Space';
+import LaneAddCard from './LaneAddCard';
 
 
     
@@ -58,6 +59,7 @@ import Space from './Space';
     <LaneContents>  
         {this.props.children}
      </LaneContents>
+     <LaneAddCard></LaneAddCard>
         </div>
     );
 }

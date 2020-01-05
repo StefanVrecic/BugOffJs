@@ -6,5 +6,6 @@
     margin-right: 0.6rem;
     /* padding-top: 10px; */
     border: black solid 2px;
+    border-radius: 6px;
     text-align: center;
 }

@@ -12,28 +12,9 @@
         constructor(props) {
             super(props);
         }
-        // this.db_loadCards();
+        // 
 
-        db_login(user, userPassword) {
-            axios
-            .post("http://localhost:8080/users/login", {
-                email: user,
-                password: userPassword
-            })
-            .then(function(response) {
-                console.log("success login - call loadCards()");
-                console.log(response.data.token);
-                // need to store this token
-                window.localStorage.setItem("login-token", response.data.token);
-            })
-            .then(() => {
-                this.db_loadCards();
-            })
-            .catch(function(error) {
-                console.log("fail login");
-                console.log(error.config.data);
-            });
-        }
+        
 
         db_loadCards() {
             axios
@@ -190,6 +171,7 @@
 
         componentDidMount() {
             // this.initCards();
+            this.db_loadCards();
         }
 
         db_createTasks() {

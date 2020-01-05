@@ -1,0 +1,51 @@
+.newCard {
+    font-size: 1.4rem;
+    margin-top: .75rem;
+    margin-bottom: .75rem;
+    margin-left: 0.6rem;
+    margin-right: 0.6rem;
+    /* padding-top: 10px; */
+    /* border: black solid 2px; */
+    color: #5e6c84;
+    border-radius: 6px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    resize: none;
+}
+
+.textStyle {
+    resize: none;
+    border-radius: 3px;
+}
+
+.Success {
+    /* background-color: #5C9210 !important; */
+}   
+
+.btnLeft {
+    /* float: left; */
+    /* display: block; */
+}
+input {
+    height: 3rem;
+}
+
+.submitCancel {
+    display: flex;
+    align-items: center;
+}
+.addBtn {
+    color: white;
+    /* float: left; */
+    align-self: flex-start;
+    margin-top: 5px;
+    margin-bottom:5px;
+    font-size: 1rem;
+    padding:3px;
+}
+
+.close {
+    float: left;
+    margin-left: 1rem;
+}

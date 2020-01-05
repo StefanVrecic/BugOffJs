@@ -8,9 +8,10 @@ body {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     column-gap: 5px;
     margin-left: 100px;
+    border-radius: 15px;
     
     /* margin-right: 25px; */
-    height: 80vh;
+    /* height: 80vh; */
     /* display: table; */
   }
 

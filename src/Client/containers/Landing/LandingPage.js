@@ -14,20 +14,43 @@ import './css/main.css'
 
 class LandingPage extends Component {
 
-
+	constructor(props) {
+		super(props);
+		this.state = {
+		  isGoing: true,
+		  numberOfGuests: 2
+		};
+	
+		this.handleInputChange = this.handleInputChange.bind(this);
+	  }
 	
 	
 	state = {
 		newUser: false,
-		rememberMe: false
+		rememberMe: false,
+		email: null,
+		pass: null
 	}
 
 	signUp = (e) =>  {
 		e.preventDefault();
-		// alert("remember: " + this.state.rememberMe + " / newUser: " + this.state.newUser);
+		// alert(this.state.newUser);
+		this.props.history.push( '/auth' , { email: this.state.email, 
+				pass: this.state.pass, newUser: this.state.newUser});
 
-		this.props.history.push( '/auth' );
+		// not sure if this works?
+		this.setState({email:null, pass:null});
 	}
+
+	handleInputChange(event)  {
+		const target = event.target;
+		const value = target.type === 'checkbox' ? target.checked : target.value;
+		const name = target.name;
+	
+		this.setState({
+		  [name]: value
+		});
+	  }
 
 	rememberCheck = () =>  {
 		this.setState({rememberMe: !this.state.rememberMe});
@@ -55,14 +78,16 @@ render() {
 
 
 					<div className="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz" >
-						<input className="input100" type="text" name="email"/>
+						<input className="input100" type="text" name="email" value={this.state.email}
+								onChange={this.handleInputChange}/>
 						<span className="focus-input100"></span>
 						<span className="label-input100">Email</span>
 					</div>
 					
 					
 					<div className="wrap-input100 validate-input" data-validate="Password is required">
-						<input className="input100" type="password" name="pass"/>
+						<input className="input100" type="password" name="pass" value={this.state.pass}
+								onChange={this.handleInputChange}/>
 						<span className="focus-input100"></span>
 						<span className="label-input100">Password</span>
 					</div>
