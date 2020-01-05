@@ -8,6 +8,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './Client/App';
 import * as serviceWorker from './Client/serviceWorker';
+import { BrowserRouter } from 'react-router-dom';
+
 // import cardReducer from '/store/reducers/cardReducer';
 
 
@@ -25,6 +27,10 @@ import * as serviceWorker from './Client/serviceWorker';
 //             <App />
 //     </Provider>
 // );
-
-ReactDOM.render(<App />, document.getElementById('root'));
+const app = (
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+);
+ReactDOM.render(app, document.getElementById('root'));
 serviceWorker.unregister();

@@ -1,15 +1,15 @@
 body {
-    margin: 40px;
+    margin: 10px;
   }
   
   .wrapper {
     display: grid;
-    column-gap: 25px;
     justify-content: space-around;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    column-gap: 25px;
-    margin-left: 125px;
-    margin-right: 25px;
+    column-gap: 5px;
+    margin-left: 100px;
+    
+    /* margin-right: 25px; */
     height: 80vh;
     /* display: table; */
   }

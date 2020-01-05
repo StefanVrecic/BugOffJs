@@ -1,17 +1,40 @@
+import React, { Component } from 'react';
 import logo from './images/bugzilla.png';
-import './vendor/bootstrap/css/bootstrap.min.css'
-import './fonts/font-awesome-4.7.0/css/font-awesome.min.css'
-import './fonts/Linearicons-Free-v1.0.0/icon-font.min.css'
-import './vendor/animate/animate.css'
-import './vendor/css-hamburgers/hamburgers.min.css'
-import './vendor/animsition/css/animsition.min.css'
-import './vendor/select2/select2.min.css'
-import './vendor/daterangepicker/daterangepicker.css'
+import {  Route, Redirect } from "react-router-dom";
+// import './vendor/bootstrap/css/bootstrap.min.css'
+// import './fonts/font-awesome-4.7.0/css/font-awesome.min.css'
+// dimport './fonts/Linearicons-Free-v1.0.0/icon-font.min.css'
+// import './vendor/animate/animate.css'
+// import './vendor/css-hamburgers/hamburgers.min.css'
+// import './vendor/animsition/css/animsition.min.css'
+// import './vendor/select2/select2.min.css'
+// import './vendor/daterangepicker/daterangepicker.css'
 import './css/util.css'
 import './css/main.css'
-import React, { Component } from 'react';
 
 class LandingPage extends Component {
+
+
+	
+	
+	state = {
+		newUser: false,
+		rememberMe: false
+	}
+
+	signUp = (e) =>  {
+		e.preventDefault();
+		// alert("remember: " + this.state.rememberMe + " / newUser: " + this.state.newUser);
+
+		this.props.history.push( '/auth' );
+	}
+
+	rememberCheck = () =>  {
+		this.setState({rememberMe: !this.state.rememberMe});
+	}
+	newUserCheck = () =>  {
+		this.setState({newUser: !this.state.newUser});
+	}
 
 render() {
 	return (
@@ -45,28 +68,28 @@ render() {
 					</div>
 					<div className="flex-sb-m w-full p-t-3 p-b-32">
 						<div className="contact100-form-checkbox">
-							<input className="input-checkbox100" id="ckb1" type="checkbox" name="remember-me"/>
+							<input className="input-checkbox100" id="ckb1" type="checkbox" name="remember-me" onChange={ this.rememberCheck } />
 							<label className="label-checkbox100" for="ckb1">
 								Remember me
 							</label>
 						
 						</div>
 						<div>
-							<input className="input-checkbox100" id="ckb2" type="checkbox" name="sign-up"/>
+							<input className="input-checkbox100" id="ckb2" type="checkbox" name="sign-up" onChange = { this.newUserCheck }/>
 							<label className="label-checkbox100" for="ckb2">
 								New user
 							</label>
 						</div>
 						<div>
-							<a href="#" className="txt1">
+							{/* <a href="#" className="txt1">
 								Forgot Password?
-							</a>
+							</a> */}
 						</div>
 					</div>
 			
 
 					<div className="container-login100-form-btn">
-						<button className="login100-form-btn">
+						<button onClick = {this.signUp} className="login100-form-btn">
 							Login
 						</button>
 					</div>
