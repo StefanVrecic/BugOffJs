@@ -6,20 +6,6 @@ import Space from './Space';
 import LaneAddCard from './LaneAddCard';
 
 
-    
-    // let tasks = this.state.tasks.filter((task) => {
-    //     if (task.name == id) {
-    //         task.category = cat;
-    //     }
-    //     return task;
-    // });
-
-    // this.setState({
-    //     ...this.state,
-    //     tasks
-    // });
- 
-
  class Lane extends Component {
 
 
@@ -48,6 +34,11 @@ import LaneAddCard from './LaneAddCard';
         this.setState({ columnNumber: this.props.columnNumber })
     }
 
+    addCard = (cardText) =>  {
+        alert("inside lane.js!");
+        this.props.addCardMethod(cardText, this.state.columnNumber);
+    }
+
      render() {
 
         return (
@@ -59,7 +50,7 @@ import LaneAddCard from './LaneAddCard';
     <LaneContents>  
         {this.props.children}
      </LaneContents>
-     <LaneAddCard></LaneAddCard>
+     <LaneAddCard addCardMethod={this.addCard}></LaneAddCard>
         </div>
     );
 }

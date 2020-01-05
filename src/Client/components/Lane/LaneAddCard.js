@@ -17,8 +17,17 @@ class LaneAddCard extends Component {
       }
 
       submitCard = () =>  {
-          alert(this.state.cardText);
+          const cardText = this.state.cardText;
+          this.setState({ cardText: ""});
+
+          this.addCard(cardText);
       }
+      
+      addCard(cardText) {
+        this.props.addCardMethod(cardText);
+   
+      }
+
 
       handleInputChange(event)  {
 		const target = event.target;

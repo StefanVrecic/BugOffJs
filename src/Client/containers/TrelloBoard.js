@@ -230,13 +230,9 @@
                 i++;
             }
 
-            // const lane = (<Lane color={this.colors[i]} columnNumber={i}
-            //     title = {t} transfer={this.transferCards}>
-            //              {card}
-            // </Lane>);
+           ;
 
             this.setState({ idArray: [...idArray] });
-            // this.setState({ idArray: [...idArray] }, this.db_createTasks);
             this.setState({ dataArray: [...dataArray] });
             this.setState({ laneArray: [...laneArray] });
             this.setState({ testInit: true });
@@ -297,6 +293,33 @@
             // this.db_createTasks();
         };
 
+        addCard = (cardText, lane)  => {
+            alert("inside trelloboard.js" + cardText + " lane: " + lane);
+            const storeId = uniqid();
+            const card = (
+                <Card 
+                clicked={this.cardClickedHandler} 
+                uniqueid={storeId}
+                >{cardText}</Card>
+
+                );
+                const laneArray = [...this.state.laneArray];
+                const idArray = [...this.state.idArray];
+                const dataArray = [...this.state.dataArray];
+                idArray.push(storeId);
+                laneArray[lane].push(storeId);
+                const dataToStore = [];
+                dataToStore.push(storeId); dataToStore.push(cardText);
+                dataArray.push(dataToStore);
+                
+                this.setState({ idArray: [...idArray] });
+                // this.setState({ idArray: [...idArray] }, this.db_createTasks);
+                this.setState({ dataArray: [...dataArray] });
+                this.setState({ laneArray: [...laneArray] });
+            
+
+        }
+
         render() {
             let i = 0;
             let c = 0;
@@ -339,10 +362,12 @@
             }
             const lane = (
                 <Lane
+                addCardMethod={this.addCard}
                 color={this.colors[c]}
                 columnNumber={c}
                 title={this.titles[c]}
                 transfer={this.transferCards}
+
                 >
                 {oneLaneCards}
                 </Lane>
