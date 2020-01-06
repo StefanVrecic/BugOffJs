@@ -35,7 +35,7 @@ import LaneAddCard from './LaneAddCard';
     }
 
     addCard = (cardText) =>  {
-        alert("inside lane.js!");
+        // alert("inside lane.js!");
         this.props.addCardMethod(cardText, this.state.columnNumber);
     }
 

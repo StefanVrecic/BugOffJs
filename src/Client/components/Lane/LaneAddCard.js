@@ -40,7 +40,7 @@ class LaneAddCard extends Component {
       }
       
       handleSubmit(event) {
-          alert(event.target.value)
+        //   alert(event.target.value)
       }
 
 render() {

@@ -44,22 +44,6 @@ app.listen(port, () => {
 //     console.log(user.bugs);
 // }
     
-//     main();
-
-// const User = require('./models/user');
-
-// app.post('/users', cors(), async (req, res) => {
-//     const user = new User(req.body)
-
-//     try {
-//         await user.save();
-//         // sendWelcomeEmail(user.email, user.name)
-//         const token = await user.generateAuthToken();
-//         res.status(201).send({ user, token });
-//     } catch (e) {
-//         res.status(400).send(e);
-//     }
-// })
 
 
 
@@ -81,22 +65,6 @@ app.listen(port, () => {
 //     });
 // }
     
-
-
-// axios.post('/users', {
-//     "name": "axiosTestName",
-//         "email": "axios@gmail.com",
-//         "password": "123123123"
-//     }, {
-//         proxy: { port: 3000 }
-//     }
-//     ).then(function (response) {
-//         console.log(response);
-//     })
-//     .catch(function (error) {
-//         console.log(error.config.data);
-//           });
-          
 
 
 

@@ -5,15 +5,20 @@ const router = new express.Router()
 var cors = require('cors');
 router.use(cors());
 
-router.post('/bugs',  cors(), async (req, res) => {
-    
+router.post('/bugs',  cors(), auth, async (req, res) => {
+    console.log("post1")
+    console.log(req.user._id);
     const bug = new Bug({
         ...req.body,
-        // owner: req.user._id
+        owner: req.user._id
     })
-
+    console.log("post2")
+    
     try {
+        console.log("post3")
         await bug.save()
+        console.log("post4")
+        console.log(bug);
         res.status(201).send(bug)
     } catch (e) {
         console.log("failed?");
@@ -22,6 +27,7 @@ router.post('/bugs',  cors(), async (req, res) => {
 })
 
 router.get('/bugs', cors(), auth, async (req, res) => {
+    
     try {
         await req.user.populate({
             path: 'bugs',

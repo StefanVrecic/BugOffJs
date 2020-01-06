@@ -4,10 +4,35 @@
         import Lane from "../components/Lane/Lane";
         import Modal from "../components/UI/Modal/Modal";
         import axios from "axios";
-        // import { connect } from 'react-redux';
         import uniqid from "uniqid";
-        // import mongoose from 'mongoose';
 
+
+            // db_loadCards()
+            // statusToLaneNumber
+            // processLoadedCards
+            // db_updateCardStatus
+            // setModalTitle
+            // setModalStatus
+            // closeModalHandler
+            // closeModalHandler
+            // getCardStatus
+            // cardClickedHandler
+            // openModalHandler
+            // axiosConnect
+            // cardClickedHandler
+            // openModalHandler
+            // axiosConnect
+            // componentDidUpdate
+            // componentDidMount
+            // db_createCard
+            // initCards
+            // cardPositionInArray
+            // getCardData
+            // assertArraysAligned
+            // initCards
+            // cardPositionInArray
+            // getCardData
+            // assertArraysAligned 
         class TrelloBoard extends Component {
         constructor(props) {
             super(props);
@@ -32,7 +57,7 @@
                 },
                 error => {
                 var status = error.response.status;
-                alert("fail loadCards");
+                console.log("fail loadCards");
                 }
             );
         }
@@ -46,9 +71,9 @@
             const laneArray = [[], [], [], [], []];
             const dataArray = [];
             var dataArrayItem = [];
-            // alert(data);
+            
             for (const dataItem of loadedData) {
-            // alert(JSON.stringify(dataItem));
+            
             const data = [];
             dataArrayItem = [];
             dataArrayItem.push(dataItem._id);
@@ -87,10 +112,11 @@
         db_updateCardStatus(id) {
             const status_int = this.getCardStatus(id);
             const status_string = this.titles[status_int];
-            // alert(id + " / " + status_string);
+            
             axios
             .patch(`http://localhost:8080/bugs/${id}`, {
                 status: status_string
+                
             })
             .then(function(response) {
                 console.log("updated status");
@@ -174,30 +200,35 @@
             this.db_loadCards();
         }
 
-        db_createTasks() {
-            // drop db
-            // post tasks to db
+        db_createCard(id) {
+            const cardPos = this.cardPositionInArray(id);
+            const cardData = this.getCardData(cardPos);
 
-            // var newId = new mongoose.mongo.ObjectId('5e1010ec9a353812f0e6b025');
+            const status_int = this.getCardStatus(id);
+            const status = this.titles[status_int];
 
-            const idArray = [...this.state.idArray];
-            var i = 0;
-            for (i = 0; i < idArray.length; i++) {
-            axios
-                .post("http://localhost:8080/bugs", {
-                name: idArray[i],
-                owner: "Stefan"
-                })
+            // console.log(cardData + " cardData trellboarodb.js");    
+         
+              const instance = axios.create({
+                baseURL: 'http://localhost:8080',
+                headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
+              });
+
+            instance
+            .post("/bugs", {
+              name: cardData, status: status
+            })
                 .then(function(response) {
-                console.log("success");
+                console.log("success create" + response);
                 console.log(response);
-                })
-                .catch(function(error) {
-                console.log("fail");
+            })
+            .catch(function(error) {
+                console.log("failure creating card");
                 console.log(error.config.data);
-                });
-            }
+            });
         }
+        
+        
 
         initCards() {
             if (!this.state.testInit) {
@@ -244,6 +275,7 @@
             const index = idArray.indexOf(id);
             return index;
         }
+        
 
         getCardData(pos) {
             const dataArray = [...this.state.dataArray];
@@ -294,8 +326,8 @@
         };
 
         addCard = (cardText, lane)  => {
-            alert("inside trelloboard.js" + cardText + " lane: " + lane);
             const storeId = uniqid();
+            
             const card = (
                 <Card 
                 clicked={this.cardClickedHandler} 
@@ -309,14 +341,20 @@
                 idArray.push(storeId);
                 laneArray[lane].push(storeId);
                 const dataToStore = [];
+
                 dataToStore.push(storeId); dataToStore.push(cardText);
                 dataArray.push(dataToStore);
+                this.setState({ laneArray: [...laneArray] });
+
+            
                 
                 this.setState({ idArray: [...idArray] });
-                // this.setState({ idArray: [...idArray] }, this.db_createTasks);
-                this.setState({ dataArray: [...dataArray] });
-                this.setState({ laneArray: [...laneArray] });
-            
+                    this.setState({ dataArray: [...dataArray] },
+                       () => {
+                            this.db_createCard(storeId)
+                        });
+                           
+                
 
         }
 
