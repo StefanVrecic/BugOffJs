@@ -18,6 +18,9 @@ class LaneAddCard extends Component {
 
       submitCard = () =>  {
           const cardText = this.state.cardText;
+          if (cardText === "") {
+              return;
+          }
           this.setState({ cardText: ""});
 
           this.addCard(cardText);
@@ -58,7 +61,7 @@ render() {
             <div className = "newCard">
                     
                     <textarea 
-                    className="textStyle" placeholder ="Write title for bug" maxlength="87"
+                    className="textStyle" placeholder ="Enter title for bug" maxlength="87"
                     cols="30" rows="3" wrap="soft" name="cardText"
                     onChange={this.handleInputChange} value={this.state.cardText}>
                             </textarea>

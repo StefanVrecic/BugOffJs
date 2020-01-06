@@ -35,7 +35,9 @@ class Card extends Component {
             onDragStart = {(e) => this.onDragStart(e, this.props.uniqueid)}
             onDragEnd = {(e) => this.onDragEnd(e)}
             >
+                <div className = "cardContents">
         {this.props.children}
+                </div>
        </div>
     );
 }

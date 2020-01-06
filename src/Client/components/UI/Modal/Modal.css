@@ -14,13 +14,13 @@
 }
 
 .modalTitle {
-    font-size: 1.5rem;
+    font-size: 1rem;
     text-align: left;
     padding-left: 2rem;
     
     padding-top: 1.5rem;
     /* background-color: red; */
-    max-width: 50%;
+    max-width: 100%;
 }
 .modalTitle-status {
     font-size: 1rem;
