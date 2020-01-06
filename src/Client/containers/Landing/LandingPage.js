@@ -12,6 +12,7 @@ import {  Route, Redirect } from "react-router-dom";
 import './css/util.css'
 import './css/main.css'
 import { verify } from 'jsonwebtoken';
+import '../../../bootstrap.css';
 
 class LandingPage extends Component {
 
@@ -93,7 +94,10 @@ render() {
 			<div className="wrap-login100">
 
 			<form className="login100-form validate-form">
-					<span className="login100-form-title brandname p-b-43">Bug Squash</span>	
+					{/* <span className="login100-form-title brandname p-b-43">Bug Squash</span>	 */}
+					<h1 className="squashTitle">
+						Bug Squash
+					</h1>
 					<span className="login100-form-title p-b-43">
 						Login to continue
 					</span>

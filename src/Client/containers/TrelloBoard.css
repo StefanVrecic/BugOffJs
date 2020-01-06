@@ -3,11 +3,14 @@ body {
   }
   
   .wrapper {
+    width: 90vw;
     display: grid;
     justify-content: space-around;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    margin-top: 10px;
+    margin-right: 10px;
     column-gap: 5px;
-    margin-left: 100px;
+    margin-left: 8vw;
     border-radius: 15px;
     
     /* margin-right: 25px; */

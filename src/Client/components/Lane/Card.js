@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './Card.css';
 import ReactDOM from 'react-dom';
+import '../../../Skeleton.css';
+
 
 
 class Card extends Component {
@@ -36,7 +38,7 @@ class Card extends Component {
             onDragEnd = {(e) => this.onDragEnd(e)}
             >
                 <div className = "cardContents">
-        {this.props.children}
+                 {this.props.children}
                 </div>
        </div>
     );

@@ -43,6 +43,7 @@
             modalTitle: "default",
             modalStatus: "default",
             modalStatusNumber: -1,
+            activeCard: "-1",
             cards: [[], [], [], [], []], // this should actually be lanes?
             lanes: [],
             idArray: [],
@@ -75,7 +76,10 @@
             this.setState({ cardModal: true });
         };
 
-     
+        cardPosInLane = id => {
+            const laneNumber = this.getCardLane(id);
+            return this.state.laneArray[laneNumber].indexOf(id);
+        }
 
         // titles = ['Open', 'In progress', 'To be tested', 'Re-opened', 'Closed'];
         statusToLaneNumber(status) {
@@ -109,7 +113,28 @@
             this.setState({ laneArray: [...laneArray] });
         }
 
-        getCardStatus = id => {
+        toString(name, arrayProvided) {
+            let output = "";
+            if (name === "id") {
+                for (const id of arrayProvided) {
+                    output = output + "\n" + id;
+                }
+
+            } else if (name === "data") {
+
+            } else if (name === "lane") {
+                for (const lane of arrayProvided) {
+                    let laneContent = "";
+                    for (const l of lane) {
+                        laneContent = laneContent + "\n" +  l  ;
+                    }
+                    output = output + laneContent + "\n\n"
+                }
+            }
+            return output;
+        }
+
+        getCardLane = id => {
             let c = 0;
             let col = -1;
             for (const l of this.state.laneArray) {
@@ -117,12 +142,20 @@
                 const itemString = item + "";
                 if (itemString == id) {
                 col = c;
-                return this.titles[col];
+                return col;
                 }
             }
             c++;
             }
+        }
+
+        getCardStatus = id => {
+            return this.titles[this.getCardLane(id)];
         };
+
+        setActiveCard = id => {
+            this.setState({activeCard: id})
+        }
 
         cardClickedHandler = id => {
             const cardPos = this.cardPositionInArray(id);
@@ -131,7 +164,7 @@
 
             this.setModalTitle(data);
             this.setModalStatus(cardStatus);
-
+            this.setActiveCard(id);
             this.openModalHandler();
         };
 
@@ -140,6 +173,35 @@
             const index = idArray.indexOf(id);
             return index;
         }
+
+        deleteItem = () => {
+            const deleteId = this.state.activeCard;
+            this.setState({activeCard: "-1"});
+            const idArray = [...this.state.idArray];
+            const laneArray = [...this.state.laneArray];
+            const dataArray = [...this.state.dataArray];
+            const deleteIndex = idArray.indexOf(deleteId);
+            const activeCardLane = this.getCardLane(deleteId);
+            // alert(this.cardPosInLane(deleteId)); // Could use this instead below
+            const indexInLane = laneArray[activeCardLane].indexOf(deleteId);
+
+
+            idArray.splice(deleteIndex, 1);
+            laneArray[activeCardLane].splice(indexInLane, 1);
+            dataArray.splice(deleteIndex, 1);
+  
+
+            this.setState({ laneArray: [...laneArray] });
+
+                this.setState({ idArray: [...idArray] });
+                    this.setState({ dataArray: [...dataArray] },
+                       () => {
+                            this.db_deleteItem(deleteId)
+                        });  
+
+
+        };
+    
         
         getCardData(pos) {
             const dataArray = [...this.state.dataArray];
@@ -266,12 +328,32 @@
                 status={this.state.modalStatus}
                 title={this.state.modalTitle}
                 color={this.state.modalStatusNumber}
+                deleteItemModal={this.deleteItem}
                 ></Modal>
             </div>
             );
         }
 
 ////////////////////////////////////// db methods ////////////////////////
+
+        db_deleteItem(id) {
+            const instance = axios.create({
+                baseURL: 'http://localhost:8080',
+                headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
+              });
+              
+              instance
+            .delete("/bugs/"+id, {
+            })
+                .then(response => {
+                console.log("success delete" + response);
+                console.log(response);
+            })
+            .catch(error => {
+                console.log("failure deleting card");
+                console.log(error.config.data);
+            });
+        }
 
         db_updateCardStatus(id) {
             const status_string = this.getCardStatus(id);

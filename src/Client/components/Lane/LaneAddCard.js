@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './LaneAddCard.css';
 import Button from '../UI/Button/Button';
 import  '../UI/Button/Button.css';
+import './LaneAddCard.css';
 
 class LaneAddCard extends Component {
     
@@ -61,16 +62,17 @@ render() {
             <div className = "newCard">
                     
                     <textarea 
-                    className="textStyle" placeholder ="Enter title for bug" maxlength="87"
+                    className="textStyle" placeholder ="Enter title for bug" maxlength="81"
                     cols="30" rows="3" wrap="soft" name="cardText"
                     onChange={this.handleInputChange} value={this.state.cardText}>
                             </textarea>
 
                     <div className = "submitCancel" >
-
-                        <Button className="btnLeft" btnType="addBtn Success-bg" clicked={this.submitCard}>
+                        <div className="addBtn" >
+                        <Button btnType="btn-success" clicked={this.submitCard}>
                             Add card
                         </Button>
+                    </div>
                         <div className="closeAddCardPadding">
                         <span class="closeAddCard" onClick={this.toggleAddCard}>x</span>
                         </div>

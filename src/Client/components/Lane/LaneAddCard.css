@@ -1,9 +1,9 @@
 .newCard {
     font-size: 1.4rem;
-    margin-top: .75rem;
-    margin-bottom: .75rem;
-    margin-left: 0.6rem;
-    margin-right: 0.6rem;
+    margin-top: 1,2rem;
+    margin-bottom: 1.2rem;
+    margin-left: 0.96rem;
+    margin-right: 0.96rem;
     /* padding-top: 10px; */
     /* border: black solid 2px; */
     color: #5e6c84;
@@ -19,24 +19,17 @@
     border-radius: 3px;
 }
 
-.Success {
-    /* background-color: #5C9210 !important; */
-}   
 
-.btnLeft {
-    /* float: left; */
-    /* display: block; */
-}
 input {
-    height: 3rem;
+    height: 4.8rem;
 }
 .plus {
-    font-size: 1.2rem;
+    font-size: 1.92rem;
 }
 
 .closeAddCard {
     margin-left: 5px;
-    padding-right: 100px;
+    padding-right: 10rem;
 }
 
 .closeAddCard:hover{
@@ -51,13 +44,12 @@ input {
     align-items: center;
 }
 .addBtn {
-    color: white;
-    /* float: left; */
+    color: red !;
+    float: left;
     align-self: flex-start;
     margin-top: 5px;
     margin-bottom:5px;
-    font-size: 1rem;
-    padding:3px;
+    font-size: 1.6rem;
 }
 
 .close {

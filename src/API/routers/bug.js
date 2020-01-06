@@ -76,7 +76,7 @@ router.patch('/bugs/:id', cors(), async (req, res) => {
     } 
 })
 
-router.delete('/bugs/:id', auth, async (req, res) => {
+router.delete('/bugs/:id', cors(), auth, async (req, res) => {
     try {
         const task = await Bug.findOneAndDelete({ _id: req.params.id, owner: req.user._id })
 

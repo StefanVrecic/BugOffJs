@@ -144,6 +144,10 @@ button {
 	background: transparent;
 }
 
+.squashTitle {
+  padding-bottom: 1rem;
+}
+
 button:hover {
 	cursor: pointer;
 }

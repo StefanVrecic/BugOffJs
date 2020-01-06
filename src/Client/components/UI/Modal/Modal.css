@@ -6,7 +6,7 @@
     width: 58%;
     border: 1px solid #ccc;
     box-shadow: 1px 1px 1px black;
-    padding: 16px;
+    padding: 1rem;
     left: 21vw;
     top: 2.5vh;
     box-sizing: border-box;
@@ -14,11 +14,11 @@
 }
 
 .modalTitle {
-    font-size: 1rem;
+    font-size: 1.6rem;
     text-align: left;
-    padding-left: 2rem;
+    padding-left: 3.2rem;
     
-    padding-top: 1.5rem;
+    padding-top: 2.4rem;
     /* background-color: red; */
     max-width: 100%;
 }
@@ -27,7 +27,7 @@
     /* color: green; */
 }
 .modalTabOne {
-    background-color: yellow;
+    /* background-color: yellow; */
     position: absolute;
     width: 95%;
     height: 15%;

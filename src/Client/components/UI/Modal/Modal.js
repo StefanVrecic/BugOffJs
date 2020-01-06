@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Modal.css'
 import Auxiliary from '../../../hoc/Auxiliary';
 import Backdrop from '../Backdrop/Backdrop';
+import '../../../../bootstrap.css';
 
 
 class Modal extends Component {
@@ -25,14 +26,14 @@ shouldComponentUpdate (nextProps, nextState) {
                         opacity: this.props.show ? '1' : '0'
                     }}>
                         <div className = "modalTitle">
-                            <span className="modalTitle-header">{this.props.title}</span>
+                            <span className="modalTitle-header"><b>{this.props.title}</b></span>
                             <br></br>
                             <span className={`modalTitle-status 
                             titleColor-${this.props.color}`
                             }>({this.props.status})</span>
                         </div>
                         <div className = "modalTabOne">
-                            Tab
+                            <input type="button" value="Delete" onClick={this.props.deleteItemModal}></input>
                         </div>
                 </div>
             </Auxiliary>
