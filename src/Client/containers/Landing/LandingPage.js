@@ -11,6 +11,7 @@ import {  Route, Redirect } from "react-router-dom";
 // import './vendor/daterangepicker/daterangepicker.css'
 import './css/util.css'
 import './css/main.css'
+import { verify } from 'jsonwebtoken';
 
 class LandingPage extends Component {
 
@@ -29,12 +30,22 @@ class LandingPage extends Component {
 		newUser: false,
 		rememberMe: false,
 		email: null,
-		pass: null
+		pass: null,
+		passConfirm: null
+	}
+
+	shakeVerify() {
+
 	}
 
 	signUp = (e) =>  {
 		e.preventDefault();
-		// alert(this.state.newUser);
+		
+		if (this.state.newUser && this.state.pass !== this.state.passConfirm) {
+			// show some message or shake 
+			return;
+		}
+
 		this.props.history.push( '/auth' , { email: this.state.email, 
 				pass: this.state.pass, newUser: this.state.newUser});
 
@@ -60,6 +71,18 @@ class LandingPage extends Component {
 	}
 
 render() {
+	let verifyPassword = null;
+	if ( this.state.newUser) {
+
+		verifyPassword = (
+			<div className="wrap-input100 validate-input" data-validate="Password is required">
+								<input className="input100" type="password" name="passConfirm" value={this.state.passConfirm}
+										onChange={this.handleInputChange}/>
+								<span className="focus-input100"></span>
+								<span className="label-input100">Verify password</span>
+							</div>
+	);
+}
 	return (
 
 	
@@ -91,6 +114,8 @@ render() {
 						<span className="focus-input100"></span>
 						<span className="label-input100">Password</span>
 					</div>
+							{verifyPassword}
+
 					<div className="flex-sb-m w-full p-t-3 p-b-32">
 						<div className="contact100-form-checkbox">
 							<input className="input-checkbox100" id="ckb1" type="checkbox" name="remember-me" onChange={ this.rememberCheck } />

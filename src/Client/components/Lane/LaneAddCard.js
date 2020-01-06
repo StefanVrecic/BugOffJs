@@ -9,7 +9,7 @@ class LaneAddCard extends Component {
     constructor(props) {
 		super(props);
 		this.state = {
-            closed: false,
+            closed: true,
             cardText: ""
 		};
 	
@@ -42,12 +42,16 @@ class LaneAddCard extends Component {
       handleSubmit(event) {
         //   alert(event.target.value)
       }
+      toggleAddCard = () =>  {
+          this.setState({ closed: !this.state.closed});
+      }
 
 render() {
     // write out text area. If focused = expand. If not = shut. May need to use refs for that not sure.
     let burger;
     if (this.state.closed) {
-        burger = (<p>Add another card</p>);
+        burger = (<p className="addCardButton" onClick={this.toggleAddCard}>
+            <span className="plus">+ </span>Add another card</p>);
     } else {
         // add Card + close
         burger = (
@@ -64,7 +68,9 @@ render() {
                         <Button className="btnLeft" btnType="addBtn Success-bg" clicked={this.submitCard}>
                             Add card
                         </Button>
-                        <span class="close">x</span>
+                        <div className="closeAddCardPadding">
+                        <span class="closeAddCard" onClick={this.toggleAddCard}>x</span>
+                        </div>
                     </div>
             </div>
         );

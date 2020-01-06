@@ -30,7 +30,22 @@
 input {
     height: 3rem;
 }
+.plus {
+    font-size: 1.2rem;
+}
 
+.closeAddCard {
+    margin-left: 5px;
+    padding-right: 100px;
+}
+
+.closeAddCard:hover{
+    color: red;
+    cursor: pointer;
+}
+.addCardButton:hover {
+    background-color: yellow;
+}
 .submitCancel {
     display: flex;
     align-items: center;
