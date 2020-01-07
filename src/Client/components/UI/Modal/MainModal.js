@@ -121,7 +121,7 @@ class MainModal extends Component {
             <Auxiliary>
                 <Backdrop show = {this.props.show} clicked = { this.closeModal} />
                 <div 
-                    className = "Modal"
+                    className = "Modal defaultDimensions"
                     style = {{
                         transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)', 
                         opacity: this.props.show ? '1' : '0'

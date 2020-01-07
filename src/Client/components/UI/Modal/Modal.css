@@ -1,9 +1,7 @@
 .Modal {
-    min-height: 95%;
     position: fixed;
     z-index: 500;
     background-color: lightgrey;
-    width: 58%;
     border: 1px solid #ccc;
     box-shadow: 1px 1px 1px black;
     padding: 1rem;
@@ -11,6 +9,16 @@
     top: 2.5vh;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
+}
+
+.defaultDimensions {
+    height: 95%;
+    width: 58%;
+}
+
+.logoutModal {
+    height: 45%;
+    width: 29%;
 }
 
 .modalTitle {
