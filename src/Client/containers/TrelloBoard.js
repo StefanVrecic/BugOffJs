@@ -3,6 +3,7 @@
         import Card from "../components/Lane/Card";
         import Lane from "../components/Lane/Lane";
         import Modal from "../components/UI/Modal/Modal";
+        import MainModal from "../components/UI/Modal/MainModal";
         import axios from "axios";
         import uniqid from "uniqid";
 
@@ -27,11 +28,7 @@
             // db_createCard
             // initCards
             // cardPositionInArray
-            // getCardData
-            // assertArraysAligned
-            // initCards
-            // cardPositionInArray
-            // getCardData
+            // getCardTitle
             // assertArraysAligned 
         class TrelloBoard extends Component {
         constructor(props) {
@@ -48,7 +45,9 @@
             lanes: [],
             idArray: [],
             dataArray: [],
-            laneArray: [[], [], [], [], []]
+            laneArray: [[], [], [], [], []],
+            addCard_laneOpen: "-1",
+            modalData: []
         };
 
         titles = ["Open", "In progress", "To be tested", "Re-opened", "Closed"];
@@ -59,6 +58,10 @@
         componentDidMount() {
             this.db_loadCards();
         }
+
+        setAddCardLaneOpen = col => {
+            this.setState({ setAddCardLaneOpen: col})
+        }
         
         setModalTitle = name => {
             this.setState({ modalTitle: name });
@@ -68,8 +71,15 @@
             this.setState({ modalStatus: status });
         };
 
+        setModalData = data => {
+            this.setState( { modalData: data });
+        }
+
         closeModalHandler = () => {
             this.setState({ cardModal: false });
+            // don't want any residual data from previous modal. Failsafe.
+            this.setModalData([]);
+
         };
 
         openModalHandler = () => {
@@ -85,6 +95,9 @@
         statusToLaneNumber(status) {
             return this.titles.indexOf(status);
         }
+        laneNumberToStatus(lane) {
+            return this.titles[lane];
+        }
 
         processLoadedCards(loadedData) {
             const idArray = [];
@@ -97,9 +110,11 @@
                 dataArrayItem = [];
                 dataArrayItem.push(dataItem._id);
 
-                // data.push("item");
+                // WARNING
+                // DO NOT CHANGE ORDER OF dataArrayItem.push
                 dataArrayItem.push(dataItem.name);
                 dataArrayItem.push(dataItem.status);
+                dataArrayItem.push(dataItem.description);
                 // dataArrayItem.push(dataItem.data); // push other data that is not id
                 const lane = this.statusToLaneNumber(dataItem.status);
 
@@ -159,12 +174,16 @@
 
         cardClickedHandler = id => {
             const cardPos = this.cardPositionInArray(id);
-            const data = this.getCardData(cardPos);
+            const title = this.getCardTitle(cardPos);
             const cardStatus = this.getCardStatus(id);
 
-            this.setModalTitle(data);
+            const data = this.getCardData(cardPos);
+
+            this.setModalTitle(title);
             this.setModalStatus(cardStatus);
             this.setActiveCard(id);
+            this.setModalData(data);
+            // alert(data);
             this.openModalHandler();
         };
 
@@ -201,9 +220,18 @@
 
 
         };
+
+        addingCard = (col) =>  {
+            
+            this.setState( { addCard_laneOpen: col });
+        }
     
-        
         getCardData(pos) {
+            const dataArray = [...this.state.dataArray];
+            return dataArray[pos];
+        }
+
+        getCardTitle(pos) {
             const dataArray = [...this.state.dataArray];
             return dataArray[pos][1];
         }
@@ -255,8 +283,14 @@
                 laneArray[lane].push(storeId);
                 const dataToStore = [];
 
-                dataToStore.push(storeId); dataToStore.push(cardText);
+                // data for each card - WARNING: don't change order
+                dataToStore.push(storeId); 
+                dataToStore.push(cardText);
+                dataToStore.push(this.laneNumberToStatus(lane));
+                dataToStore.push("No decription provided");
+
                 dataArray.push(dataToStore);
+
                 this.setState({ laneArray: [...laneArray] });
 
                 this.setState({ idArray: [...idArray] });
@@ -265,6 +299,8 @@
                             this.db_createCard(storeId)
                         });                         
         }
+
+      
 
         render() {
             let c = 0;
@@ -310,7 +346,8 @@
                 columnNumber={c}
                 title={this.titles[c]}
                 transfer={this.transferCards}
-
+                laneAddCardOpen={this.state.addCard_laneOpen===c}
+                addingCard_lane={this.addingCard}
                 >
                 {oneLaneCards}
                 </Lane>
@@ -322,35 +359,82 @@
             return (
             <div className="wrapper">
                 {renderLanes}
-                <Modal
+                {/* <Modal
                 show={this.state.cardModal}
                 modalClosed={this.closeModalHandler}
                 status={this.state.modalStatus}
                 title={this.state.modalTitle}
                 color={this.state.modalStatusNumber}
                 deleteItemModal={this.deleteItem}
-                ></Modal>
+                ></Modal> */}
+                 <MainModal
+                show={this.state.cardModal}
+                modalClosed={this.closeModalHandler}
+                status={this.state.modalStatus}
+                title={this.state.modalTitle}
+                data={this.state.modalData}
+                color={this.state.modalStatusNumber}
+                deleteItemModal={this.deleteItem}
+                addDescription={this.addDescriptionHandler}
+                ></MainModal>
             </div>
             );
         }
+////////////////////////////////////// Modal methods ///////////////////////
+
+    addDescriptionHandler = (text) => {
+        const cardId = this.state.activeCard;
+        // get position in index
+        const cardPos = this.cardPositionInArray(cardId);
+        const dataArray = [...this.state.dataArray];
+
+        // needs to be dynamic
+        dataArray[cardPos][3] = text;
+        alert("text on " + cardPos + " : " + dataArray[cardPos]);
+        this.setState( { dataArray: [...dataArray]})
+        this.db_updateCardData(cardId, dataArray[cardPos]);
+        
+        
+        // const cardData = this.state.dataArray[]
+    }
 
 ////////////////////////////////////// db methods ////////////////////////
+        
 
         db_deleteItem(id) {
             const instance = axios.create({
                 baseURL: 'http://localhost:8080',
                 headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
               });
-              
-              instance
-            .delete("/bugs/"+id, {
+
+              instance.delete("/bugs/"+id, {
             })
                 .then(response => {
                 console.log("success delete" + response);
-                console.log(response);
             })
             .catch(error => {
-                console.log("failure deleting card");
+                console.log("failure deleting card " + error.config.data);
+            });
+        }
+
+        db_updateCardData(id, data) {
+
+            alert(data + "\n\ndb-updateCard\n\nid: " + id);
+            const name = data[1];
+            const status = data[2];
+            const description = data[3];
+
+            axios
+            .patch(`http://localhost:8080/bugs/${id}`, {
+                name, description, status
+                
+            })
+            .then(function(response) {
+                console.log("updated status");
+                console.log(response);
+            })
+            .catch(function(error) {
+                console.log("failed status update");
                 console.log(error.config.data);
             });
         }
@@ -377,7 +461,7 @@
 
         db_createCard(id) {
             const cardPos = this.cardPositionInArray(id);
-            const cardData = this.getCardData(cardPos);
+            const cardTitle = this.getCardTitle(cardPos);
 
             const status = this.getCardStatus(id);  
          
@@ -388,7 +472,7 @@
 
             instance
             .post("/bugs", {
-              name: cardData, status: status
+              name: cardTitle, status: status, description: "No description provided"
             })
                 .then(function(response) {
                 console.log("success create" + response);
@@ -432,7 +516,7 @@
             for (const c of idArray) {
                 const stat = " Status: " + this.getCardStatus(c);
                 const cardPos = this.cardPositionInArray(c);
-                const data = " Name: " + this.getCardData(cardPos);
+                const data = " Name: " + this.getCardTitle(cardPos);
                 const exportData = data + "\n" + stat +"\n\n";
                 content = content + exportData;
             }

@@ -17,6 +17,13 @@ class LaneAddCard extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
       }
 
+      componentDidMount() {
+          this.setState({ closed: !this.props.defaultOpen})
+        }
+        
+        componentDidUpdate() {
+      }
+
       submitCard = () =>  {
           const cardText = this.state.cardText;
           if (cardText === "") {
@@ -48,12 +55,13 @@ class LaneAddCard extends Component {
       }
       toggleAddCard = () =>  {
           this.setState({ closed: !this.state.closed});
+          this.props.addingCard_card();
       }
 
 render() {
     // write out text area. If focused = expand. If not = shut. May need to use refs for that not sure.
     let burger;
-    if (this.state.closed) {
+    if (this.state.closed || !this.props.defaultOpen) {
         burger = (<p className="addCardButton" onClick={this.toggleAddCard}>
             <span className="plus">+ </span>Add another card</p>);
     } else {

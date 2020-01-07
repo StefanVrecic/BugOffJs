@@ -7,6 +7,11 @@ const bugSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    description: {
+        type: String,
+        required: false,
+        default: 'No description provided'
+    },
     status: {
         type: String,
         required: false,

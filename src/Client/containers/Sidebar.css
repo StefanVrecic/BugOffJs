@@ -1,0 +1,10 @@
+.sidebar {
+    height: 96vh;
+    background-color: #E7DDE5;
+    margin-top: 2vh;
+    display: flex;
+    flex-direction: column;
+}
+.themeBtn {
+    margin-top: auto;
+}

@@ -4,10 +4,11 @@ import LaneContents from './LaneContents';
 import LaneTitle from './LaneTitle';
 import Space from './Space';
 import LaneAddCard from './LaneAddCard';
-
+// import { AuthConsumer } from '../../Auth-Context';
+import AuthContext from '../../Auth-Context';
 
  class Lane extends Component {
-
+    static contextType = AuthContext;
 
     state = {
         columnNumber: -1
@@ -31,7 +32,12 @@ import LaneAddCard from './LaneAddCard';
     }
 
     componentDidMount() {
-        this.setState({ columnNumber: this.props.columnNumber })
+        this.setState({ columnNumber: this.props.columnNumber });   
+        const user = this.context;
+        // alert(user.loggedIn);
+    }
+
+    componentDidUpdate() {
     }
 
     addCard = (cardText) =>  {
@@ -40,7 +46,7 @@ import LaneAddCard from './LaneAddCard';
     }
 
      render() {
-
+         
         return (
             <div className= "box" 
             onDrop={(e)=>{this.onDrop(e, "wip")}}
@@ -50,12 +56,14 @@ import LaneAddCard from './LaneAddCard';
     <LaneContents>  
         {this.props.children}
      </LaneContents>
-     <LaneAddCard addCardMethod={this.addCard}></LaneAddCard>
+     <LaneAddCard defaultOpen={this.props.laneAddCardOpen} 
+                addingCard_card={() => {this.props.addingCard_lane(this.state.columnNumber)}}
+                 addCardMethod={this.addCard}></LaneAddCard>
         </div>
     );
 }
 };
-
+Lane.contextType = AuthContext;
 export default Lane;
 
 
