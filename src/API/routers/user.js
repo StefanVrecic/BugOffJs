@@ -32,6 +32,20 @@ router.post('/users/login', cors(), async (req, res) => {
     }
 })
 
+router.patch('/users/changepass', cors(), async (req, res) => {
+    try {
+        console.log(req.body.newPassword)
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+        console.log()
+        user.password = req.body.newPassword;
+        await user.save();
+        res.send();
+    } catch (e) {
+        console.log("login failed");
+        res.status(400).send()
+    }
+})
+
 router.post('/users/logout', auth, async (req, res) => {
     try {
         console.log(req.user.name, "user logged out");

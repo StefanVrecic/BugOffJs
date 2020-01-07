@@ -64,6 +64,7 @@ class Auth extends Component {
         console.log("success login - call loadCards()");
         // need to store this token
         window.localStorage.setItem("login-token", response.data.token);
+        window.localStorage.setItem("email", user);
       })
       .then(() => {
           this.handleLoginSuccess();

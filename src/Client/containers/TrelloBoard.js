@@ -192,7 +192,8 @@
             i = 0;
             
             for (i = 0; i < toSplice.length; i++) {
-                dataArray.splice(toSplice[i]-i, 1);
+                dataArray.splice(toSplice[i]-i, 1); // needs to compensate for the previously removed element
+                // no native function for this?? 
             }
 
             // for (const c of dataArray) {

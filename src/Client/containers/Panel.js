@@ -83,16 +83,37 @@ render() {
 
 }
 
+db_changePass = (currentPass, newPass) => {
+ const instance = axios.create({
+        baseURL: 'http://localhost:8080',
+        headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
+      });
 
-db_logout() {
+        instance.patch("/users/changepass", {
+            email: window.localStorage.getItem("email"),
+            password: currentPass,
+            newPassword: newPass
+          })
+          .then(function(response) {
+            console.log("success changing pass");
+          })
+          .then(() => {
+                console.log("suc change pass")
+            }).catch(() => {
+            console.log("fail login");
+            // console.log(error.config.data);
+          });
+      }
+
+
+db_logout = () => {
     const instance = axios.create({
         baseURL: 'http://localhost:8080',
         headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
       });
 
       instance.post("/users/logout", {
-    })
-        .then(response => {
+    }).then(response => {
         console.log("success logout" + response);
         this.props.history.push( '/' );
     })
