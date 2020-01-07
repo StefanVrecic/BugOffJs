@@ -22,6 +22,10 @@ const bugSchema = new mongoose.Schema({
             }
         }
     },
+    dueDate: {
+        type: Date,
+        required: false
+    },
     owner: { // team
         type: mongoose.Schema.Types.ObjectId,
         required: true,

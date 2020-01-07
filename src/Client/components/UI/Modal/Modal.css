@@ -26,6 +26,15 @@
     font-size: 1rem;
     /* color: green; */
 }
+
+.calendarComponent{
+    /* font-size: 3rem; */
+    min-width: 300px;
+}
+.react-datepicker {
+    font-size: 1.5rem;
+}
+
 .modalTabOne {
     /* background-color: yellow; */
     position: absolute;

@@ -3,7 +3,10 @@ import './Modal.css'
 import Auxiliary from '../../../hoc/Auxiliary';
 import Backdrop from '../Backdrop/Backdrop';
 import '../../../../bootstrap.css';
+import Calendar from 'react-calendar';
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 class MainModal extends Component {
 
@@ -19,11 +22,21 @@ class MainModal extends Component {
             closed: true,
             cardText: "",
             editing: false,
-            descriptionArea: ""
+            descriptionArea: "",
+            date: "",
+            startDate: new Date()
 		};
 	
 		this.handleInputChange = this.handleInputChange.bind(this);
       }
+
+      handleCalendarChange = date => {
+        this.setState({
+          startDate: date
+        });
+
+        this.props.addDate(date);
+      };
     
       componentDidUpdate() {
         //   alert(this.props.data);
@@ -52,6 +65,9 @@ class MainModal extends Component {
         this.props.modalClosed();
         this.setState({ closed: true, cardText: "", editing: false, descriptionArea: ""});
       }
+
+    //   onCalendarChange = date => this.setState({ date })
+      onCalendarChange = date => alert(date);
 
     render()  {
         let editOrSave = "Edit";
@@ -94,6 +110,21 @@ class MainModal extends Component {
                         <input type="button" className="btn-success" value={editOrSave} onClick={this.setEditing}></input>
                             {displayEditing}
                             <input type="button" value="Delete" onClick={this.props.deleteItemModal}></input>
+
+                            {/* <div>
+                                <Calendar
+                                onChange={this.onCalendarChange}
+                                value={this.state.date}
+                                />
+                            </div> */}
+
+                            <DatePicker
+                                className="calendarComponent"
+                                timeIntervals={15}
+                                selected={this.state.startDate}
+                                onChange={this.handleCalendarChange}
+                                showTimeSelect
+                        />
 
                         
 

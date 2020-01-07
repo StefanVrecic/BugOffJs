@@ -6,7 +6,11 @@
         import MainModal from "../components/UI/Modal/MainModal";
         import axios from "axios";
         import uniqid from "uniqid";
+        import mongoose from 'mongoose';
 
+
+        // data order:
+        // id, text, status, [description]
 
             // db_loadCards()
             // statusToLaneNumber
@@ -115,6 +119,9 @@
                 dataArrayItem.push(dataItem.name);
                 dataArrayItem.push(dataItem.status);
                 dataArrayItem.push(dataItem.description);
+                dataArrayItem.push(dataItem.dueDate); // needs to be converted to date?
+                if (dataItem.dueDate != undefined)
+                alert(dataItem.dueDate + "\n" +  dataItem.name);
                 // dataArrayItem.push(dataItem.data); // push other data that is not id
                 const lane = this.statusToLaneNumber(dataItem.status);
 
@@ -217,7 +224,7 @@
                        () => {
                             this.db_deleteItem(deleteId)
                         });  
-
+            this.closeModalHandler();
 
         };
 
@@ -274,17 +281,21 @@
         }
 
         addCard = (cardText, lane)  => {
-            const storeId = uniqid();
+            // const storeId = uniqid();
+                
+            var storeId = (mongoose.Types.ObjectId());
+            var storeId_string = storeId+"";
+
             
                 const laneArray = [...this.state.laneArray];
                 const idArray = [...this.state.idArray];
                 const dataArray = [...this.state.dataArray];
-                idArray.push(storeId);
-                laneArray[lane].push(storeId);
+                idArray.push(storeId_string);
+                laneArray[lane].push(storeId_string);
                 const dataToStore = [];
 
                 // data for each card - WARNING: don't change order
-                dataToStore.push(storeId); 
+                dataToStore.push(storeId_string); 
                 dataToStore.push(cardText);
                 dataToStore.push(this.laneNumberToStatus(lane));
                 dataToStore.push("No decription provided");
@@ -376,6 +387,7 @@
                 color={this.state.modalStatusNumber}
                 deleteItemModal={this.deleteItem}
                 addDescription={this.addDescriptionHandler}
+                addDate={this.saveDateHandler}
                 ></MainModal>
             </div>
             );
@@ -390,7 +402,7 @@
 
         // needs to be dynamic
         dataArray[cardPos][3] = text;
-        alert("text on " + cardPos + " : " + dataArray[cardPos]);
+        
         this.setState( { dataArray: [...dataArray]})
         this.db_updateCardData(cardId, dataArray[cardPos]);
         
@@ -398,7 +410,19 @@
         // const cardData = this.state.dataArray[]
     }
 
-////////////////////////////////////// db methods ////////////////////////
+    saveDateHandler = (date) => {
+        // alert(date + " trllo");
+        const cardId = this.state.activeCard;
+        // get position in index
+        const cardPos = this.cardPositionInArray(cardId);
+        const dataArray = [...this.state.dataArray];// needs to be dynamic
+        dataArray[cardPos][4] = date;
+        
+        this.setState( { dataArray: [...dataArray]})
+        this.db_updateCardData(cardId, dataArray[cardPos]);
+    }
+
+//////////////////////////////////// db methods ////////////////////////
         
 
         db_deleteItem(id) {
@@ -423,10 +447,11 @@
             const name = data[1];
             const status = data[2];
             const description = data[3];
+            const dueDate = data[4];
 
             axios
             .patch(`http://localhost:8080/bugs/${id}`, {
-                name, description, status
+                name, description, status, dueDate
                 
             })
             .then(function(response) {
@@ -460,10 +485,10 @@
         
 
         db_createCard(id) {
-            const cardPos = this.cardPositionInArray(id);
+            const cardPos = this.cardPositionInArray(id+"");
             const cardTitle = this.getCardTitle(cardPos);
 
-            const status = this.getCardStatus(id);  
+            const status = this.getCardStatus(id+"");  
          
               const instance = axios.create({
                 baseURL: 'http://localhost:8080',
@@ -472,7 +497,7 @@
 
             instance
             .post("/bugs", {
-              name: cardTitle, status: status, description: "No description provided"
+              _id: id, name: cardTitle, status: status, description: "No description provided", dueDate: null
             })
                 .then(function(response) {
                 console.log("success create" + response);
