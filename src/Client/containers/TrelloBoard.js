@@ -147,6 +147,67 @@
             this.setState({ dataArray: [...dataArray] });
             this.setState({ laneArray: [...laneArray] });
         }
+        // const name = data[1];
+        // const status = data[2];
+        // const description = data[3];
+        // const dueDate = data[4];
+        // const severity = data[5];
+        sortDate(a, b) {
+           const c = 4;
+            if (a[c] === b[c]) {
+                return 0;
+            }
+            else {
+                return (a[c] < b[c]) ? -1 : 1;
+            }
+        }
+
+        sortSeverity(a, b) {
+            const c=5;
+            if (a[c] === b[c]) {
+                return 0;
+            }
+            else {
+            if (a[c] === "High") {
+                return -1;
+            }
+            if (b[c] === "High") {
+                return 1;
+            }
+                return (a[c] > b[c]) ? -1 : 1;
+            }
+        }
+
+        orderByDate = () => {
+            const dataArray = [...this.state.dataArray];
+            // cleansing - no undefined dates in array.
+            let i = 0;
+            const toSplice = [];
+            for (const c of dataArray) {
+                if (c[4] === undefined) {
+                    toSplice.push(i);
+                }
+                i++;
+            }
+            i = 0;
+            
+            for (i = 0; i < toSplice.length; i++) {
+                dataArray.splice(toSplice[i]-i, 1);
+            }
+
+            // for (const c of dataArray) {
+            //     console.log(c[4]);
+            // }
+            const sortData = dataArray.sort(this.sortDate);
+            for (const c of sortData) {
+                console.log(c[4]);
+            }
+        }
+        
+        orderBySeverity = () => {
+            const dataArray = [...this.state.dataArray];
+            console.log(dataArray.sort(this.sortSeverity) + " new");
+        }
 
         toString(name, arrayProvided) {
             let output = "";
@@ -380,7 +441,8 @@
             renderLanes.push(lane);
             c++;
             }
-
+            this.orderByDate();
+            
             return (
             <div className="wrapper">
                 {renderLanes}
