@@ -8,6 +8,8 @@ import LandingPage from './containers/Landing/LandingPage';
 import { Route } from 'react-router-dom';
 // import { AuthContext } from './Auth-Context';
 import { AuthProvider } from './Auth-Context';
+import '../bootstrap.css';
+
 
 function App() {
   const user = { loggedIn: true }

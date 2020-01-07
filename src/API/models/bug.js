@@ -12,6 +12,11 @@ const bugSchema = new mongoose.Schema({
         required: false,
         default: 'No description provided'
     },
+    severity: {
+        type: String,
+        required: false,
+        default: "Low"
+    },
     status: {
         type: String,
         required: false,

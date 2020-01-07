@@ -11,6 +11,11 @@
 
         // data order:
         // id, text, status, [description]
+        // const name = data[1];
+        // const status = data[2];
+        // const description = data[3];
+        // const dueDate = data[4];
+        // const severity = data[5];
 
             // db_loadCards()
             // statusToLaneNumber
@@ -120,8 +125,16 @@
                 dataArrayItem.push(dataItem.status);
                 dataArrayItem.push(dataItem.description);
                 dataArrayItem.push(dataItem.dueDate); // needs to be converted to date?
-                if (dataItem.dueDate != undefined)
-                alert(dataItem.dueDate + "\n" +  dataItem.name);
+                dataArrayItem.push(dataItem.severity);
+               
+                // alert("... " + dataItem.dueDate);
+                // alert(dataItem.severity + "\n" + dataItem.name);
+                // if (dataItem.severity != undefined) {
+                //     alert(dataItem.severity + "\n" + dataItem.name);
+                // } else {
+                //     continue;
+                // }
+               
                 // dataArrayItem.push(dataItem.data); // push other data that is not id
                 const lane = this.statusToLaneNumber(dataItem.status);
 
@@ -299,6 +312,7 @@
                 dataToStore.push(cardText);
                 dataToStore.push(this.laneNumberToStatus(lane));
                 dataToStore.push("No decription provided");
+                dataToStore.push("Severity");
 
                 dataArray.push(dataToStore);
 
@@ -388,6 +402,7 @@
                 deleteItemModal={this.deleteItem}
                 addDescription={this.addDescriptionHandler}
                 addDate={this.saveDateHandler}
+                addSeverity={this.saveSeverityHandler}
                 ></MainModal>
             </div>
             );
@@ -422,6 +437,18 @@
         this.db_updateCardData(cardId, dataArray[cardPos]);
     }
 
+    saveSeverityHandler = (severity) => {
+             // alert(date + " trllo");
+             const cardId = this.state.activeCard;
+             // get position in index
+             const cardPos = this.cardPositionInArray(cardId);
+             const dataArray = [...this.state.dataArray];// needs to be dynamic
+             dataArray[cardPos][5] = severity;
+             
+             this.setState( { dataArray: [...dataArray]})
+             this.db_updateCardData(cardId, dataArray[cardPos]);
+    }
+
 //////////////////////////////////// db methods ////////////////////////
         
 
@@ -443,15 +470,17 @@
 
         db_updateCardData(id, data) {
 
-            alert(data + "\n\ndb-updateCard\n\nid: " + id);
+            // alert(data + "\n\ndb-updateCard\n\nid: " + id);
+            // warning
             const name = data[1];
             const status = data[2];
             const description = data[3];
             const dueDate = data[4];
+            const severity = data[5];
 
             axios
             .patch(`http://localhost:8080/bugs/${id}`, {
-                name, description, status, dueDate
+                name, description, status, dueDate, severity
                 
             })
             .then(function(response) {
@@ -496,8 +525,9 @@
               });
 
             instance
-            .post("/bugs", {
-              _id: id, name: cardTitle, status: status, description: "No description provided", dueDate: null
+            .post("/bugs", { // WARNING
+              _id: id, name: cardTitle, status: status, description: "No description provided", dueDate: null,
+              severity: null
             })
                 .then(function(response) {
                 console.log("success create" + response);

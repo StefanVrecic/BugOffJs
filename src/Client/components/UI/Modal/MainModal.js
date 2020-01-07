@@ -8,6 +8,10 @@ import Calendar from 'react-calendar';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+import Dropdown from 'react-bootstrap/Dropdown';
+
+import DropdownButton from 'react-bootstrap/DropdownButton';
+
 class MainModal extends Component {
 
 // shouldComponentUpdate (nextProps, nextState) {
@@ -24,7 +28,8 @@ class MainModal extends Component {
             editing: false,
             descriptionArea: "",
             date: "",
-            startDate: new Date()
+            startDate: new Date(),
+            severity: ""
 		};
 	
 		this.handleInputChange = this.handleInputChange.bind(this);
@@ -52,6 +57,13 @@ class MainModal extends Component {
 		});
       }
 
+      setSeverity = (eventKey) =>  {
+        //   alert(eventKey);
+          this.setState({severity: eventKey});
+        //   alert(typeof eventKey);
+          this.props.addSeverity(eventKey);
+      }
+
       setEditing = () => {
             // state = editing => button value = "save" => user wants to save description  
         if (this.state.editing) {
@@ -61,15 +73,30 @@ class MainModal extends Component {
         this.setState({ editing: !this.state.editing })
       }
     
+    //   closed: true,
+    //   cardText: "",
+    //   editing: false,
+    //   descriptionArea: "",
+    //   date: "",
+    //   startDate: new Date(),
+    //   severity: ""
+
       closeModal = () =>  {
         this.props.modalClosed();
+        // reset properties for next modal
         this.setState({ closed: true, cardText: "", editing: false, descriptionArea: ""});
+        this.setState({ date: "", startDate: new Date(), severity: ""});
       }
 
-    //   onCalendarChange = date => this.setState({ date })
-      onCalendarChange = date => alert(date);
-
+    
     render()  {
+        // alert(this.props.data[4]);
+        let startingDate = new Date();
+        if (this.props.data[4] != undefined) {
+            startingDate = new Date(this.props.data[4]);
+        }
+        
+
         let editOrSave = "Edit";
         // alert();
         let displayEditing = 
@@ -119,13 +146,29 @@ class MainModal extends Component {
                             </div> */}
 
                             <DatePicker
+                                // selected={this.props.data[4]}
                                 className="calendarComponent"
                                 timeIntervals={15}
-                                selected={this.state.startDate}
+                                selected={startingDate}
                                 onChange={this.handleCalendarChange}
                                 showTimeSelect
                         />
+                        {/* <input type="dropdown" value="Severity" />
+                         */}
+<div>
 
+<Dropdown onSelect={this.setSeverity}>
+  <Dropdown.Toggle variant="success" id="dropdown-basic" drop="up">
+    Dropdown Button
+  </Dropdown.Toggle>
+
+  <Dropdown.Menu>
+    <Dropdown.Item eventKey="High">High</Dropdown.Item>
+    <Dropdown.Item eventKey="Medium">Medium</Dropdown.Item>
+    <Dropdown.Item eventKey="Low">Low</Dropdown.Item>
+  </Dropdown.Menu>
+</Dropdown>
+</div>
                         
 
 
