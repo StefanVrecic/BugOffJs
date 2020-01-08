@@ -31,6 +31,18 @@ const bugSchema = new mongoose.Schema({
         type: Date,
         required: false
     },
+    dueDatePassed: {
+        type: Boolean,
+        required: false
+    },
+    overdueConfirmed: {
+        type: Boolean,
+        required: false
+    },
+    activity: {
+        type: Array,
+        required: false
+    },
     owner: { // team
         type: mongoose.Schema.Types.ObjectId,
         required: true,

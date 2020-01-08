@@ -4,6 +4,7 @@
         import Lane from "../components/Lane/Lane";
         import Modal from "../components/UI/Modal/Modal";
         import MainModal from "../components/UI/Modal/MainModal";
+        import ActivityModal from "../components/UI/Modal/ActivityModal";
         import axios from "axios";
         import uniqid from "uniqid";
         import mongoose from 'mongoose';
@@ -44,6 +45,7 @@
             super(props);
         }
 
+        // warning
         state = {
             cardModal: false,
             modalTitle: "default",
@@ -126,6 +128,8 @@
                 dataArrayItem.push(dataItem.description);
                 dataArrayItem.push(dataItem.dueDate); // needs to be converted to date?
                 dataArrayItem.push(dataItem.severity);
+                dataArrayItem.push(dataItem.overdueConfirmed);
+                dataArrayItem.push(dataItem.activity);
                
                 // alert("... " + dataItem.dueDate);
                 // alert(dataItem.severity + "\n" + dataItem.name);
@@ -152,6 +156,20 @@
         // const description = data[3];
         // const dueDate = data[4];
         // const severity = data[5];
+        // Goal format: {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
+        cleanseActivity = (data) => {
+            const cleansedActivity = [];
+        
+        for (const d of data) {
+            var subDivide = d.split('/timeNoteSplit/');
+            var elements = new Object();
+            elements.ts = subDivide[0];
+            elements.text = subDivide[1];
+            cleansedActivity.push(elements)
+        }
+        return cleansedActivity
+        }
+
         sortDate(a, b) {
            const c = 4;
             if (a[c] === b[c]) {
@@ -375,6 +393,8 @@
                 dataToStore.push(this.laneNumberToStatus(lane));
                 dataToStore.push("No decription provided");
                 dataToStore.push("Severity");
+                dataToStore.push(false); // overdueConfirmed
+                dataToStore.push([]); // notes
 
                 dataArray.push(dataToStore);
 
@@ -387,9 +407,37 @@
                         });                         
         }
 
-      
+        saveNewNote = (note) => {
+            // data [7]
+            const now = new Date();
+
+            const updatedDataArray = [...this.state.dataArray];
+            const activeCard = this.state.activeCard;
+            const cardPos = this.cardPositionInArray(activeCard);
+            updatedDataArray[cardPos][7].push("time="+now+"/time"+note);
+            this.setState({dataArray: [...updatedDataArray]});
+
+            this.db_updateCardData(activeCard, updatedDataArray[cardPos]);
+        }
 
         render() {
+            let events =  [
+                {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
+                {ts: "2017-09-17T12:21:46.587Z", text: 'Clicked Home Page'},
+                {ts: "2017-09-17T12:20:46.587Z", text: 'Edited Profile'},
+                {ts: "2017-09-16T12:22:46.587Z", text: 'Registred'},
+                {ts: "2017-09-16T12:21:46.587Z", text: 'Clicked Cart'},
+                {ts: "2017-09-16T12:20:46.587Z", text: 'Clicked Checkout'},
+              ];
+            //   alert(events[0].ts);
+            //   alert(events[0].text);
+            if (this.state.modalData.length > 0) {
+                if (this.state.modalData[7].length > 0) {
+                    const cleansed = this.cleanseActivity(this.state.modalData[7]).reverse();
+                    events = cleansed;
+                }
+            }
+                
             let c = 0;
             const laneArray = [...this.state.laneArray];
             const idArray = [...this.state.idArray];
@@ -455,7 +503,7 @@
                 color={this.state.modalStatusNumber}
                 deleteItemModal={this.deleteItem}
                 ></Modal> */}
-                 <MainModal
+                 {/* <MainModal
                 show={this.state.cardModal}
                 modalClosed={this.closeModalHandler}
                 status={this.state.modalStatus}
@@ -466,10 +514,19 @@
                 addDescription={this.addDescriptionHandler}
                 addDate={this.saveDateHandler}
                 addSeverity={this.saveSeverityHandler}
-                ></MainModal>
+                postNewNote={this.saveNewNote}
+            ></MainModal> */}
+
+                <ActivityModal 
+                    closeModal={this.closeModalHandler}
+                    show={this.state.cardModal}
+                    events={events}
+                    ></ActivityModal>
+
             </div>
             );
         }
+        // {/* events={this.modalData[7]} */}f
 ////////////////////////////////////// Modal methods ///////////////////////
 
     addDescriptionHandler = (text) => {
@@ -540,10 +597,11 @@
             const description = data[3];
             const dueDate = data[4];
             const severity = data[5];
-
+            const overdueConfirmed = data[6];
+            const activity = data[7];
             axios
             .patch(`http://localhost:8080/bugs/${id}`, {
-                name, description, status, dueDate, severity
+                name, description, status, dueDate, severity, overdueConfirmed, activity
                 
             })
             .then(function(response) {
@@ -587,10 +645,9 @@
                 headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
               });
 
-            instance
-            .post("/bugs", { // WARNING
+            instance.post("/bugs", { // WARNING
               _id: id, name: cardTitle, status: status, description: "No description provided", dueDate: null,
-              severity: null
+              severity: null, overdueConfirmed: false, notes: null
             })
                 .then(function(response) {
                 console.log("success create" + response);

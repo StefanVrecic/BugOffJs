@@ -29,7 +29,8 @@ class MainModal extends Component {
             descriptionArea: "",
             date: "",
             startDate: new Date(),
-            severity: ""
+            severity: "",
+            addNote: ""
 		};
 	
 		this.handleInputChange = this.handleInputChange.bind(this);
@@ -62,6 +63,11 @@ class MainModal extends Component {
           this.setState({severity: eventKey});
         //   alert(typeof eventKey);
           this.props.addSeverity(eventKey);
+      }
+
+      addNewNote = () => {
+        const note = this.state.addNote;
+        this.props.postNewNote(note);
       }
 
       setEditing = () => {
@@ -153,8 +159,20 @@ class MainModal extends Component {
                                 onChange={this.handleCalendarChange}
                                 showTimeSelect
                         />
-                        {/* <input type="dropdown" value="Severity" />
-                         */}
+                        
+                        <div className="wrap-input100 validate-input" data-validate="Password is required">
+						<input className="input100" type="text" name="addNote" value={this.state.addNote}
+								onChange={this.handleInputChange}/>
+						<span className="focus-input100"></span>
+						<span className="label-input100">Add new note</span>
+					</div>
+
+          <div className="container-login100-form-btn">
+						<button onClick = {this.addNewNote} className="login100-form-btn">
+							Add new note
+						</button>
+					</div>
+
 <div>
 
 <Dropdown onSelect={this.setSeverity}>
