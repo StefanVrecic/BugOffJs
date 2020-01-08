@@ -5,7 +5,14 @@ class ActivityModal extends Component {
     state = {
         open: true
     }
-
+    
+    componentDidUpdate() {
+        if(this.state.open === false) {
+            this.props.closeModal(); // see [Modal.js]
+        }
+    }
+    
+    
     closeModalHandler = () => {
         this.setState({open: false});
         this.props.closeModal();

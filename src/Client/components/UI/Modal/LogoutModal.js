@@ -11,6 +11,12 @@ class LogoutModal extends Component {
         this.props.closeModal();
     }
 
+    componentDidUpdate() {
+        if(this.state.open === false) {
+            this.props.closeModal(); // see [Modal.js]
+        }
+    }
+
 render() {
 
     return (

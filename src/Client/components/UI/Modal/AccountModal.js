@@ -14,6 +14,12 @@ class AccountModal extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
       }
       
+      componentDidUpdate() {
+        if(this.state.open === false) {
+            this.props.closeModal(); // see [Modal.js]
+        }
+    }
+
     handleInputChange(event)  {
 		const target = event.target;
 		const value = target.value;
@@ -22,7 +28,8 @@ class AccountModal extends Component {
 		this.setState({
 		  [name]: value
 		});
-	  }
+      }
+      
     closeModalHandler = () => {
         this.setState({open: false});
         this.props.closeModal();
@@ -37,8 +44,6 @@ class AccountModal extends Component {
     }
 
 render() {
- 
-
     return (
             <Modal show={this.state.open}
             modalClosed={this.closeModalHandler}
@@ -94,19 +99,3 @@ render() {
 }
 
 export default AccountModal;
-
-{/* <form>
-<label>
-    Current pass:
-    <input type="text" name="Current" />
-</label>
-<label>
-    New Password:
-    <input type="text" name="New" />
-</label>
-<label>
-   Verify New Password:
-    <input type="text" name="Verify" />
-</label>
-<input type="submit" value="Submit" onSubmit={this.submit} />
-</form> */}

@@ -64,7 +64,7 @@ class Panel extends Component {
                 return (<LogoutModal LogoutModal_logout = {this.db_logout} 
                     closeModal={this.closeModalPanel}></LogoutModal>);
 
-            default: break;
+            default: return null;
         }
 
     }
