@@ -5,9 +5,10 @@
         import Modal from "../components/UI/Modal/Modal";
         import MainModal from "../components/UI/Modal/MainModal";
         import ActivityModal from "../components/UI/Modal/ActivityModal";
+        import DeadlinesModal from '../components/UI/Modal/DeadlinesModal';
         import axios from "axios";
         import uniqid from "uniqid";
-        import mongoose from 'mongoose';
+        import mongoose, { Mongoose } from 'mongoose';
 
 
         // data order:
@@ -121,6 +122,13 @@
                 dataArrayItem = [];
                 dataArrayItem.push(dataItem._id);
 
+                // const name = data[1];
+                // const status = data[2];
+                // const description = data[3];
+                // const dueDate = data[4];
+                // const severity = data[5];
+                // const overdueConfirmed = data[6];
+                // const activity = data[7];
                 // WARNING
                 // DO NOT CHANGE ORDER OF dataArrayItem.push
                 dataArrayItem.push(dataItem.name);
@@ -202,7 +210,7 @@
             let i = 0;
             const toSplice = [];
             for (const c of dataArray) {
-                if (c[4] === undefined) {
+                if (c[4] === undefined || c[4] == null) {
                     toSplice.push(i);
                 }
                 i++;
@@ -221,6 +229,7 @@
             for (const c of sortData) {
                 // console.log(c[4]);
             }
+            return sortData;
         }
         
         orderBySeverity = () => {
@@ -387,11 +396,19 @@
                 laneArray[lane].push(storeId_string);
                 const dataToStore = [];
 
+                // const name = data[1];
+                // const status = data[2];
+                // const description = data[3];
+                // const dueDate = data[4];
+                // const severity = data[5];
+                // const overdueConfirmed = data[6];
+                // const activity = data[7];
                 // data for each card - WARNING: don't change order
                 dataToStore.push(storeId_string); 
                 dataToStore.push(cardText);
                 dataToStore.push(this.laneNumberToStatus(lane));
                 dataToStore.push("No decription provided");
+                dataToStore.push(null);
                 dataToStore.push("Severity");
                 dataToStore.push(false); // overdueConfirmed
                 dataToStore.push([]); // notes
@@ -420,24 +437,83 @@
             this.db_updateCardData(activeCard, updatedDataArray[cardPos]);
         }
 
-        render() {
-            let events =  [
-                {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
-                {ts: "2017-09-17T12:21:46.587Z", text: 'Clicked Home Page'},
-                {ts: "2017-09-17T12:20:46.587Z", text: 'Edited Profile'},
-                {ts: "2017-09-16T12:22:46.587Z", text: 'Registred'},
-                {ts: "2017-09-16T12:21:46.587Z", text: 'Clicked Cart'},
-                {ts: "2017-09-16T12:20:46.587Z", text: 'Clicked Checkout'},
-              ];
-            //   alert(events[0].ts);
-            //   alert(events[0].text);
-            if (this.state.modalData.length > 0) {
-                if (this.state.modalData[7].length > 0) {
-                    const cleansed = this.cleanseActivity(this.state.modalData[7]).reverse();
-                    events = cleansed;
+        testDeadLine() {
+            console.log("start");
+            const now = new Date();
+            // const now = mongoose.Date();
+            const overdue = [];
+            const upcoming = [];
+            const dataArray = this.orderByDate();
+            for (const d of dataArray) {
+                if (d[6] == true) {
+                    continue; // don't addd items if user already confirmed that they know it's overdue
+                }
+                if (d[2] == "Closed") {
+                    continue; // do not show closed items in Deadlines modal
+                }
+                var date = new Date(d[4]);
+                if (date > now) {
+                    upcoming.push(d);
+                } else {
+                    overdue.push(d);
                 }
             }
+            // target: duedate + description + severity + [ ] + (VIEW)
+                // const name = data[1];
+                // const status = data[2];
+                // const description = data[3];
+                // const dueDate = data[4];
+                // const severity = data[5];
+                // const overdueConfirmed = data[6];
+                // const activity = data[7];
+            console.log(
+                "============================================OVERDUE============================================")
                 
+            for (const o of overdue) 
+            console.log(o[4] + " / " + o[2] + " / " + o[5] + " [ ] " + " VIEW-"+o[0]);
+            
+            console.log(
+                "============================================UPCOMING============================================")
+
+            for (const o of upcoming) 
+            console.log(o[4] + " / " + o[2] + " / " + o[5] + " [ ] " + " VIEW-"+o[0]);
+            
+                const returnArray = [];
+                returnArray.push(overdue);
+                returnArray.push(upcoming);
+
+                return returnArray;
+        }
+
+        render() {
+            let upcoming = []; let overdue = [];
+            if (this.state.dataArray.length > 0) {
+                alert("-");
+            const deadLines = this.testDeadLine();
+            overdue = deadLines[0];
+            upcoming = deadLines[1];
+        }
+
+            // tidy
+            // let events =  [
+            //     {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
+            //     {ts: "2017-09-17T12:21:46.587Z", text: 'Clicked Home Page'},
+            //     {ts: "2017-09-17T12:20:46.587Z", text: 'Edited Profile'},
+            //     {ts: "2017-09-16T12:22:46.587Z", text: 'Registred'},
+            //     {ts: "2017-09-16T12:21:46.587Z", text: 'Clicked Cart'},
+            //     {ts: "2017-09-16T12:20:46.587Z", text: 'Clicked Checkout'},
+            //   ];
+            //   alert(events[0].ts);
+            //   alert(events[0].text);
+            // if (this.state.modalData.length > 0) {
+            //     if (this.state.modalData[7].length > 0) {
+            //         const cleansed = this.cleanseActivity(this.state.modalData[7]).reverse();
+            //         events = cleansed;
+            //     }
+            // }
+            // end Tidy
+
+
             let c = 0;
             const laneArray = [...this.state.laneArray];
             const idArray = [...this.state.idArray];
@@ -517,11 +593,18 @@
                 postNewNote={this.saveNewNote}
             ></MainModal> */}
 
-                <ActivityModal 
+                {/* <ActivityModal 
                     closeModal={this.closeModalHandler}
                     show={this.state.cardModal}
                     events={events}
-                    ></ActivityModal>
+                    ></ActivityModal> */}
+                    
+                    <DeadlinesModal 
+                    closeModal={this.closeModalHandler}
+                    show={this.state.cardModal}
+                    upcomingTasks={upcoming}
+                    overdueTasks={overdue}
+                    ></DeadlinesModal>
 
             </div>
             );
