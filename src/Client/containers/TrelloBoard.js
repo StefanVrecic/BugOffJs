@@ -201,7 +201,7 @@
             // }
             const sortData = dataArray.sort(this.sortDate);
             for (const c of sortData) {
-                console.log(c[4]);
+                // console.log(c[4]);
             }
         }
         

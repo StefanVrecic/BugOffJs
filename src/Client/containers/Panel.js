@@ -54,7 +54,8 @@ class Panel extends Component {
                 return null; // (<ThemeModal closeModal={this.closeModalPanel}></ThemeModal>);
 
             case buttons[5]:  
-                return (<AccountModal closeModal={this.closeModalPanel}></AccountModal>);
+                return (<AccountModal closeModal={this.closeModalPanel} 
+                    changePass={this.db_changePass}></AccountModal>);
 
             case buttons[6]:  
                 return (<ThemeModal closeModal={this.closeModalPanel}></ThemeModal>);
@@ -88,19 +89,21 @@ db_changePass = (currentPass, newPass) => {
         baseURL: 'http://localhost:8080',
         headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
       });
-
+      const sendEmail = window.localStorage.getItem("email");
+      console.log(sendEmail + " sendEmail");
+      console.log(currentPass + " / " + newPass);
         instance.patch("/users/changepass", {
-            email: window.localStorage.getItem("email"),
+            email: sendEmail,
             password: currentPass,
             newPassword: newPass
           })
-          .then(function(response) {
+          .then(() =>  {
             console.log("success changing pass");
           })
           .then(() => {
                 console.log("suc change pass")
             }).catch(() => {
-            console.log("fail login");
+            console.log("fail change");
             // console.log(error.config.data);
           });
       }
