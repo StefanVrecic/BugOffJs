@@ -23,6 +23,10 @@ class DeadlinesModal extends Component {
 render() {
     const overdueTasks = []; const upcomingTasks = [];
 
+
+    // add button
+    // onClick - this.props.openDeadlineItem(o[0])
+    // In the parent => set active card, set active modal = card/main
     for (const o of this.props.overdueTasks) {
         const item = (
             <p>{o[4]}    {o[1]}    { o[2] } - [c] - { o[0] } </p>

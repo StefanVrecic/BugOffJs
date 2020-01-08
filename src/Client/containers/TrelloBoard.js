@@ -48,18 +48,25 @@
 
         // warning
         state = {
-            cardModal: false,
+            cards: [[], [], [], [], []], // this should actually be lanes?
+            lanes: [],
+            // items
             modalTitle: "default",
             modalStatus: "default",
             modalStatusNumber: -1,
-            activeCard: "-1",
-            cards: [[], [], [], [], []], // this should actually be lanes?
-            lanes: [],
-            idArray: [],
-            dataArray: [],
-            laneArray: [[], [], [], [], []],
-            addCard_laneOpen: "-1",
-            modalData: []
+            
+            cardModal: false, // not required - Different logic in panel
+            activeCard: "-1", // not required
+            idArray: [], // required - to create cards
+            dataArray: [], // only accessed in modals (and list?) => actually, TrelloBoard.js needs the name 
+            laneArray: [[], [], [], [], []], // required to track lanes
+            addCard_laneOpen: "-1", // required *only* locally
+            modalData: [] // only required inside modals?
+            // /items
+            // how about providing idArray & laneArray from Panel.js + best way to provide the name?
+            // could make an array containing [ [id,name,status], [id,name,status]] etc. ?
+            // then addCard_laneOpen will remain in the state.
+            // ... what about creating a new card?
         };
 
         titles = ["Open", "In progress", "To be tested", "Re-opened", "Closed"];
@@ -488,7 +495,7 @@
         render() {
             let upcoming = []; let overdue = [];
             if (this.state.dataArray.length > 0) {
-                alert("-");
+                
             const deadLines = this.testDeadLine();
             overdue = deadLines[0];
             upcoming = deadLines[1];
