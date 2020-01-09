@@ -9,6 +9,8 @@
     background-color: lightblue;
     display: table;
     border-collapse: collapse; 
+    grid-auto-columns: min-content;
+    grid-auto-rows: min-content;
     /* height: */
     
     /* background-color: green; */

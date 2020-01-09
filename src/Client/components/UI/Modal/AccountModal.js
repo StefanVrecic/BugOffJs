@@ -54,8 +54,9 @@ render() {
                 <br></br>
                 <br></br>
                 
-                
-					<div className="wrap-input100 validate-input" data-validate = "Password is required" >
+                <div className = "changePassForm">
+
+					<div className="wrap-input50 validate-input" data-validate = "Password is required" >
 						<input className="input100" type="password" name="currentPass" value={this.state.currentPass}
 								onChange={this.handleInputChange}/>
 						<span className="focus-input100"></span>
@@ -64,7 +65,7 @@ render() {
                     <br></br>
 					
 					
-					<div className="wrap-input100 validate-input" data-validate="Password is required">
+					<div className="wrap-input50 validate-input" data-validate="Password is required">
 						<input className="input100" type="password" name="newPass" value={this.state.newPass}
 								onChange={this.handleInputChange}/>
 						<span className="focus-input100"></span>
@@ -72,21 +73,21 @@ render() {
 					</div>
                     
                                 <br></br>
-                      <div className="wrap-input100 validate-input" data-validate="Password is required">
+                      <div className="wrap-input50 validate-input" data-validate="Password is required">
                         <input className="input100" type="password" name="passConfirm" value={this.state.passConfirm}
                                 onChange={this.handleInputChange}/>
                         <span className="focus-input100"></span>
                         <span className="label-input100">Verify password</span>
                     </div>
+                    <br></br>
 
 
-
-					<div className="container-login100-form-btn">
+					<div className="container-login50-form-btn">
 						<button onClick = {this.signUp} className="login100-form-btn">
 							Confirm password change
 						</button>
 					</div>
-					
+					</div>
 				
 
       

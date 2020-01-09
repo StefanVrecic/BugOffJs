@@ -26,6 +26,7 @@
   }
   .titleColor-3 {
     color: #84531c;
+    
   }
 
   .closed {
@@ -42,5 +43,5 @@
     display: table-cell;
     vertical-align: middle;
       margin-bottom: 1.25rem;
-    /* width: 100%; */
+    width: calc(100% + .5px);
 }

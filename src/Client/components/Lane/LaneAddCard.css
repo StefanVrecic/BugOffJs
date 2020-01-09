@@ -1,6 +1,6 @@
 .newCard {
     font-size: 1.4rem;
-    margin-top: 1,2rem;
+    margin-top: 1.2rem;
     margin-bottom: 1.2rem;
     margin-left: 0.96rem;
     margin-right: 0.96rem;
@@ -17,6 +17,9 @@
 .textStyle {
     resize: none;
     border-radius: 3px;
+    overflow: hidden;
+    width: 100%;
+    /* width: calc(100% - 2.88rem); */
 }
 
 

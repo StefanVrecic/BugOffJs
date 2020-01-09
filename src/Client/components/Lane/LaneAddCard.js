@@ -25,12 +25,36 @@ class LaneAddCard extends Component {
       }
 
       submitCard = () =>  {
-          const cardText = this.state.cardText;
+          let cardText = this.state.cardText;
           if (cardText === "") {
               return;
           }
           this.setState({ cardText: ""});
 
+//           let i = 0; const addSpaces = [];
+//           for (var x = 0; x < cardText.length; x++) {
+//             var c = cardText.charAt(x); //Add code here to do the translation
+//             if (c === ' ') {
+//                 i=0;
+//             }
+//             if (i>22) {
+//                 // add space
+//                 addSpaces.push(x);
+//                 i = 0;
+//             }
+//             i++;
+// }       
+//             // 25 50 75
+//         for (var x = 0; x<addSpaces.length; x++) {
+//             if (x===0) {                  // 0 - 24(25) + '25' + 25-75
+//                 cardText = cardText.substring(0, addSpaces[x]) + ' ' + cardText.substring(addSpaces[x], cardText.length);
+//             } else {                    // 
+//                 cardText = cardText.substring(0, addSpaces[x]+x) + ' ' + cardText.substring(addSpaces[x]+x, cardText.length);
+//             }
+            
+//         }
+        
+        // alert(cardText);
           this.addCard(cardText);
       }
       
@@ -73,7 +97,7 @@ render() {
                     className="textStyle" placeholder ="Enter title for bug" maxlength="81"
                     cols="30" rows="3" wrap="soft" name="cardText"
                     onChange={this.handleInputChange} value={this.state.cardText}>
-                            </textarea>
+                    </textarea>
 
                     <div className = "submitCancel" >
                         <div className="addBtn" >

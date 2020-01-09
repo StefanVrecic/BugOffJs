@@ -18,9 +18,9 @@ function App() {
       
       
       <div className="App" > 
-      <Route path = "/auth" exact component = {Auth} />
+      {/* <Route path = "/auth" exact component = {Auth} /> */}
       <Route path = "/panel" exact component = {Panel} />
-      <Route path="/" exact component = {LandingPage} />
+      <Route path="/" component = {LandingPage} />
     </div>
     </AuthProvider>
     

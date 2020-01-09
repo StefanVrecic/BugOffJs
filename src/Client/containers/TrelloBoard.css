@@ -12,10 +12,14 @@ body {
     column-gap: 5px;
     margin-left: 1vw;
     border-radius: 15px;
+    /* firefox */
+    align-items: start;
     
     /* margin-right: 25px; */
     /* height: 80vh; */
     /* display: table; */
+    /* grid-auto-columns: minmax(min-content, min-content); */
+    
   }
 
 

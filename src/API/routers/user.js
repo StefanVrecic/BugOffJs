@@ -45,6 +45,13 @@ router.patch('/users/changepass', cors(), async (req, res) => {
         res.status(400).send()
     }
 })
+router.post('/users/checkauth', cors(), auth, async (req,res) => {
+    try {
+        res.send("Identity confirmed");
+    } catch(e) {
+        res.status(400).send();
+    }
+});
 
 router.post('/users/logout', auth, async (req, res) => {
     try {

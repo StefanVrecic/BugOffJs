@@ -1,0 +1,7 @@
+.emailShakeRight {
+    transform: translate(15%, 0);
+}
+
+.emailShakeLeft {
+    transform: translate(-30%, 0);
+}

@@ -15,7 +15,29 @@ import { connect } from 'react-redux';
 
 class Panel extends Component {
 
+    componentDidMount() {
+        // alert("check authenticated");
+        // check to see if token works?
+        this.db_confirmIdentity();
+    }
+    db_confirmIdentity = () => {
 
+        const instance = axios.create({
+            baseURL: 'http://localhost:8080',
+            headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
+        });
+        
+        instance.post("/users/checkauth", {
+        }).then(response => {
+            // alert("success Panel.js");
+        })
+        .catch(error => {
+            alert("Please login. You are being redirected to the login page");
+            console.log("failure confirming " + error.config.data);
+            this.props.history.push( '/' );
+            window.localStorage.removeItem("login-token");
+        });
+    }
     state = {
         currentModal: null,
         loadedModal: null,
@@ -163,10 +185,7 @@ class Panel extends Component {
         }
         const cleansed = this.cleanseActivity(this.props.modalData[7]).reverse();
         let events = cleansed;
-
-        // return (<LogoutModal LogoutModal_logout = {this.db_logout} 
-        //     closeModal={this.closeModalPanel}></LogoutModal>);
-    
+   
 
         return (<ActivityModal 
             closeModal={this.closeModalPanel}
@@ -295,6 +314,7 @@ db_logout = () => {
     }).then(response => {
         console.log("success logout" + response);
         this.props.history.push( '/' );
+        window.localStorage.removeItem("login-token");
     })
     .catch(error => {
         console.log("failure logut " + error.config.data);

@@ -1,11 +1,13 @@
 .box-contents {
     padding-top: 4.8rem;
   display: table-row;
-  height: 10vh;
+  /* height: 10vh; */
   z-index: 99;
   /* padding-top: 12px; */
   /* border: red solid 4px; */
   color: black;
   font-size: 4rem;
   border-radius: 25px;
+  /* grid-auto-columns: minmax(min-content, min-content); */
+  grid-auto-columns: auto;
 }

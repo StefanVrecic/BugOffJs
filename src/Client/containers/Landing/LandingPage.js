@@ -1,29 +1,33 @@
 import React, { Component } from 'react';
 import logo from './images/bugzilla.png';
-import {  Route, Redirect } from "react-router-dom";
-// import './vendor/bootstrap/css/bootstrap.min.css'
-// import './fonts/font-awesome-4.7.0/css/font-awesome.min.css'
-// dimport './fonts/Linearicons-Free-v1.0.0/icon-font.min.css'
-// import './vendor/animate/animate.css'
-// import './vendor/css-hamburgers/hamburgers.min.css'
-// import './vendor/animsition/css/animsition.min.css'
-// import './vendor/select2/select2.min.css'
-// import './vendor/daterangepicker/daterangepicker.css'
-import './css/util.css'
-import './css/main.css'
-import { verify } from 'jsonwebtoken';
+
+import './css/util.css';
+import './css/main.css';
+import './css/shake.css'
+
 import '../../../bootstrap.css';
+import axios from "axios";
+
+// I was going to split this into two components LandingPage and Auth
+// I originally did that, but there was a UX weakness which I attempted to resolve
+// I couldn't figure it out so I just put everything in one file
+// I figured out what was going wrong, but there's not much reason to split it now, will do later if I have time
 
 class LandingPage extends Component {
 
 	constructor(props) {
-		super(props);
+		super(props);	
+		this.myRef = React.createRef();
 		this.state = {
 		  isGoing: true,
 		  numberOfGuests: 2
 		};
 	
 		this.handleInputChange = this.handleInputChange.bind(this);
+	  }
+
+	  componentDidMount() {
+		  this.db_confirmIdentity();
 	  }
 	
 	
@@ -32,7 +36,8 @@ class LandingPage extends Component {
 		rememberMe: false,
 		email: null,
 		pass: null,
-		passConfirm: null
+		passConfirm: null,
+		shake: false
 	}
 
 	shakeVerify() {
@@ -47,11 +52,18 @@ class LandingPage extends Component {
 			return;
 		}
 
-		this.props.history.push( '/auth' , { email: this.state.email, 
-				pass: this.state.pass, newUser: this.state.newUser});
+		if (this.state.newUser) {
+			this.db_createUser(this.state.email, this.state.pass);
+		} else {
+			
+			this.db_login(this.state.email, this.state.pass);
+			// this.db_login(this.props.history.location.state.email, this.props.history.location.state.pass);
+		}
+		// this.props.history.push( '/auth' , { email: this.state.email, 
+		// 		pass: this.state.pass, newUser: this.state.newUser});
 
 		// not sure if this works?
-		this.setState({email:null, pass:null});
+		// this.setState({email:null, pass:null});
 	}
 
 	handleInputChange(event)  {
@@ -73,6 +85,12 @@ class LandingPage extends Component {
 
 render() {
 	let verifyPassword = null;
+	let emailClasses = "input100";
+	if (this.state.shake === "right") {
+		emailClasses = "input100 emailShakeRight"
+	} else if (this.state.shake === "left") {
+		emailClasses = "input100 emailShakeLeft"
+	}
 	if ( this.state.newUser) {
 
 		verifyPassword = (
@@ -103,9 +121,9 @@ render() {
 					</span>
 						
 
-
+{/* "input100" */}
 					<div className="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz" >
-						<input className="input100" type="text" name="email" value={this.state.email}
+						<input className={emailClasses} type="text" name="email" value={this.state.email}
 								onChange={this.handleInputChange}/>
 						<span className="focus-input100"></span>
 						<span className="label-input100">Email</span>
@@ -113,7 +131,7 @@ render() {
 					
 					
 					<div className="wrap-input100 validate-input" data-validate="Password is required">
-						<input className="input100" type="password" name="pass" value={this.state.pass}
+						<input className={emailClasses} type="password" name="pass" value={this.state.pass}
 								onChange={this.handleInputChange}/>
 						<span className="focus-input100"></span>
 						<span className="label-input100">Password</span>
@@ -165,6 +183,78 @@ render() {
 
 );
 }
+
+  // todo
+  db_checkUserExists = (user) => {}
+
+  // logic could be merged with below, may reduce managability though
+  db_createUser = (user, userPassword) => {
+    axios.post("http://localhost:8080/users", {
+        email: user,
+        password: userPassword
+      })
+      .then(function(response) {
+        console.log("success login - call loadCards()");
+        // need to store this token
+        window.localStorage.setItem("login-token", response.data.token);
+      })
+      .then(() => {
+          this.handleLoginSuccess();
+        }).catch(() => {
+        console.log("fail login");
+        // console.log(error.config.data);
+        this.handleLoginFail();
+      });
+  }
+
+  db_login = (user, userPassword) =>  {
+    axios.post("http://localhost:8080/users/login", {
+        email: user,
+        password: userPassword
+      })
+      .then(function(response) {
+        console.log("success login - call loadCards()");
+        // need to store this token
+        window.localStorage.setItem("login-token", response.data.token);
+        window.localStorage.setItem("email", user);
+      })
+      .then(() => {
+          this.handleLoginSuccess();
+        }).catch(() => {
+        console.log("fail login");
+        // console.log(error.config.data);
+        this.handleLoginFail();
+      });
+  }
+
+  handleLoginSuccess() {
+	//   set auth context here.
+	// alert("success LandingPage.js");
+    this.props.history.push( '/panel' );
+  }
+
+  handleLoginFail() {
+	  // kind of hacky and suboptimal and not accessiibility friendly
+	this.setState({ shake: "right"});
+	setTimeout(() => { this.setState({shake:"left"})}, 100);
+	setTimeout(() => { this.setState({shake:"zero"})}, 200);
+  }
+
+  db_confirmIdentity = () => {
+
+	const instance = axios.create({
+		baseURL: 'http://localhost:8080',
+		headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
+	});
+	
+	instance.post("/users/checkauth", {
+	}).then(response => {
+		this.handleLoginSuccess();
+	})
+	.catch(error => {
+	});
+}
+  
 }
 
 export default LandingPage;

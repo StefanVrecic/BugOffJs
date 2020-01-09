@@ -304,6 +304,29 @@ iframe {
   border-radius: 10px;
   margin-bottom: 10px;
 }
+.changePassForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.wrap-input50 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  width: 50%;
+  /* left: 25%; */
+  justify-content: center;
+  height: 50px;
+  position: relative;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  /* position: absolutes */
+}
 
 .label-input100 {
   font-family: Montserrat-Regular;
@@ -468,6 +491,18 @@ input.input100 {
 [ Button ]*/
 .container-login100-form-btn {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.container-login50-form-btn {
+  width: 50%;
+  left: 25%;
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
