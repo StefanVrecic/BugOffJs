@@ -167,11 +167,14 @@ class MainModal extends Component {
 						<span className="label-input100">Add new note</span>
 					</div>
 
+          
+
           <div className="container-login100-form-btn">
 						<button onClick = {this.addNewNote} className="login100-form-btn">
 							Add new note
 						</button>
 					</div>
+          <input type="button" value="View notes" onClick={this.props.viewNotes}></input>
 
 <div>
 

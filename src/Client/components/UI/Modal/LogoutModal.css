@@ -1,0 +1,21 @@
+.logoutModal {
+    height: 45%;
+    width: 29%;
+    left: 35.5vw;
+    top: 27.5vh;
+}
+
+.defaultDimensions {
+    height: 95%;
+    width: 58%;
+}
+
+.logoutYes {
+    margin-left: auto;
+    color: blue;
+}
+
+.logoutNo {
+    /* margin-right: auto; */
+    color:red;
+}

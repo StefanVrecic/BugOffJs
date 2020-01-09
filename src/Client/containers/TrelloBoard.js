@@ -2,54 +2,30 @@
         import "./TrelloBoard.css";
         import Card from "../components/Lane/Card";
         import Lane from "../components/Lane/Lane";
-        import Modal from "../components/UI/Modal/Modal";
         import MainModal from "../components/UI/Modal/MainModal";
-        import ActivityModal from "../components/UI/Modal/ActivityModal";
-        import DeadlinesModal from '../components/UI/Modal/DeadlinesModal';
         import axios from "axios";
-        import uniqid from "uniqid";
-        import mongoose, { Mongoose } from 'mongoose';
+        import mongoose from 'mongoose';
+        import { connect } from 'react-redux';
+        
+        // import Modal from "../components/UI/Modal/Modal";
+        // import uniqid from "uniqid";
 
-
-        // data order:
+        // data order: warning
         // id, text, status, [description]
         // const name = data[1];
         // const status = data[2];
         // const description = data[3];
         // const dueDate = data[4];
         // const severity = data[5];
+            // Methods in file
+            // db_loadCards(), statusToLaneNumber, // processLoadedCards,db_updateCardStatus,
+            // setModalTitle,setModalStatus, // closeModalHandler,getCardStatus,
+            // cardClickedHandler,openModalHandler, // axiosConnect,db_createCard,
+            // initCards,cardPositionInArray, // getCardTitle,assertArraysAligned ,
 
-            // db_loadCards()
-            // statusToLaneNumber
-            // processLoadedCards
-            // db_updateCardStatus
-            // setModalTitle
-            // setModalStatus
-            // closeModalHandler
-            // closeModalHandler
-            // getCardStatus
-            // cardClickedHandler
-            // openModalHandler
-            // axiosConnect
-            // cardClickedHandler
-            // openModalHandler
-            // axiosConnect
-            // componentDidUpdate
-            // componentDidMount
-            // db_createCard
-            // initCards
-            // cardPositionInArray
-            // getCardTitle
-            // assertArraysAligned 
         class TrelloBoard extends Component {
-        constructor(props) {
-            super(props);
-        }
 
-        // warning
         state = {
-            cards: [[], [], [], [], []], // this should actually be lanes?
-            lanes: [],
             // items
             modalTitle: "default",
             modalStatus: "default",
@@ -72,7 +48,14 @@
         titles = ["Open", "In progress", "To be tested", "Re-opened", "Closed"];
         colors = ["open", "progress", "test", "reopened", "closed"];
 
-        componentDidUpdate() {}
+        componentDidUpdate(prevProps) {
+            // Typical usage (don't forget to compare props):
+            if (this.props.panelCard !== prevProps.panelCard) {
+                // alert("someone opened a card from a modal" + "." + prevProps.panelCard + " . " + this.props.panelCard);
+                this.cardClickedHandler(this.props.panelCard);
+            
+            }
+          }
         
         componentDidMount() {
             this.db_loadCards();
@@ -92,6 +75,7 @@
 
         setModalData = data => {
             this.setState( { modalData: data });
+            this.props.updateModalData(data); // redux call
         }
 
         closeModalHandler = () => {
@@ -129,15 +113,10 @@
                 dataArrayItem = [];
                 dataArrayItem.push(dataItem._id);
 
-                // const name = data[1];
-                // const status = data[2];
-                // const description = data[3];
-                // const dueDate = data[4];
-                // const severity = data[5];
-                // const overdueConfirmed = data[6];
-                // const activity = data[7];
-                // WARNING
-                // DO NOT CHANGE ORDER OF dataArrayItem.push
+                // name = data[1]; status = [2]; description = [3]; dueDate = [4]; 
+                // severity = [5]; overdueConfirmed = [6]; activity = data[7];
+
+                // WARNING DO NOT CHANGE ORDER OF dataArrayItem.push
                 dataArrayItem.push(dataItem.name);
                 dataArrayItem.push(dataItem.status);
                 dataArrayItem.push(dataItem.description);
@@ -161,38 +140,14 @@
                 dataArray.push(dataArrayItem);
                 laneArray[lane].push(dataItem._id);
             }
+            // redux calls
+            this.props.updateIdArray(idArray);
+            // this.setState({ idArray: [...idArray] });
+            
+            this.props.updateDataArray(dataArray); // redux call
+            // this.setState({ dataArray: [...dataArray] });
 
-            this.setState({ idArray: [...idArray] });
-            this.setState({ dataArray: [...dataArray] });
             this.setState({ laneArray: [...laneArray] });
-        }
-        // const name = data[1];
-        // const status = data[2];
-        // const description = data[3];
-        // const dueDate = data[4];
-        // const severity = data[5];
-        // Goal format: {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
-        cleanseActivity = (data) => {
-            const cleansedActivity = [];
-        
-        for (const d of data) {
-            var subDivide = d.split('/timeNoteSplit/');
-            var elements = new Object();
-            elements.ts = subDivide[0];
-            elements.text = subDivide[1];
-            cleansedActivity.push(elements)
-        }
-        return cleansedActivity
-        }
-
-        sortDate(a, b) {
-           const c = 4;
-            if (a[c] === b[c]) {
-                return 0;
-            }
-            else {
-                return (a[c] < b[c]) ? -1 : 1;
-            }
         }
 
         sortSeverity(a, b) {
@@ -211,36 +166,8 @@
             }
         }
 
-        orderByDate = () => {
-            const dataArray = [...this.state.dataArray];
-            // cleansing - no undefined dates in array.
-            let i = 0;
-            const toSplice = [];
-            for (const c of dataArray) {
-                if (c[4] === undefined || c[4] == null) {
-                    toSplice.push(i);
-                }
-                i++;
-            }
-            i = 0;
-            
-            for (i = 0; i < toSplice.length; i++) {
-                dataArray.splice(toSplice[i]-i, 1); // needs to compensate for the previously removed element
-                // no native function for this?? 
-            }
-
-            // for (const c of dataArray) {
-            //     console.log(c[4]);
-            // }
-            const sortData = dataArray.sort(this.sortDate);
-            for (const c of sortData) {
-                // console.log(c[4]);
-            }
-            return sortData;
-        }
-        
         orderBySeverity = () => {
-            const dataArray = [...this.state.dataArray];
+            const dataArray = [...this.props.dataArray];
             console.log(dataArray.sort(this.sortSeverity) + " new");
         }
 
@@ -289,6 +216,8 @@
         }
 
         cardClickedHandler = id => {
+            // this.props.clickedCard(id);
+            // return;
             const cardPos = this.cardPositionInArray(id);
             const title = this.getCardTitle(cardPos);
             const cardStatus = this.getCardStatus(id);
@@ -304,17 +233,20 @@
         };
 
         cardPositionInArray(id) {
-            const idArray = [...this.state.idArray];
+            const idArray = [...this.props.idArray];
             const index = idArray.indexOf(id);
+            // alert(index + " index of " + id);
             return index;
         }
 
         deleteItem = () => {
             const deleteId = this.state.activeCard;
             this.setState({activeCard: "-1"});
-            const idArray = [...this.state.idArray];
+
+            const idArray = [...this.props.idArray];
             const laneArray = [...this.state.laneArray];
-            const dataArray = [...this.state.dataArray];
+            const dataArray = [...this.props.dataArray];
+
             const deleteIndex = idArray.indexOf(deleteId);
             const activeCardLane = this.getCardLane(deleteId);
             // alert(this.cardPosInLane(deleteId)); // Could use this instead below
@@ -328,27 +260,30 @@
 
             this.setState({ laneArray: [...laneArray] });
 
-                this.setState({ idArray: [...idArray] });
-                    this.setState({ dataArray: [...dataArray] },
-                       () => {
-                            this.db_deleteItem(deleteId)
-                        });  
+                // this.setState({ idArray: [...idArray] });
+                this.props.updateIdArray([...idArray]);
+                
+                    // this.setState({ dataArray: [...dataArray] },
+                        this.props.updateDataArray([...dataArray]);
+                        // warning needs call back
+                    //    () => {
+        this.db_deleteItem(deleteId);
+                    //     });  
             this.closeModalHandler();
 
         };
 
-        addingCard = (col) =>  {
-            
+        addingCard = (col) => {
             this.setState( { addCard_laneOpen: col });
         }
     
         getCardData(pos) {
-            const dataArray = [...this.state.dataArray];
+            const dataArray = [...this.props.dataArray];
             return dataArray[pos];
         }
 
         getCardTitle(pos) {
-            const dataArray = [...this.state.dataArray];
+            const dataArray = [...this.props.dataArray];
             return dataArray[pos][1];
         }
 
@@ -379,10 +314,8 @@
             const cutCard = laneArray_temp[col].splice(i, 1); // cutting from original lane
             laneArray_temp[destination].push(cutCard);
 
-            this.setState(
-            { laneArray: [...laneArray_temp] },
-            this.db_updateCardStatus(id)
-            );
+            this.setState({ laneArray: [...laneArray_temp] },
+            this.db_updateCardStatus(id));
         }
 
         transferCards = (id, dropColumn) => {
@@ -397,134 +330,66 @@
 
             
                 const laneArray = [...this.state.laneArray];
-                const idArray = [...this.state.idArray];
-                const dataArray = [...this.state.dataArray];
+                const idArray = [...this.props.idArray];
+                const dataArray = [...this.props.dataArray];
                 idArray.push(storeId_string);
                 laneArray[lane].push(storeId_string);
                 const dataToStore = [];
-
-                // const name = data[1];
-                // const status = data[2];
-                // const description = data[3];
-                // const dueDate = data[4];
-                // const severity = data[5];
-                // const overdueConfirmed = data[6];
-                // const activity = data[7];
+// name = data[1]; status=[2]; description=[3]; dueDate=[4]; severity=[5]; overdueConfirmed= [6]; activity = [7];
                 // data for each card - WARNING: don't change order
+                const status = this.laneNumberToStatus(lane);
+
                 dataToStore.push(storeId_string); 
                 dataToStore.push(cardText);
-                dataToStore.push(this.laneNumberToStatus(lane));
+                dataToStore.push(status);
                 dataToStore.push("No decription provided");
                 dataToStore.push(null);
                 dataToStore.push("Severity");
                 dataToStore.push(false); // overdueConfirmed
                 dataToStore.push([]); // notes
-
+                // alert(cardText + " .... cardText");
                 dataArray.push(dataToStore);
 
                 this.setState({ laneArray: [...laneArray] });
 
-                this.setState({ idArray: [...idArray] });
-                    this.setState({ dataArray: [...dataArray] },
-                       () => {
-                            this.db_createCard(storeId)
-                        });                         
+                // this.setState({ idArray: [...idArray] });
+                this.props.updateIdArray([...idArray]);
+                
+                // this.setState({ dataArray: [...dataArray] },
+
+                this.props.updateDataArray([...dataArray]);
+                
+                // , // this below needs callback warning
+                    //    () => {
+                            this.db_createCard(storeId, cardText, status);
+                    //     });                         
+        }
+        
+        viewActivityNotes = () => {
+            this.setState({ cardModal: false });
+            this.props.viewActivityNotes();
         }
 
         saveNewNote = (note) => {
             // data [7]
             const now = new Date();
 
-            const updatedDataArray = [...this.state.dataArray];
+            const updatedDataArray = [...this.props.dataArray];
             const activeCard = this.state.activeCard;
             const cardPos = this.cardPositionInArray(activeCard);
-            updatedDataArray[cardPos][7].push("time="+now+"/time"+note);
+            updatedDataArray[cardPos][7].push(now+"/timeNoteSplit/"+note);
             this.setState({dataArray: [...updatedDataArray]});
+            this.props.updateDataArray(updatedDataArray); // redux call
 
             this.db_updateCardData(activeCard, updatedDataArray[cardPos]);
         }
 
-        testDeadLine() {
-            console.log("start");
-            const now = new Date();
-            // const now = mongoose.Date();
-            const overdue = [];
-            const upcoming = [];
-            const dataArray = this.orderByDate();
-            for (const d of dataArray) {
-                if (d[6] == true) {
-                    continue; // don't addd items if user already confirmed that they know it's overdue
-                }
-                if (d[2] == "Closed") {
-                    continue; // do not show closed items in Deadlines modal
-                }
-                var date = new Date(d[4]);
-                if (date > now) {
-                    upcoming.push(d);
-                } else {
-                    overdue.push(d);
-                }
-            }
-            // target: duedate + description + severity + [ ] + (VIEW)
-                // const name = data[1];
-                // const status = data[2];
-                // const description = data[3];
-                // const dueDate = data[4];
-                // const severity = data[5];
-                // const overdueConfirmed = data[6];
-                // const activity = data[7];
-            console.log(
-                "============================================OVERDUE============================================")
-                
-            for (const o of overdue) 
-            console.log(o[4] + " / " + o[2] + " / " + o[5] + " [ ] " + " VIEW-"+o[0]);
-            
-            console.log(
-                "============================================UPCOMING============================================")
-
-            for (const o of upcoming) 
-            console.log(o[4] + " / " + o[2] + " / " + o[5] + " [ ] " + " VIEW-"+o[0]);
-            
-                const returnArray = [];
-                returnArray.push(overdue);
-                returnArray.push(upcoming);
-
-                return returnArray;
-        }
-
         render() {
-            let upcoming = []; let overdue = [];
-            if (this.state.dataArray.length > 0) {
-                
-            const deadLines = this.testDeadLine();
-            overdue = deadLines[0];
-            upcoming = deadLines[1];
-        }
-
-            // tidy
-            // let events =  [
-            //     {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
-            //     {ts: "2017-09-17T12:21:46.587Z", text: 'Clicked Home Page'},
-            //     {ts: "2017-09-17T12:20:46.587Z", text: 'Edited Profile'},
-            //     {ts: "2017-09-16T12:22:46.587Z", text: 'Registred'},
-            //     {ts: "2017-09-16T12:21:46.587Z", text: 'Clicked Cart'},
-            //     {ts: "2017-09-16T12:20:46.587Z", text: 'Clicked Checkout'},
-            //   ];
-            //   alert(events[0].ts);
-            //   alert(events[0].text);
-            // if (this.state.modalData.length > 0) {
-            //     if (this.state.modalData[7].length > 0) {
-            //         const cleansed = this.cleanseActivity(this.state.modalData[7]).reverse();
-            //         events = cleansed;
-            //     }
-            // }
-            // end Tidy
-
-
+            
             let c = 0;
             const laneArray = [...this.state.laneArray];
-            const idArray = [...this.state.idArray];
-            const dataArray = [...this.state.dataArray];
+            const idArray = [...this.props.idArray];
+            const dataArray = [...this.props.dataArray];
             let idIndex = -1;
             let data = "default";
             let cardComponent = "";
@@ -545,7 +410,11 @@
                 const cardId = cardIdObj + ""; // not sure why this is
 
                 idIndex = idArray.indexOf(cardId);
-
+                if (idIndex == -1) {
+                    continue;
+                }
+                // alert(idIndex + " ... idIndex " + cardId + " .... ");
+                // alert(idArray);
                 data = dataArray[idIndex][1]; // update to [1]
 
                 cardComponent = (
@@ -573,20 +442,14 @@
             renderLanes.push(lane);
             c++;
             }
-            this.orderByDate();
+            // this.orderByDate();
             
             return (
             <div className="wrapper">
                 {renderLanes}
-                {/* <Modal
-                show={this.state.cardModal}
-                modalClosed={this.closeModalHandler}
-                status={this.state.modalStatus}
-                title={this.state.modalTitle}
-                color={this.state.modalStatusNumber}
-                deleteItemModal={this.deleteItem}
-                ></Modal> */}
-                 {/* <MainModal
+                
+
+                 <MainModal
                 show={this.state.cardModal}
                 modalClosed={this.closeModalHandler}
                 status={this.state.modalStatus}
@@ -598,20 +461,8 @@
                 addDate={this.saveDateHandler}
                 addSeverity={this.saveSeverityHandler}
                 postNewNote={this.saveNewNote}
-            ></MainModal> */}
-
-                {/* <ActivityModal 
-                    closeModal={this.closeModalHandler}
-                    show={this.state.cardModal}
-                    events={events}
-                    ></ActivityModal> */}
-                    
-                    <DeadlinesModal 
-                    closeModal={this.closeModalHandler}
-                    show={this.state.cardModal}
-                    upcomingTasks={upcoming}
-                    overdueTasks={overdue}
-                    ></DeadlinesModal>
+                viewNotes={this.viewActivityNotes}
+            ></MainModal>
 
             </div>
             );
@@ -623,12 +474,13 @@
         const cardId = this.state.activeCard;
         // get position in index
         const cardPos = this.cardPositionInArray(cardId);
-        const dataArray = [...this.state.dataArray];
+        const dataArray = [...this.props.dataArray];
 
         // needs to be dynamic
         dataArray[cardPos][3] = text;
         
-        this.setState( { dataArray: [...dataArray]})
+        // this.setState( { dataArray: [...dataArray]})
+        this.props.updateDataArray(dataArray); // redux call
         this.db_updateCardData(cardId, dataArray[cardPos]);
         
         
@@ -640,10 +492,11 @@
         const cardId = this.state.activeCard;
         // get position in index
         const cardPos = this.cardPositionInArray(cardId);
-        const dataArray = [...this.state.dataArray];// needs to be dynamic
+        const dataArray = [...this.props.dataArray];// needs to be dynamic
         dataArray[cardPos][4] = date;
         
-        this.setState( { dataArray: [...dataArray]})
+        // this.setState( { dataArray: [...dataArray]})
+        this.props.updateDataArray(dataArray); // redux call
         this.db_updateCardData(cardId, dataArray[cardPos]);
     }
 
@@ -652,10 +505,11 @@
              const cardId = this.state.activeCard;
              // get position in index
              const cardPos = this.cardPositionInArray(cardId);
-             const dataArray = [...this.state.dataArray];// needs to be dynamic
+             const dataArray = [...this.props.dataArray];// needs to be dynamic
              dataArray[cardPos][5] = severity;
              
-             this.setState( { dataArray: [...dataArray]})
+            //  this.setState( { dataArray: [...dataArray]})
+             this.props.updateDataArray(dataArray); // redux call
              this.db_updateCardData(cardId, dataArray[cardPos]);
     }
 
@@ -724,11 +578,13 @@
 
         
 
-        db_createCard(id) {
-            const cardPos = this.cardPositionInArray(id+"");
-            const cardTitle = this.getCardTitle(cardPos);
-
-            const status = this.getCardStatus(id+"");  
+        db_createCard(id, cardTitle, status) {
+            // alert("db cretecard");
+            // const cardPos = this.cardPositionInArray(id+"");
+            // const cardTitle = this.getCardTitle(cardPos);
+            // alert(cardPos + ' ... cardPos');
+            // alert(cardTitle + ' ... cardTitlte');
+            // const status = this.getCardStatus(id+"");  
          
               const instance = axios.create({
                 baseURL: 'http://localhost:8080',
@@ -776,7 +632,7 @@
         exportData() {
             const time = new Date();
             let content = time + "\n\n";
-            const idArray = [...this.state.idArray];
+            const idArray = [...this.props.idArray];
 
             for (const c of idArray) {
                 const stat = " Status: " + this.getCardStatus(c);
@@ -791,7 +647,24 @@
         }
     }
 
-        export default TrelloBoard;
+        // now access the redux with this.props.idArray or this.props.dataArray etc
+const mapStateToProps = state => {
+	return {
+		idArray: state.idArray,
+		dataArray: state.dataArray,
+		modalData: state.modalData
+	};
+};
+// call via this.props.updateIdArray or this.props.updateDataArray
+const mapDispatchToProps = dispatch => {
+	return {
+		updateIdArray: (newArray) => dispatch({type: 'idArray_update', payload: newArray}),
+		updateDataArray: (newArray) => dispatch({type: 'dataArray_update', payload: newArray}),
+		updateModalData: (newArray) => dispatch({type: 'modalData_update', payload: newArray})
+}; };
+
+export default connect(mapStateToProps, mapDispatchToProps)(TrelloBoard);
+
         // loop through pre-defined properties
         // for each property, create an array
         // if the data from db contains that property, push it . Otherwise push undefined
@@ -819,3 +692,104 @@
 
         // cardProperties[this.propertiesManaged.indexOf('propertyToChange')] = newValue ||
         // const getValue = cardProperties[this.propertiesManaged.indexOf('propertyToChange')]
+
+
+        // transferred to Panel.js
+        // testDeadLine() {
+        //     console.log("start");
+        //     const now = new Date();
+        //     // const now = mongoose.Date();
+        //     const overdue = [];
+        //     const upcoming = [];
+        //     const dataArray = this.orderByDate();
+        //     for (const d of dataArray) {
+        //         if (d[6] == true) {
+        //             continue; // don't addd items if user already confirmed that they know it's overdue
+        //         }
+        //         if (d[2] == "Closed") {
+        //             continue; // do not show closed items in Deadlines modal
+        //         }
+        //         var date = new Date(d[4]);
+        //         if (date > now) {
+        //             upcoming.push(d);
+        //         } else {
+        //             overdue.push(d);
+        //         }
+        //     }
+        //     // target: duedate + description + severity + [ ] + (VIEW)
+        //         // const name = data[1];
+        //         // const status = data[2];
+        //         // const description = data[3];
+        //         // const dueDate = data[4];
+        //         // const severity = data[5];
+        //         // const overdueConfirmed = data[6];
+        //         // const activity = data[7];
+        //     console.log(
+        //         "============================================OVERDUE============================================")
+                
+        //     for (const o of overdue) 
+        //     console.log(o[4] + " / " + o[2] + " / " + o[5] + " [ ] " + " VIEW-"+o[0]);
+            
+        //     console.log(
+        //         "============================================UPCOMING============================================")
+
+        //     for (const o of upcoming) 
+        //     console.log(o[4] + " / " + o[2] + " / " + o[5] + " [ ] " + " VIEW-"+o[0]);
+            
+        //         const returnArray = [];
+        //         returnArray.push(overdue);
+        //         returnArray.push(upcoming);
+
+        //         return returnArray;
+        // }
+        // orderByDate = () => {
+        //     const dataArray = [...this.state.dataArray];
+        //     // cleansing - no undefined dates in array.
+        //     let i = 0;
+        //     const toSplice = [];
+        //     for (const c of dataArray) {
+        //         if (c[4] === undefined || c[4] == null) {
+        //             toSplice.push(i);
+        //         }
+        //         i++;
+        //     }
+        //     i = 0;
+            
+        //     for (i = 0; i < toSplice.length; i++) {
+        //         dataArray.splice(toSplice[i]-i, 1); // needs to compensate for the previously removed element
+        //         // no native function for this?? 
+        //     }
+
+        //     // for (const c of dataArray) {
+        //     //     console.log(c[4]);
+        //     // }
+        //     const sortData = dataArray.sort(this.sortDate);
+        //     for (const c of sortData) {
+        //         // console.log(c[4]);
+        //     }
+        //     return sortData;
+        // }
+
+        //        sortDate(a, b) {
+        // const c = 4;
+        //     if (a[c] === b[c]) {
+        //         return 0;
+        //     }
+        //     else {
+        //         return (a[c] < b[c]) ? -1 : 1;
+        //     }
+        // }
+        //  name = data[1]; status = [2]; description = [3]; dueDate = [4]; severity = [5];
+        // Goal format: {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
+        // cleanseActivity = (data) => {
+        //     const cleansedActivity = [];
+        
+        // for (const d of data) {
+        //     var subDivide = d.split('/timeNoteSplit/');
+        //     var elements = new Object();
+        //     elements.ts = subDivide[0];
+        //     elements.text = subDivide[1];
+        //     cleansedActivity.push(elements)
+        // }
+        // return cleansedActivity
+        // }

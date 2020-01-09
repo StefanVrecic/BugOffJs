@@ -48,22 +48,20 @@ render() {
             <Modal show={this.state.open}
             modalClosed={this.closeModalHandler}
             classes="Modal defaultDimensions">
-                AccountModal
+                <br></br>
+                <br></br>
+                <h1>Change password</h1>
+                <br></br>
+                <br></br>
                 
                 
-		
-					<span className="login100-form-title p-b-43">
-						Login to continue
-					</span>
-						
-
-
 					<div className="wrap-input100 validate-input" data-validate = "Password is required" >
 						<input className="input100" type="password" name="currentPass" value={this.state.currentPass}
 								onChange={this.handleInputChange}/>
 						<span className="focus-input100"></span>
 						<span className="label-input100">Current Password</span>
 					</div>
+                    <br></br>
 					
 					
 					<div className="wrap-input100 validate-input" data-validate="Password is required">
@@ -73,6 +71,7 @@ render() {
 						<span className="label-input100">Password</span>
 					</div>
                     
+                                <br></br>
                       <div className="wrap-input100 validate-input" data-validate="Password is required">
                         <input className="input100" type="password" name="passConfirm" value={this.state.passConfirm}
                                 onChange={this.handleInputChange}/>

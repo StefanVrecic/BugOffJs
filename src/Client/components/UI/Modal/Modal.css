@@ -11,16 +11,6 @@
     transition: all 0.3s ease-out;
 }
 
-.defaultDimensions {
-    height: 95%;
-    width: 58%;
-}
-
-.logoutModal {
-    height: 45%;
-    width: 29%;
-}
-
 .modalTitle {
     font-size: 1.6rem;
     text-align: left;
