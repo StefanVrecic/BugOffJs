@@ -15,7 +15,8 @@
 }
 .cardContents {
     max-width: 100%;
-        word-wrap: break-word;
+    display: inline-block;
+    word-break: break-word;
 }
 .box-contents--card:hover {
     background-color: yellow;

@@ -34,7 +34,7 @@ class Panel extends Component {
         .catch(error => {
             alert("Please login. You are being redirected to the login page");
             console.log("failure confirming " + error.config.data);
-            this.props.history.push( '/' );
+            this.props.history.push( '/login' );
             window.localStorage.removeItem("login-token");
         });
     }

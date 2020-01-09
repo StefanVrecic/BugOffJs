@@ -47,14 +47,14 @@ class LaneAddCard extends Component {
 //             // 25 50 75
 //         for (var x = 0; x<addSpaces.length; x++) {
 //             if (x===0) {                  // 0 - 24(25) + '25' + 25-75
-//                 cardText = cardText.substring(0, addSpaces[x]) + ' ' + cardText.substring(addSpaces[x], cardText.length);
+//                 cardText = cardText.substring(0, addSpaces[x]) + '-' + cardText.substring(addSpaces[x], cardText.length);
 //             } else {                    // 
-//                 cardText = cardText.substring(0, addSpaces[x]+x) + ' ' + cardText.substring(addSpaces[x]+x, cardText.length);
+//                 cardText = cardText.substring(0, addSpaces[x]+x) + '-' + cardText.substring(addSpaces[x]+x, cardText.length);
 //             }
             
 //         }
         
-        // alert(cardText);
+//         alert(cardText);
           this.addCard(cardText);
       }
       
