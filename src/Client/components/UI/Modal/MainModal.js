@@ -10,6 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Form from "react-bootstrap/Form";
 
 import "./MainModal.css";
+import ConfirmationModal from "./ConfirmationModal";
 
 class MainModal extends Component {
   // shouldComponentUpdate (nextProps, nextState) {
@@ -31,12 +32,20 @@ class MainModal extends Component {
       addNote: "",
       noteArea: "",
       disableCalendar: true,
-      option: "empty"
+      option: "empty",
+      reprod: "empty",
+      sever: "empty",
+      deleteItemModal: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
   }
-
+      bugProperties = ["id", "name", "status", "description", "dueDate", "severity", "overdueConfirmed",
+        "activity", "bugReproducible"];
+        
+        p = title => {
+          return this.bugProperties.indexOf(title);
+      }
   handleCalendarChange = date => {
     this.setState({
       startDate: date
@@ -45,12 +54,29 @@ class MainModal extends Component {
     this.props.addDate(date);
   };
 
+  confirmDeleteItem = () => {
+    // alert("confirmed")
+    this.setState({deleteItemModal: false});
+    this.props.deleteItemModal();
+  }
+  rejectDeleteItem = () => {
+    this.setState({deleteItemModal: false});
+  }
+  deleteItemConfirmation = () => {
+    alert("deleteItem?");
+      this.setState({deleteItemModal: true});
+  }
+
   saveSeverity = (event) => {
+    this.setState({sever: event.target.value});
     this.props.addSeverity(event.target.value);
   }
+
   saveReproducible = (event) => {
+    this.setState({reprod: event.target.value});
     this.props.addReproducible(event.target.value);
   }
+
   saveStatus = (event) => {
     this.setState({option: event.target.value});
     this.props.saveStatus(this.props.data[0], event.target.value);
@@ -59,10 +85,22 @@ class MainModal extends Component {
     if (this.props.data.length > 0 && this.state.option === "empty") {
       this.setState({option: this.props.status});
     }
+    if (this.props.data.length > 0 && this.state.sever === "empty") {
+      this.setState({sever: this.props.data[5]});
+    }
+    if (this.props.data.length > 0 && this.state.reprod === "empty") {
+      this.setState({reprod: this.props.data[8]});
+    }
+  }
+
+  escFunction = (event) => {
+    if(this.state.closed === true && event.keyCode === 27) {
+      this.closeModal();
+    }
   }
 
   componentDidMount() {
- 
+    document.addEventListener("keydown", this.escFunction, false);
   }
 
   handleInputChange(event) {
@@ -108,13 +146,22 @@ class MainModal extends Component {
       cardText: "",
       editing: false,
       descriptionArea: "",
-      option: "empty"
+      option: "empty",
+      reprod: "empty",
+      sever: "empty "
     });
     this.setState({ date: "", startDate: new Date(), severity: "" });
   };
+  
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
   render() {
-    
+    let confirmationModal;
+      if (this.state.deleteItemModal) {
+        confirmationModal = (
+          <ConfirmationModal confirmDelete={this.confirmDeleteItem}
+          closeModal={this.rejectDeleteItem} ></ConfirmationModal>
+        );
+      }
 
     let viewNotesDisabled = false;
     if (this.props.data.length === 0 || this.props.data[7].length === 0) {
@@ -223,7 +270,7 @@ class MainModal extends Component {
                   <Form>
                     <Form.Group controlId="exampleForm.ControlSelect1">
                       <Form.Label>Bug reproducible?</Form.Label>
-                      <Form.Control onChange={this.saveReproducible} size="sm" as="select">
+                      <Form.Control value={this.state.reprod} onChange={this.saveReproducible} size="sm" as="select">
                         <option>None</option>
                         <option>Consistently</option>
                         <option>Intermittently</option>
@@ -243,7 +290,7 @@ class MainModal extends Component {
                   <Form>
                     <Form.Group controlId="exampleForm.ControlSelect1">
                       <Form.Label>Bug severity?</Form.Label>
-                      <Form.Control onChange={this.saveSeverity} size="sm" as="select">
+                      <Form.Control value={this.state.sever} onChange={this.saveSeverity} size="sm" as="select">
                         <option>None</option>
                         <option>High</option>
                         <option>Medium</option>
@@ -292,7 +339,7 @@ class MainModal extends Component {
                 <input
               type="button"
               value="Delete"
-              onClick={this.props.deleteItemModal}
+              onClick={this.deleteItemConfirmation}
               ></input>
           </div>
         </div>
@@ -300,6 +347,7 @@ class MainModal extends Component {
           </div>
          
         </div>
+        {confirmationModal}
       </Auxiliary>
     );
   }

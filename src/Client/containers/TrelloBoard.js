@@ -22,6 +22,15 @@
             // setModalTitle,setModalStatus, // closeModalHandler,getCardStatus,
             // cardClickedHandler,openModalHandler, // axiosConnect,db_createCard,
             // initCards,cardPositionInArray, // getCardTitle,assertArraysAligned ,
+            // const name = data[1];
+            // const status = data[2];
+            // const description = data[3];
+            // const dueDate = data[4];
+            // const severity = data[5];
+            // const overdueConfirmed = data[6];
+            // const activity = data[7];
+            // const bugReproducible = data[8];
+           
 
         class TrelloBoard extends Component {
 
@@ -47,6 +56,8 @@
 
         titles = ["Open", "In progress", "To be tested", "Re-opened", "Closed"];
         colors = ["open", "progress", "test", "reopened", "closed"];
+        bugProperties = ["id", "name", "status", "description", "dueDate", "severity", "overdueConfirmed",
+        "activity", "bugReproducible"];
 
         componentDidUpdate(prevProps) {
             // Typical usage (don't forget to compare props):
@@ -59,6 +70,10 @@
         
         componentDidMount() {
             this.db_loadCards();
+        }
+
+        p = title => {
+            return this.bugProperties.indexOf(title);
         }
 
         setAddCardLaneOpen = col => {
@@ -296,7 +311,7 @@
         }
 
         changeLane(id, destination) {
-            alert(id + " . " + destination);
+            // alert(id + " . " + destination);
             const laneArray_temp = [...this.state.laneArray];
             let c = 0;
             let i = -1;
@@ -450,11 +465,11 @@
         
 ////////////////////////////////////// Modal save data handlers  ///////////////////////
 
-    saveDescriptionHandler = (text) => {
+    saveDescriptionHandler = (description) => {
         const cardId = this.state.activeCard;
         const cardPos = this.cardPositionInArray(cardId); // get position in index
         const dataArray = [...this.props.dataArray]; // get relative data
-        dataArray[cardPos][3] = text; // alter specific property
+        dataArray[cardPos][this.p("description")] = description; // alter specific property
         this.props.updateDataArray(dataArray); // save to store
         this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
     }
@@ -463,7 +478,7 @@
         const cardId = this.state.activeCard;
         const cardPos = this.cardPositionInArray(cardId); // get position in index
         const dataArray = [...this.props.dataArray]; // get relative data
-        dataArray[cardPos][4] = date; // alter specific property
+        dataArray[cardPos][this.p("dueDate")] = date; // alter specific property
         this.props.updateDataArray(dataArray); // save to store
         this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
     }
@@ -472,17 +487,17 @@
              const cardId = this.state.activeCard;
              const cardPos = this.cardPositionInArray(cardId); // get position in index
              const dataArray = [...this.props.dataArray]; // get relative data
-             dataArray[cardPos][5] = severity; // alter specific property
+             dataArray[cardPos][this.p("severity")] = severity; // alter specific property
              this.props.updateDataArray(dataArray); // save to store
              this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
     }
-
+    
     saveNewNote = (note) => {
         const cardId = this.state.activeCard;
         const cardPos = this.cardPositionInArray(cardId); // get position in index
         const now = new Date(); // make a timestamp
         const dataArray = [...this.props.dataArray]; // get relative data
-        dataArray[cardPos][7].push(now+"/timeNoteSplit/"+note); // alter specific property
+        dataArray[cardPos][this.p("activity")].push(now+"/timeNoteSplit/"+note); // alter specific property
         this.props.updateDataArray(dataArray); // save to store
         this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
     }
