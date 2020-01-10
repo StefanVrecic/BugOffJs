@@ -440,17 +440,20 @@ input.input100 {
 
 .input-checkbox100 {
   display: none;
+  font-family: Poppins-Regular;
 }
 
 .label-checkbox100 {
-  font-family: Poppins-Regular;
-  font-size: 13px;
-  color: #999999;
+  /* font-family: Poppins-Regular; */
+  /* font-size: 13px; */
+  /* color: #999999; */
   line-height: 1.4;
 
-  display: block;
+  display: inline;
   position: relative;
   padding-left: 26px;
+  padding-right: 1rem;
+  
   cursor: pointer;
 }
 
@@ -510,6 +513,7 @@ input.input100 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-content: center;
 }
 
 .login100-form-btn {

@@ -1,0 +1,36 @@
+Deadlines:
+ => Make it so you can change the status to completed
+ => this should also put the dueDateConfirmed = true
+ => and strike through the text until Modal is closed, then moved it to "closed"
+ => Limit items or make modal scrollable?
+
+Activity:
+If selected from the sidebar
+ => should the last 10 notes added ... ?
+ => with view buttons?
+ => Should be able to delete notes
+
+Account
+ => Reduce input sizes
+
+Logout
+ => Improve spacing/colors
+
+Main
+ => Provide box with "remind x hours before"
+ => Include this in notifications
+ => Set up option to remove due date after set
+ => Lots of styling work
+ => Add screenshot still not implemented...?
+ => Add fields: OS, Classification, Reproducable
+ => Keylistener on main modal
+
+
+Teams
+ => Forget about it
+
+View as list:
+ => Could probably whip it up as the last thing
+
+Theme
+ => Forget about it for now

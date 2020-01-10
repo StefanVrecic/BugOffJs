@@ -14,6 +14,7 @@ router.post('/bugs',  cors(), auth, async (req, res) => {
     })
     console.log("post2")
     
+    
     try {
         console.log("post3")
         await bug.save()
@@ -22,6 +23,7 @@ router.post('/bugs',  cors(), auth, async (req, res) => {
         res.status(201).send(bug)
     } catch (e) {
         console.log("failed?");
+        console.log(e);
         res.status(400).send(e)
     }
 })

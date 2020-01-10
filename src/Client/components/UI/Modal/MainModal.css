@@ -1,0 +1,91 @@
+.bug-severity--form {
+    width: 20%;
+}
+.bug-reproducible--form{
+    width: 40%;
+}
+.status-change {
+    width: 15%;
+}
+
+.notesButtons {
+    width: 25%;
+}
+
+.notesTextAreaContainer {
+    width: 40%;
+    /* height: 20%; */
+}
+.notesTextArea {
+    /* height : 1%; */
+}
+
+.notesTextArea {
+    resize: none;
+    border-radius: 3px;
+    overflow: hidden;
+    width: 100%;
+    height: 100%; 
+    border: solid black 1px;
+    /* width: calc(100% - 2.88rem); */
+}
+.notesTextArea: {
+    border: solid black 1px;
+}
+.date-Reminder {
+    display: flex;
+}
+
+.blah {
+    width: 100%;
+    display: flex;
+    /* border: red solid 1px; */
+}
+
+.dropdownButtons {
+    width: 40%;
+    /* border: black solid 2px; */
+}
+
+.bugFields {
+    display: flex;
+}
+.changeStatus--form {
+    width: 100%;    
+}
+.settings-3 {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mainModalBtn-spacing {
+    padding-left: 1rem;
+}
+
+.bugSettings {
+    /* border: solid black 2px; */
+    margin-top: auto;
+    /* padding: 12px; */
+}
+
+.Modal {
+    display: flex;
+    flex-direction: column;
+}
+
+.disableDate {
+    margin-left: .8rem;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    margin-right: 1rem;
+    margin-bottom: 5px !important;
+}
+
+/* Override packaage specifications */
+.react-datepicker {
+    font-size: 1.5rem !important;
+}
+
+.greyed {
+    background-color: grey;
+}

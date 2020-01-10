@@ -181,7 +181,7 @@ class Panel extends Component {
     
     prepareActivityModal = () => {
         if (this.props.modalData.length === 0 || this.props.modalData[7].length === 0) {
-            return alert("no data to display");
+            return;
         }
         const cleansed = this.cleanseActivity(this.props.modalData[7]).reverse();
         let events = cleansed;
@@ -313,7 +313,8 @@ db_logout = () => {
       instance.post("/users/logout", {
     }).then(response => {
         console.log("success logout" + response);
-        this.props.history.push( '/' );
+        // alert("loggingout");
+        this.props.history.push( '/login' );
         window.localStorage.removeItem("login-token");
     })
     .catch(error => {

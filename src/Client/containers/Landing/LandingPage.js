@@ -27,6 +27,7 @@ class LandingPage extends Component {
 	  }
 
 	  componentDidMount() {
+		//   alert("comp mount");
 		  this.db_confirmIdentity();
 	  }
 	
@@ -252,6 +253,7 @@ render() {
 		this.handleLoginSuccess();
 	})
 	.catch(error => {
+		// alert("failed to auto login");
 	});
 }
   

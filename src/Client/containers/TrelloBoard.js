@@ -114,7 +114,7 @@
                 dataArrayItem.push(dataItem._id);
 
                 // name = data[1]; status = [2]; description = [3]; dueDate = [4]; 
-                // severity = [5]; overdueConfirmed = [6]; activity = data[7];
+                // severity = [5]; overdueConfirmed = [6]; activity = data[7]; reproducible = data[8]
 
                 // WARNING DO NOT CHANGE ORDER OF dataArrayItem.push
                 dataArrayItem.push(dataItem.name);
@@ -124,6 +124,8 @@
                 dataArrayItem.push(dataItem.severity);
                 dataArrayItem.push(dataItem.overdueConfirmed);
                 dataArrayItem.push(dataItem.activity);
+                dataArrayItem.push(dataItem.bugReproducible);
+                // alert(dataItem.bugReproducible + "reprod " + dataItem.severity + " severity");
                
                 // alert("... " + dataItem.dueDate);
                 // alert(dataItem.severity + "\n" + dataItem.name);
@@ -142,10 +144,8 @@
             }
             // redux calls
             this.props.updateIdArray(idArray);
-            // this.setState({ idArray: [...idArray] });
             
             this.props.updateDataArray(dataArray); // redux call
-            // this.setState({ dataArray: [...dataArray] });
 
             this.setState({ laneArray: [...laneArray] });
         }
@@ -216,8 +216,7 @@
         }
 
         cardClickedHandler = id => {
-            // this.props.clickedCard(id);
-            // return;
+            
             const cardPos = this.cardPositionInArray(id);
             const title = this.getCardTitle(cardPos);
             const cardStatus = this.getCardStatus(id);
@@ -228,18 +227,19 @@
             this.setModalStatus(cardStatus);
             this.setActiveCard(id);
             this.setModalData(data);
-            // alert(data);
+            // alert(title + " . " + cardStatus + " . " + id + " . " + data);
+            // this.setState({modalData: data}, this.openModalHandler());
             this.openModalHandler();
         };
 
         cardPositionInArray(id) {
             const idArray = [...this.props.idArray];
             const index = idArray.indexOf(id);
-            // alert(index + " index of " + id);
             return index;
         }
 
         deleteItem = () => {
+            // return;
             const deleteId = this.state.activeCard;
             this.setState({activeCard: "-1"});
 
@@ -290,8 +290,13 @@
         assertArraysAligned(id, pos) {
             // to-do
         }
+        saveStatusHandler = (id, status) => { // same as changeLane, just handled from Main Modal=
+            const destination = this.statusToLaneNumber(status);
+            this.changeLane(id, destination);
+        }
 
         changeLane(id, destination) {
+            alert(id + " . " + destination);
             const laneArray_temp = [...this.state.laneArray];
             let c = 0;
             let i = -1;
@@ -323,67 +328,40 @@
         }
 
         addCard = (cardText, lane)  => {
-            // const storeId = uniqid();
                 
             var storeId = (mongoose.Types.ObjectId());
             var storeId_string = storeId+"";
 
-            
                 const laneArray = [...this.state.laneArray];
                 const idArray = [...this.props.idArray];
                 const dataArray = [...this.props.dataArray];
                 idArray.push(storeId_string);
                 laneArray[lane].push(storeId_string);
-                const dataToStore = [];
-// name = data[1]; status=[2]; description=[3]; dueDate=[4]; severity=[5]; overdueConfirmed= [6]; activity = [7];
+                
+// name = data1[];status=2;description=3;dueDate=4;severity=5;overdueConfirmed= 6;activity=7;reproducible=8;
                 // data for each card - WARNING: don't change order
                 const status = this.laneNumberToStatus(lane);
 
-                dataToStore.push(storeId_string); 
-                dataToStore.push(cardText);
-                dataToStore.push(status);
-                dataToStore.push("No decription provided");
-                dataToStore.push(null);
-                dataToStore.push("Severity");
-                dataToStore.push(false); // overdueConfirmed
-                dataToStore.push([]); // notes
-                // alert(cardText + " .... cardText");
+ const dataToStore = [storeId_string, cardText, status, "No description provided", null, "None", false, [], "None"]
                 dataArray.push(dataToStore);
-
-                this.setState({ laneArray: [...laneArray] });
-
-                // this.setState({ idArray: [...idArray] });
-                this.props.updateIdArray([...idArray]);
                 
-                // this.setState({ dataArray: [...dataArray] },
-
+                this.setState({ laneArray: [...laneArray] });
+                this.props.updateIdArray([...idArray]);
                 this.props.updateDataArray([...dataArray]);
                 
-                // , // this below needs callback warning
-                    //    () => {
-                            this.db_createCard(storeId, cardText, status);
-                    //     });                         
+                this.db_createCard(storeId, cardText, status);
+                                  
         }
         
         viewActivityNotes = () => {
+            if (this.props.modalData.length === 0 || this.props.modalData[7].length === 0) {
+                return alert("no data to display");
+            }
             this.setState({ cardModal: false });
             this.props.viewActivityNotes();
         }
 
-        saveNewNote = (note) => {
-            // data [7]
-            const now = new Date();
-
-            const updatedDataArray = [...this.props.dataArray];
-            const activeCard = this.state.activeCard;
-            const cardPos = this.cardPositionInArray(activeCard);
-            updatedDataArray[cardPos][7].push(now+"/timeNoteSplit/"+note);
-            this.setState({dataArray: [...updatedDataArray]});
-            this.props.updateDataArray(updatedDataArray); // redux call
-
-            this.db_updateCardData(activeCard, updatedDataArray[cardPos]);
-        }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         render() {
             
             let c = 0;
@@ -413,15 +391,14 @@
                 if (idIndex == -1) {
                     continue;
                 }
-                // alert(idIndex + " ... idIndex " + cardId + " .... ");
-                // alert(idArray);
+                
                 data = dataArray[idIndex][1]; // update to [1]
 
                 cardComponent = (
-                <Card clicked={this.cardClickedHandler} uniqueid={cardId}>
-                    {data}
-                </Card>
-                );
+                    <Card clicked={this.cardClickedHandler} uniqueid={cardId}>
+                        {data}
+                    </Card>
+                    );
 
                 oneLaneCards.push(cardComponent);
 
@@ -442,76 +419,83 @@
             renderLanes.push(lane);
             c++;
             }
-            // this.orderByDate();
             
+            ///////////////////////////////////
+
             return (
             <div className="wrapper">
                 {renderLanes}
                 
 
-                 <MainModal
+            <MainModal
                 show={this.state.cardModal}
+                                                    addDescription={this.saveDescriptionHandler}
                 modalClosed={this.closeModalHandler}
-                status={this.state.modalStatus}
-                title={this.state.modalTitle}
+                                                    addDate={this.saveDateHandler}
                 data={this.state.modalData}
-                color={this.state.modalStatusNumber}
+                                                    addReproducible={this.saveReproducibilityHandler}
                 deleteItemModal={this.deleteItem}
-                addDescription={this.addDescriptionHandler}
-                addDate={this.saveDateHandler}
-                addSeverity={this.saveSeverityHandler}
-                postNewNote={this.saveNewNote}
+                                                    addSeverity={this.saveSeverityHandler}
+                title={this.state.modalTitle}
+                                                    status={this.state.modalStatus}  
+                color={this.state.modalStatusNumber}
+                                                    postNewNote={this.saveNewNote}
                 viewNotes={this.viewActivityNotes}
+                                                    saveStatus={this.saveStatusHandler}
             ></MainModal>
 
             </div>
             );
         }
-        // {/* events={this.modalData[7]} */}f
-////////////////////////////////////// Modal methods ///////////////////////
+        
+////////////////////////////////////// Modal save data handlers  ///////////////////////
 
-    addDescriptionHandler = (text) => {
+    saveDescriptionHandler = (text) => {
         const cardId = this.state.activeCard;
-        // get position in index
-        const cardPos = this.cardPositionInArray(cardId);
-        const dataArray = [...this.props.dataArray];
-
-        // needs to be dynamic
-        dataArray[cardPos][3] = text;
-        
-        // this.setState( { dataArray: [...dataArray]})
-        this.props.updateDataArray(dataArray); // redux call
-        this.db_updateCardData(cardId, dataArray[cardPos]);
-        
-        
-        // const cardData = this.state.dataArray[]
+        const cardPos = this.cardPositionInArray(cardId); // get position in index
+        const dataArray = [...this.props.dataArray]; // get relative data
+        dataArray[cardPos][3] = text; // alter specific property
+        this.props.updateDataArray(dataArray); // save to store
+        this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
     }
 
     saveDateHandler = (date) => {
-        // alert(date + " trllo");
         const cardId = this.state.activeCard;
-        // get position in index
-        const cardPos = this.cardPositionInArray(cardId);
-        const dataArray = [...this.props.dataArray];// needs to be dynamic
-        dataArray[cardPos][4] = date;
-        
-        // this.setState( { dataArray: [...dataArray]})
-        this.props.updateDataArray(dataArray); // redux call
-        this.db_updateCardData(cardId, dataArray[cardPos]);
+        const cardPos = this.cardPositionInArray(cardId); // get position in index
+        const dataArray = [...this.props.dataArray]; // get relative data
+        dataArray[cardPos][4] = date; // alter specific property
+        this.props.updateDataArray(dataArray); // save to store
+        this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
     }
 
     saveSeverityHandler = (severity) => {
-             // alert(date + " trllo");
              const cardId = this.state.activeCard;
-             // get position in index
-             const cardPos = this.cardPositionInArray(cardId);
-             const dataArray = [...this.props.dataArray];// needs to be dynamic
-             dataArray[cardPos][5] = severity;
-             
-            //  this.setState( { dataArray: [...dataArray]})
-             this.props.updateDataArray(dataArray); // redux call
-             this.db_updateCardData(cardId, dataArray[cardPos]);
+             const cardPos = this.cardPositionInArray(cardId); // get position in index
+             const dataArray = [...this.props.dataArray]; // get relative data
+             dataArray[cardPos][5] = severity; // alter specific property
+             this.props.updateDataArray(dataArray); // save to store
+             this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
     }
+
+    saveNewNote = (note) => {
+        const cardId = this.state.activeCard;
+        const cardPos = this.cardPositionInArray(cardId); // get position in index
+        const now = new Date(); // make a timestamp
+        const dataArray = [...this.props.dataArray]; // get relative data
+        dataArray[cardPos][7].push(now+"/timeNoteSplit/"+note); // alter specific property
+        this.props.updateDataArray(dataArray); // save to store
+        this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
+    }
+
+
+    saveReproducibilityHandler = (bugReproducible) => {
+        const cardId = this.state.activeCard;
+        const cardPos = this.cardPositionInArray(cardId); // get position in index
+        const dataArray = [...this.props.dataArray]; // get relative data
+        dataArray[cardPos][8] = bugReproducible; // alter specific property
+        this.props.updateDataArray(dataArray); // save to store
+        this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
+}
 
 //////////////////////////////////// db methods ////////////////////////
         
@@ -534,7 +518,6 @@
 
         db_updateCardData(id, data) {
 
-            // alert(data + "\n\ndb-updateCard\n\nid: " + id);
             // warning
             const name = data[1];
             const status = data[2];
@@ -543,9 +526,10 @@
             const severity = data[5];
             const overdueConfirmed = data[6];
             const activity = data[7];
+            const bugReproducible = data[8];
             axios
             .patch(`http://localhost:8080/bugs/${id}`, {
-                name, description, status, dueDate, severity, overdueConfirmed, activity
+                name, description, status, dueDate, severity, overdueConfirmed, activity, bugReproducible
                 
             })
             .then(function(response) {
@@ -579,13 +563,7 @@
         
 
         db_createCard(id, cardTitle, status) {
-            // alert("db cretecard");
-            // const cardPos = this.cardPositionInArray(id+"");
-            // const cardTitle = this.getCardTitle(cardPos);
-            // alert(cardPos + ' ... cardPos');
-            // alert(cardTitle + ' ... cardTitlte');
-            // const status = this.getCardStatus(id+"");  
-         
+
               const instance = axios.create({
                 baseURL: 'http://localhost:8080',
                 headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
@@ -593,7 +571,7 @@
 
             instance.post("/bugs", { // WARNING
               _id: id, name: cardTitle, status: status, description: "No description provided", dueDate: null,
-              severity: null, overdueConfirmed: false, notes: null
+              severity: "None", overdueConfirmed: false, notes: null, bugReproducible: "None"
             })
                 .then(function(response) {
                 console.log("success create" + response);
@@ -665,131 +643,3 @@ const mapDispatchToProps = dispatch => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrelloBoard);
 
-        // loop through pre-defined properties
-        // for each property, create an array
-        // if the data from db contains that property, push it . Otherwise push undefined
-        // push this array into a main dataArray
-        // when reading this data:
-
-        // const dataItemProperties = [];
-        // this.propertiesManaged = [description, tite, status] - put global
-        // for (const property of this.propertiesManaged) {
-        // if (dataItem.property) {
-        // dataItemProperties.push(dataItem.property);
-        // } else {
-        // dataItemProperties.push(undefined);
-        // }
-        // }
-
-        // dataProperties.push(dataItemProperties);
-        // to access - plug in the id
-
-        // const cardPos = this.cardPositionInArray(id);
-        // const cardProperties = dataArray[cardPos]
-
-        // now we have all the data for the given card
-        // propertyToChange will be pre-defined by a button, an input field etc
-
-        // cardProperties[this.propertiesManaged.indexOf('propertyToChange')] = newValue ||
-        // const getValue = cardProperties[this.propertiesManaged.indexOf('propertyToChange')]
-
-
-        // transferred to Panel.js
-        // testDeadLine() {
-        //     console.log("start");
-        //     const now = new Date();
-        //     // const now = mongoose.Date();
-        //     const overdue = [];
-        //     const upcoming = [];
-        //     const dataArray = this.orderByDate();
-        //     for (const d of dataArray) {
-        //         if (d[6] == true) {
-        //             continue; // don't addd items if user already confirmed that they know it's overdue
-        //         }
-        //         if (d[2] == "Closed") {
-        //             continue; // do not show closed items in Deadlines modal
-        //         }
-        //         var date = new Date(d[4]);
-        //         if (date > now) {
-        //             upcoming.push(d);
-        //         } else {
-        //             overdue.push(d);
-        //         }
-        //     }
-        //     // target: duedate + description + severity + [ ] + (VIEW)
-        //         // const name = data[1];
-        //         // const status = data[2];
-        //         // const description = data[3];
-        //         // const dueDate = data[4];
-        //         // const severity = data[5];
-        //         // const overdueConfirmed = data[6];
-        //         // const activity = data[7];
-        //     console.log(
-        //         "============================================OVERDUE============================================")
-                
-        //     for (const o of overdue) 
-        //     console.log(o[4] + " / " + o[2] + " / " + o[5] + " [ ] " + " VIEW-"+o[0]);
-            
-        //     console.log(
-        //         "============================================UPCOMING============================================")
-
-        //     for (const o of upcoming) 
-        //     console.log(o[4] + " / " + o[2] + " / " + o[5] + " [ ] " + " VIEW-"+o[0]);
-            
-        //         const returnArray = [];
-        //         returnArray.push(overdue);
-        //         returnArray.push(upcoming);
-
-        //         return returnArray;
-        // }
-        // orderByDate = () => {
-        //     const dataArray = [...this.state.dataArray];
-        //     // cleansing - no undefined dates in array.
-        //     let i = 0;
-        //     const toSplice = [];
-        //     for (const c of dataArray) {
-        //         if (c[4] === undefined || c[4] == null) {
-        //             toSplice.push(i);
-        //         }
-        //         i++;
-        //     }
-        //     i = 0;
-            
-        //     for (i = 0; i < toSplice.length; i++) {
-        //         dataArray.splice(toSplice[i]-i, 1); // needs to compensate for the previously removed element
-        //         // no native function for this?? 
-        //     }
-
-        //     // for (const c of dataArray) {
-        //     //     console.log(c[4]);
-        //     // }
-        //     const sortData = dataArray.sort(this.sortDate);
-        //     for (const c of sortData) {
-        //         // console.log(c[4]);
-        //     }
-        //     return sortData;
-        // }
-
-        //        sortDate(a, b) {
-        // const c = 4;
-        //     if (a[c] === b[c]) {
-        //         return 0;
-        //     }
-        //     else {
-        //         return (a[c] < b[c]) ? -1 : 1;
-        //     }
-        // }
-        //  name = data[1]; status = [2]; description = [3]; dueDate = [4]; severity = [5];
-        // Goal format: {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
-        // cleanseActivity = (data) => {
-        //     const cleansedActivity = [];
-        
-        // for (const d of data) {
-        //     var subDivide = d.split('/timeNoteSplit/');
-        //     var elements = new Object();
-        //     elements.ts = subDivide[0];
-        //     elements.text = subDivide[1];
-        //     cleansedActivity.push(elements)
-        // }
-        // return cleansedActivity
-        // }

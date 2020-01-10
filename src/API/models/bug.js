@@ -9,26 +9,39 @@ const bugSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: false,
+        required: true,
         default: 'No description provided'
     },
     severity: {
         type: String,
-        required: false,
-        default: "Low"
+        default: 'None',
+        required: true
     },
     status: {
         type: String,
         required: false,
-        default: 'open',
+        default: 'Open',
         validate(value) {
             if (!statuses.includes(value)) {
                 throw new Error('Status set incorrectly')
             }
         }
     },
+    bugReproducible: { // todo
+        type: String,
+        default: 'None',
+        required: true
+    },
     dueDate: {
         type: Date,
+        required: false
+    },
+    reminder: {// todo
+        type: Date,
+        required: false
+    },
+    dueDateEnabled: {// todo
+        type: Boolean,
         required: false
     },
     dueDatePassed: {
