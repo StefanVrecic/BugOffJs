@@ -35,9 +35,16 @@ class MainModal extends Component {
       option: "empty",
       reprod: "empty",
       sever: "empty",
-      deleteItemModal: false
+      deleteItemModal: false,
+      startAllowCalendar: "empty",
+      stateNewCard: false,
+      newTitleSet: false,
+      newTitle: "",
+      oldNoteArea: ""
     };
 
+    this.textInput = React.createRef();
+    this.saveNewCardTitle = this.saveNewCardTitle.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
       bugProperties = ["id", "name", "status", "description", "dueDate", "severity", "overdueConfirmed",
@@ -54,8 +61,14 @@ class MainModal extends Component {
     this.props.addDate(date);
   };
 
+  checkAlert = (event) => {
+    alert("????????????????????????????");
+  }
+  saveDueDateEnabled = (event) => {
+
+  }
+
   confirmDeleteItem = () => {
-    // alert("confirmed")
     this.setState({deleteItemModal: false});
     this.props.deleteItemModal();
   }
@@ -63,7 +76,6 @@ class MainModal extends Component {
     this.setState({deleteItemModal: false});
   }
   deleteItemConfirmation = () => {
-    alert("deleteItem?");
       this.setState({deleteItemModal: true});
   }
 
@@ -82,6 +94,7 @@ class MainModal extends Component {
     this.props.saveStatus(this.props.data[0], event.target.value);
   }
   componentDidUpdate() {
+    
     if (this.props.data.length > 0 && this.state.option === "empty") {
       this.setState({option: this.props.status});
     }
@@ -91,6 +104,19 @@ class MainModal extends Component {
     if (this.props.data.length > 0 && this.state.reprod === "empty") {
       this.setState({reprod: this.props.data[8]});
     }
+    if (this.props.data.length > 0 && this.state.startAllowCalendar === "empty") {
+      if (this.props.data[9] === true) { //  allow calendaar
+      
+      // alert("enabled");
+      this.setState({disableCalendar: false});
+      this.setState({startAllowCalendar: false});
+      
+    } else { // don't allow calendar
+    // alert("disabled");
+    this.setState({disableCalendar: true});
+    this.setState({startAllowCalendar: true});
+      }
+    } 
   }
 
   escFunction = (event) => {
@@ -135,6 +161,11 @@ class MainModal extends Component {
   };
 
   toggleCalendar = () => {
+    this.props.saveCalendarEnabled(this.state.disableCalendar); // !!this.state.disableCalendar
+    // if calendar is disabled=true => dueDateEnabled => false
+    // if we toggle it => calendar is enabled=false => dueDateEnabled = true
+    // thus if calendar is disabled=true and we hit toggle, we set dueDateEnabled = true;
+    // thus at current time dueDateEnabled = (!!) disabled 
     this.setState({disableCalendar: !this.state.disableCalendar});
   }
 
@@ -148,13 +179,49 @@ class MainModal extends Component {
       descriptionArea: "",
       option: "empty",
       reprod: "empty",
-      sever: "empty "
+      sever: "empty",
+      startAllowCalendar: "empty"
     });
     this.setState({ date: "", startDate: new Date(), severity: "" });
   };
+
+  cancelNewTitle = () => {
+    this.setState({stateNewCard: !this.state.stateNewCard});
+    this.setState({noteArea: this.state.oldNoteArea});
+  }
+
+  saveNewCardTitle = () => {
+    let currentTitle = this.props.title;
+    if (this.state.newTitleSet === true) {
+      currentTitle = this.state.newTitle;
+    }
+    
+    this.setState({stateNewCard: !this.state.stateNewCard});
+    if (!this.state.stateNewCard === true) {
+      // edit
+      this.textInput.current.focus();
+      this.setState({oldNoteArea: this.state.noteArea});
+      this.setState({noteArea: currentTitle});
+    }
+    if (!this.state.stateNewCard === false) {
+      // save
+      // alert("save");
+      this.props.saveNewTitle(this.state.noteArea);
+      this.setState({newTitleSet: true});
+      this.setState({newTitle: this.state.noteArea});
+      this.setState({noteArea: this.state.oldNoteArea});
+    }
+    
+  }
+
   
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
   render() {
+    let titleToDisplay = this.props.title;
+    if (this.state.newTitleSet === true) {
+      titleToDisplay = this.state.newTitle;
+    }
+    
     let confirmationModal;
       if (this.state.deleteItemModal) {
         confirmationModal = (
@@ -170,23 +237,59 @@ class MainModal extends Component {
     let selectedTime = new Date();
     if (this.props.data[4] != undefined) {
       selectedTime = new Date(this.props.data[4]);
-    }
-    
+    }    
+    let newCard = null;
+
+    let notesOrTitle = (
+      <textarea
+      className="notesTextArea"
+      placeholder="Add a new note (250 characters max)"
+      maxlength="250"
+      cols="45"
+      rows="5"
+      wrap="soft"
+      name="noteArea"
+      ref={this.textInput}
+      onChange={this.handleInputChange}
+      value={this.state.noteArea}
+      ></textarea>
+    );
     
     let editOrSave = "Edit";
-    
-    let displayEditing = <p>{this.props.data[3]}</p>;
+    let editOrSaveTitle = "Edit";
+    let cancelSaveTitle = null;
 
+      if (this.state.stateNewCard) {
+        editOrSaveTitle = "Save";
+        cancelSaveTitle = <span className = "editTitle" onClick={this.cancelNewTitle}> / Cancel </span>
+        notesOrTitle = (
+          <textarea
+          className="notesTextArea"
+          placeholder="Add a new title (81 characters max)"
+          maxlength="81"
+          cols="45"
+          rows="5"
+          wrap="soft"
+          name="noteArea"
+          ref={this.textInput}
+          onChange={this.handleInputChange}
+          value={this.state.noteArea}
+          ></textarea>
+        );
+      }
+
+    let displayEditing = <p className="displayDescription">{this.props.data[3]}</p>;
+    
     if (this.state.editing) {
       editOrSave = "Save";
       displayEditing = (
         <div>
           <textarea
-            className="textStyle"
+            className="descriptionTextArea"
             placeholder="Add a more detailed description"
             maxlength="1000"
             cols="75"
-            rows="12"
+            // rows="15"
             wrap="soft"
             name="descriptionArea"
             onChange={this.handleInputChange}
@@ -196,8 +299,12 @@ class MainModal extends Component {
       );
     }
     let displayCalendar = "";
+
+    // if (this.state.startAllowCalendar === true)
+
     let onOffButton = "Off";
-    if (this.state.disableCalendar) {
+
+    if (!this.state.disableCalendar) {
       displayCalendar = (
         <DatePicker
           selected={selectedTime}
@@ -227,38 +334,58 @@ class MainModal extends Component {
               opacity: this.props.show ? "1" : "0"
           }} >
           <div className="modalTitle">
+            
             <span className="modalTitle-header">
-              <b>{this.props.title}</b>
+              <b>{titleToDisplay}</b> <span onClick={this.saveNewCardTitle} className = "editTitle">{editOrSaveTitle}</span>{cancelSaveTitle}
             </span>
+            
+            {newCard}
+            
             <br></br>
+            </div>
+            <div className = "modalTitle-status-container">
             <span
               className={`modalTitle-status 
                             titleColor-${this.props.color}`}
             >
+             
               ({this.props.status})
             </span>
           </div>
 
-          <input type="button" className="btn-success" value={editOrSave} onClick={this.setEditing}></input>
-          {displayEditing}
 
-          <br></br>
-          <br></br>
+                <div className="itemDescription">
+          {displayEditing}
+                </div>
+                
+                <div className=" zeroWidth">
+            <div className=" ">
+
+                    <button onClick={this.setEditing} className="editBtn nopadding">
+                      {editOrSave}
+                  </button>
+                  </div>
+                </div>
+          {/* <br></br>
+          <br></br> */}
         <div className = "bugSettings">
           <div className="date-Reminder">
             <div>
              {displayCalendar}
 
-              <input
+              {/* <input
               type="button" value={onOffButton} onClick={this.toggleCalendar} className="disableDate"
-              ></input>
+              ></input> */}
+                    <button onClick={this.toggleCalendar} className="onOffBtn nopadding disableDate">
+                      {onOffButton}
+                  </button>
 
             </div>  
             <div>
-							<input className="input-checkbox100" id="ckb2" type="checkbox" name="sign-up" onChange = { this.newUserCheck }/>
+							<input className="input-checkbox100" id="ckb2" type="checkbox" name="sign-up" onChange = { this.checkAlert }/>
 							<label className="label-checkbox100" for="ckb2">
               Email me </label>
-                <input type="number" min="1" max="48" step="1" />
+                <input type="number" min="1" max="48" step="1" name="alertTimer" />
               <span> hours before due date</span>
             </div>
           </div>
@@ -279,9 +406,9 @@ class MainModal extends Component {
                     </Form.Group>
                   </Form>
                 </div>
-                <div className="container-login50-form-btn mainModalBtn-spacing">
-                    <button onClick={this.addNewNote} className="login100-form-btn">
-                      Add
+                <div className="zeroWidth mainModalBtn-spacing addNote-btn">
+                    <button onClick={this.addNewNote} className="editBtn nopadding">
+                      Add Note
                   </button>
                 </div>
               </div>
@@ -299,8 +426,9 @@ class MainModal extends Component {
                     </Form.Group>
                   </Form>
                 </div>
-                <div className="container-login50-form-btn mainModalBtn-spacing">
-                    <button disabled={viewNotesDisabled} onClick={this.props.viewNotes} className="login100-form-btn ">
+    
+                <div className="zeroWidth mainModalBtn-spacing viewNotes-btn">
+                    <button disabled={viewNotesDisabled} onClick={this.props.viewNotes} className="editBtn nopadding ">
                       View notes
                   </button>
                 </div>
@@ -308,17 +436,7 @@ class MainModal extends Component {
           </div>
 
           <div className="notesTextAreaContainer">
-            <textarea
-              className="notesTextArea"
-              placeholder="Add a new note (250 characters max)"
-              maxlength="250"
-              cols="45"
-              rows="5"
-              wrap="soft"
-              name="noteArea"
-              onChange={this.handleInputChange}
-              value={this.state.noteArea}
-              ></textarea>
+            {notesOrTitle}
           </div>
 
           <div className="settings-3">
@@ -336,11 +454,19 @@ class MainModal extends Component {
                     </Form.Group>
                   </Form>
                 </div>
-                <input
+                <div className=" zeroWidth">
+            <div className=" ">
+
+                    <button onClick={this.deleteItemConfirmation} className="editBtn nopadding">
+                      Delete Item
+                  </button>
+                  </div>
+                </div>
+                {/* <input
               type="button"
               value="Delete"
               onClick={this.deleteItemConfirmation}
-              ></input>
+              ></input> */}
           </div>
         </div>
 

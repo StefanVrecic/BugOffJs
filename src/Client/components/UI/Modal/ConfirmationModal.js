@@ -20,20 +20,35 @@ class ConfirmationModal extends Component {
 
 render() {
     
+
     return (
-            <Modal show={this.state.open}
-            classes={"Modal logoutModal"}
-            modalClosed={this.closeModalHandler}>
-               <br></br>
-               <h2>Are you sure you want to delete this item?</h2>
-               <br></br>
-               <div className = "logoutYes" >
-                <input type="button" value="Yes" onClick={this.props.confirmDelete}></input>
-               </div>
-        <br></br>
-                <input className = "logoutNo" type="button" value="No" onClick={() => {this.closeModalHandler()} }></input>
+        <Modal show={this.state.open}
+        classes={"Modal logoutModal"}
+        modalClosed={this.closeModalHandler}>
+           <br></br>
+           <h2>Are you sure you want to delete this item</h2>
+           <br></br>
+           <div className="logoutBtn-container">
+           <div className = "logoutBtnModal" >
+            <button onClick={this.props.confirmDelete} className="">
+                  Yes
+              </button>
+           </div>
+           </div>
+           
+    <br></br>
+
+    <div className="logoutBtn-container">
+    <div className = "logoutBtnModal" >
+            <button onClick={() => {this.closeModalHandler()} } className="">
+                  No
+              </button>
+           </div>
+</div>
             </Modal>
-    );
+);
+
+
 
 }
 

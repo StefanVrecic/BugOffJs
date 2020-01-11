@@ -10,12 +10,38 @@
     width: 58%;
 }
 
-.logoutYes {
-    margin-left: auto;
-    color: blue;
-}
 
-.logoutNo {
-    /* margin-right: auto; */
-    color:red;
+.logoutBtnModal {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    background: #6675df;
+  
+    font-family: Montserrat;
+    font-size: 2.5rem;
+    padding: .7rem;
+
+    color: #fff;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  
+    -webkit-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    transition: all 0.4s;
+  }
+.logoutBtn-container {
+    width: 50%;
+    left: 25%;
+    /* position: fixed; */
+    /* font-size:  */
+
+    margin: auto;
+    
 }

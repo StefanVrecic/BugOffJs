@@ -128,8 +128,13 @@ class Panel extends Component {
                 continue; // don't addd items if user already confirmed that they know it's overdue
             }
             if (d[2] == "Closed") {
+                // alert(d[1]);
                 continue; // do not show closed items in Deadlines modal
             }
+            if (d[9] == false) {
+                continue; // do not want items that have had their dates (stored, but) disabled
+            }
+            
             var date = new Date(d[4]);
             if (date > now) {
                 upcoming.push(d);

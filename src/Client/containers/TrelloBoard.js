@@ -57,7 +57,7 @@
         titles = ["Open", "In progress", "To be tested", "Re-opened", "Closed"];
         colors = ["open", "progress", "test", "reopened", "closed"];
         bugProperties = ["id", "name", "status", "description", "dueDate", "severity", "overdueConfirmed",
-        "activity", "bugReproducible"];
+        "activity", "bugReproducible", "allow"];
 
         componentDidUpdate(prevProps) {
             // Typical usage (don't forget to compare props):
@@ -140,6 +140,7 @@
                 dataArrayItem.push(dataItem.overdueConfirmed);
                 dataArrayItem.push(dataItem.activity);
                 dataArrayItem.push(dataItem.bugReproducible);
+                dataArrayItem.push(dataItem.dueDateEnabled);
                 // alert(dataItem.bugReproducible + "reprod " + dataItem.severity + " severity");
                
                 // alert("... " + dataItem.dueDate);
@@ -334,6 +335,15 @@
             const cutCard = laneArray_temp[col].splice(i, 1); // cutting from original lane
             laneArray_temp[destination].push(cutCard);
 
+            const status = this.laneNumberToStatus(destination);
+                const cardPos = this.cardPositionInArray(id); // get position in index
+                const dataArray = [...this.props.dataArray]; // get relative data
+                dataArray[cardPos][this.p("status")] = status; // alter specific property
+                this.props.updateDataArray(dataArray); // save to store
+            //     this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
+            // }
+
+
             this.setState({ laneArray: [...laneArray_temp] },
             this.db_updateCardStatus(id));
         }
@@ -354,10 +364,11 @@
                 laneArray[lane].push(storeId_string);
                 
 // name = data1[];status=2;description=3;dueDate=4;severity=5;overdueConfirmed= 6;activity=7;reproducible=8;
+// dueDateEnabled=9;
                 // data for each card - WARNING: don't change order
                 const status = this.laneNumberToStatus(lane);
 
- const dataToStore = [storeId_string, cardText, status, "No description provided", null, "None", false, [], "None"]
+ const dataToStore = [storeId_string, cardText, status, "No description provided", null, "None", false, [], "None", false]
                 dataArray.push(dataToStore);
                 
                 this.setState({ laneArray: [...laneArray] });
@@ -457,6 +468,8 @@
                                                     postNewNote={this.saveNewNote}
                 viewNotes={this.viewActivityNotes}
                                                     saveStatus={this.saveStatusHandler}
+                                                    saveCalendarEnabled={this.saveAllowCalendar}
+                                                    saveNewTitle={this.saveNewTitleHandler}
             ></MainModal>
 
             </div>
@@ -464,6 +477,15 @@
         }
         
 ////////////////////////////////////// Modal save data handlers  ///////////////////////
+
+    saveNewTitleHandler = (name) => {
+        const cardId = this.state.activeCard;
+        const cardPos = this.cardPositionInArray(cardId); // get position in index
+        const dataArray = [...this.props.dataArray]; // get relative data
+        dataArray[cardPos][this.p("name")] = name; // alter specific property
+        this.props.updateDataArray(dataArray); // save to store
+        this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
+    }
 
     saveDescriptionHandler = (description) => {
         const cardId = this.state.activeCard;
@@ -473,12 +495,20 @@
         this.props.updateDataArray(dataArray); // save to store
         this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
     }
-
+    saveAllowCalendar = (allow) => {
+        const cardId = this.state.activeCard;
+        const cardPos = this.cardPositionInArray(cardId); // get position in index
+        const dataArray = [...this.props.dataArray]; // get relative data
+        dataArray[cardPos][this.p("allow")] = allow; // alter specific property
+        this.props.updateDataArray(dataArray); // save to store
+        this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
+    }
     saveDateHandler = (date) => {
         const cardId = this.state.activeCard;
         const cardPos = this.cardPositionInArray(cardId); // get position in index
         const dataArray = [...this.props.dataArray]; // get relative data
         dataArray[cardPos][this.p("dueDate")] = date; // alter specific property
+        alert(dataArray[cardPos][this.p("dueDate")]);
         this.props.updateDataArray(dataArray); // save to store
         this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
     }
@@ -542,9 +572,10 @@
             const overdueConfirmed = data[6];
             const activity = data[7];
             const bugReproducible = data[8];
+            const dueDateEnabled = data[9];
             axios
             .patch(`http://localhost:8080/bugs/${id}`, {
-                name, description, status, dueDate, severity, overdueConfirmed, activity, bugReproducible
+                name, description, status, dueDate, severity, overdueConfirmed, activity, bugReproducible, dueDateEnabled
                 
             })
             .then(function(response) {
@@ -586,7 +617,7 @@
 
             instance.post("/bugs", { // WARNING
               _id: id, name: cardTitle, status: status, description: "No description provided", dueDate: null,
-              severity: "None", overdueConfirmed: false, notes: null, bugReproducible: "None"
+              severity: "None", overdueConfirmed: false, notes: null, bugReproducible: "None", dueDateEnabled: false
             })
                 .then(function(response) {
                 console.log("success create" + response);

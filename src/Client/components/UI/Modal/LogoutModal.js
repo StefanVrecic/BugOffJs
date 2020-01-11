@@ -27,13 +27,27 @@ render() {
                <br></br>
                <h2>Are you sure you want to log out?</h2>
                <br></br>
-               <div className = "logoutYes" >
-                <input type="button" value="Yes" onClick={this.props.LogoutModal_logout}></input>
+               <div className="logoutBtn-container">
+               <div className = "logoutBtnModal" >
+                <button onClick={this.props.LogoutModal_logout} className="">
+                      Yes
+                  </button>
                </div>
+               </div>
+               
         <br></br>
-                <input className = "logoutNo" type="button" value="No" onClick={() => {this.closeModalHandler()} }></input>
-            </Modal>
+
+        <div className="logoutBtn-container">
+        <div className = "logoutBtnModal" >
+                <button onClick={() => {this.closeModalHandler()} } className="">
+                      No
+                  </button>
+               </div>
+</div>
+                </Modal>
     );
+
+    
 
 }
 

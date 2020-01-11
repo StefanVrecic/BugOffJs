@@ -33,7 +33,8 @@ app.listen(port, () => {
 const Bug = require('./models/bug');
 
 const checkBugOverdue = async () => {
-    const bugs = await Bug.find({dueDate:{$ne:null}, dueDatePassed:{$ne:true}});
+    const bugs = await Bug.find({dueDate:{$ne:null}, dueDatePassed:{$ne:true}, dueDateEnabled:{$ne:false},
+    status:{$ne:'Closed'}});
     // const bugs = await Bug.find();
     let items = 0;
     const now = new Date();
@@ -52,7 +53,8 @@ const checkBugOverdue = async () => {
             // E.g., 1.45pm on my computer, if I put 1.45pm into the Robo 3T, this will register as 2.45pm
         }
     }
-    console.log("Completed check for deadlines: " + now);
+    // console.log("Completed check for deadlines: " + now);
+    console.log("Completed check for deadlines: ");
     if (items > 0) {
         console.log(items + " items have reached their deadline")
     } else {
@@ -61,7 +63,7 @@ const checkBugOverdue = async () => {
     }
 }
     
-setInterval(checkBugOverdue, 15000);
+setInterval(checkBugOverdue, 30000);
 
 
 
