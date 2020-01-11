@@ -29,7 +29,7 @@ class DeadlinesModal extends Component {
     
 render() {
     const overdueTasks = []; const upcomingTasks = [];
-    alert(this.props.upcomingTasks);
+    // alert(this.props.upcomingTasks);
 
     // add button
     // onClick - this.props.openDeadlineItem(o[0])

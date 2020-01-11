@@ -32,7 +32,7 @@ class Panel extends Component {
             // alert("success Panel.js");
         })
         .catch(error => {
-            alert("Please login. You are being redirected to the login page");
+            // alert("Please login. You are being redirected to the login page");
             console.log("failure confirming " + error.config.data);
             this.props.history.push( '/login' );
             window.localStorage.removeItem("login-token");
@@ -183,7 +183,24 @@ class Panel extends Component {
         this.registerModalHandler("Activity");
         // this.modalSelectHandler("Activity");
     }
-    
+    removeNoteFromData = (index) => {
+        // from RHS of array
+        const newModalData = [...this.props.modalData];
+        const RHS_index = this.props.modalData[7].length - index - 1;
+        newModalData[7].splice(RHS_index, 1);
+        this.props.updateModalData(newModalData);
+        
+        const modalItemId = newModalData[0];
+        const modalItemIndex = this.props.idArray.indexOf(modalItemId);
+        // alert(modalItemId + " / " + modalItemIndex);
+        const dataArray = [...this.props.dataArray]; // get relative data
+        dataArray[modalItemIndex] = newModalData;
+        this.props.updateDataArray(dataArray); // save to store
+        this.db_updateCardData(modalItemId, dataArray[modalItemIndex]); // save to db
+
+        this.openActivityHandler();
+    }
+
     prepareActivityModal = () => {
         if (this.props.modalData.length === 0 || this.props.modalData[7].length === 0) {
             return;
@@ -195,6 +212,7 @@ class Panel extends Component {
         return (<ActivityModal 
             closeModal={this.closeModalPanel}
             events={events}
+            removeNote={this.removeNoteFromData}
             ></ActivityModal> );
     }
     
@@ -307,6 +325,33 @@ db_changePass = (currentPass, newPass) => {
             // console.log(error.config.data);
           });
       }
+
+      db_updateCardData(id, data) {
+
+        // warning
+        const name = data[1];
+        const status = data[2];
+        const description = data[3];
+        const dueDate = data[4];
+        const severity = data[5];
+        const overdueConfirmed = data[6];
+        const activity = data[7];
+        const bugReproducible = data[8];
+        const dueDateEnabled = data[9];
+        axios
+        .patch(`http://localhost:8080/bugs/${id}`, {
+            name, description, status, dueDate, severity, overdueConfirmed, activity, bugReproducible, dueDateEnabled
+            
+        })
+        .then(function(response) {
+            console.log("updated status");
+            console.log(response);
+        })
+        .catch(function(error) {
+            console.log("failed status update");
+            console.log(error.config.data);
+        });
+    }
 
 
 db_logout = () => {

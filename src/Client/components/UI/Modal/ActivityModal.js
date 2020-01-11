@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from './Modal';
-import Timeline from 'react-time-line';
+// import Timeline from 'react-time-line';
+import Timeline from '../Timeline/Timeline';
 import { connect } from 'react-redux';
 
 class ActivityModal extends Component {
@@ -26,7 +27,7 @@ render() {
             modalClosed={this.closeModalHandler}
             classes="Modal defaultDimensions">
                 ActivityModal
-            <Timeline items={events} /> 
+            <Timeline items={events} deleteItem={this.props.removeNote} /> 
             </Modal>
     );
 

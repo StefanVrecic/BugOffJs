@@ -508,7 +508,6 @@
         const cardPos = this.cardPositionInArray(cardId); // get position in index
         const dataArray = [...this.props.dataArray]; // get relative data
         dataArray[cardPos][this.p("dueDate")] = date; // alter specific property
-        alert(dataArray[cardPos][this.p("dueDate")]);
         this.props.updateDataArray(dataArray); // save to store
         this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
     }
