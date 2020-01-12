@@ -41,7 +41,7 @@ class MainModal extends Component {
       newTitleSet: false,
       newTitle: "",
       oldNoteArea: "",
-      alertTimer: -1,
+      alertTimer: "empty",
       alertMeChecked: "empty"
     };
 
@@ -66,11 +66,20 @@ class MainModal extends Component {
   };
 
   changeTimer = (event) => {
-    this.setState({alertTimer: event.target.value});
+    let setTimer = event.target.value;
+    if (setTimer > 48) {
+      setTimer = 48;
+    event.target.value = 48;
+    } 
+    if (setTimer < 1) {
+      setTimer = -1;
+      event.target.value = -1;
+    }
+    this.setState({alertTimer: setTimer});
   }
 
   checkAlert = (e) => {
-    // alert(e.target.checked + " checked");
+  
     this.setState({alertMeChecked: e.target.checked});
     this.props.saveAllowAlert(e.target.checked);
   }
@@ -96,7 +105,7 @@ class MainModal extends Component {
   }
 
   saveReproducible = (event) => {
-    // return alert(this.state.alertMeChecked);
+    
     this.setState({reprod: event.target.value});
     this.props.addReproducible(event.target.value);
   }
@@ -106,7 +115,9 @@ class MainModal extends Component {
     this.props.saveStatus(this.props.data[0], event.target.value);
   }
   componentDidUpdate() {
-    
+    if (this.props.data.length > 0 && this.state.alertTimer === "empty") {
+      this.setState({alertTimer: this.props.data[11]});
+    }
     if (this.props.data.length > 0 && this.state.option === "empty") {
       this.setState({option: this.props.status});
     }
@@ -122,12 +133,10 @@ class MainModal extends Component {
     if (this.props.data.length > 0 && this.state.startAllowCalendar === "empty") {
       if (this.props.data[9] === true) { //  allow calendaar
       
-      // alert("enabled");
       this.setState({disableCalendar: false});
       this.setState({startAllowCalendar: false});
       
     } else { // don't allow calendar
-    // alert("disabled");
     this.setState({disableCalendar: true});
     this.setState({startAllowCalendar: true});
       }
@@ -137,13 +146,13 @@ class MainModal extends Component {
   escFunction = (event) => {
     if(this.state.closed === true && event.keyCode === 27) {
       // maybe keylistener doesn't provide latest ?
-    // alert("esc key " + this.state.alertTimer);
+      // this is partly broken. Settings transfer to the next modal that shows up.
     this.closeModal();
     }
   }
 
   componentDidMount() {
-    document.addEventListener("keydown", this.escFunction, false);
+    // document.addEventListener("keydown", this.escFunction, false);
     
   }
 
@@ -184,16 +193,28 @@ class MainModal extends Component {
     // if we toggle it => calendar is enabled=false => dueDateEnabled = true
     // thus if calendar is disabled=true and we hit toggle, we set dueDateEnabled = true;
     // thus at current time dueDateEnabled = (!!) disabled 
+    if (this.state.disableCalendar === false) { // === true as not yet toggled
+      this.setState({alertMeChecked: false});
+      this.props.saveAllowAlert(false);
+    }
     this.setState({disableCalendar: !this.state.disableCalendar});
   }
 
   closeModal = () => {
     // reset properties for next modal
     
-    // alert(this.state.alertTimer + " about to set reminder");
-    this.props.setReminder(this.state.alertTimer);
     
-    this.props.modalClosed();
+    let setTimer = this.state.alertTimer;
+    // alert("hr: " + setTimer);
+    
+    if (setTimer > 48) {
+      setTimer = 48;
+    } if (setTimer < 1) {
+      setTimer = -1;
+    }
+    
+    this.props.setReminder(setTimer);
+    
     this.setState({
       closed: true,
       cardText: "",
@@ -204,9 +225,12 @@ class MainModal extends Component {
       sever: "empty",
       startAllowCalendar: "empty",
       alertMeChecked: "empty",
-      alertTimer: -1
+      alertTimer: "empty",
+      stateNewCard: false
     });
     this.setState({ date: "", startDate: new Date(), severity: "" });
+    
+    this.props.modalClosed();
   };
 
   cancelNewTitle = () => {
@@ -229,7 +253,7 @@ class MainModal extends Component {
     }
     if (!this.state.stateNewCard === false) {
       // save
-      // alert("save");
+      
       this.props.saveNewTitle(this.state.noteArea);
       this.setState({newTitleSet: true});
       this.setState({newTitle: this.state.noteArea});
@@ -348,7 +372,7 @@ class MainModal extends Component {
             />);
   }
 
-  // alert(this.props.data[10]);
+  
   
     return (
       <Auxiliary>
@@ -405,11 +429,12 @@ class MainModal extends Component {
 
             </div>  
             <div>
-              <input className="input-checkbox100" id="ckb2" checked={this.props.data[10]} type="checkbox"
+              <input className="input-checkbox100"  id="ckb2" checked={this.props.data[10]} type="checkbox"
   name="sign-up" onChange = { this.checkAlert }/>
 							<label className="label-checkbox100" for="ckb2">
               Email me </label>
-                <input type="number" min="1" max="48" step="1" onChange={this.changeTimer} name="alertTimer" />
+              {/* value={this.props.data[11]} */}
+                <input type="number" min="1"  max="48" value={this.state.alertTimer} step="1" onChange={this.changeTimer} name="alertTimer" />
               <span> hours before due date</span>
             </div>
           </div>

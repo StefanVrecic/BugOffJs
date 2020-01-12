@@ -137,17 +137,6 @@
                 dataArrayItem.push(dataItem.allowReminder);
                 dataArrayItem.push(dataItem.reminderTimer);
                 
-                // alert(dataItem.bugReproducible + "reprod " + dataItem.severity + " severity");
-               
-                // alert("... " + dataItem.dueDate);
-                // alert(dataItem.severity + "\n" + dataItem.name);
-                // if (dataItem.severity != undefined) {
-                //     alert(dataItem.severity + "\n" + dataItem.name);
-                // } else {
-                //     continue;
-                // }
-               
-                // dataArrayItem.push(dataItem.data); // push other data that is not id
                 const lane = this.statusToLaneNumber(dataItem.status);
 
                 idArray.push(dataItem._id);
@@ -156,9 +145,7 @@
             }
             // redux calls
             this.props.updateIdArray(idArray);
-            
             this.props.updateDataArray(dataArray); // redux call
-
             this.setState({ laneArray: [...laneArray] });
         }
 
@@ -166,8 +153,7 @@
             const c=5;
             if (a[c] === b[c]) {
                 return 0;
-            }
-            else {
+            } else {
             if (a[c] === "High") {
                 return -1;
             }
@@ -189,7 +175,6 @@
                 for (const id of arrayProvided) {
                     output = output + "\n" + id;
                 }
-
             } else if (name === "data") {
 
             } else if (name === "lane") {
@@ -239,8 +224,7 @@
             this.setModalStatus(cardStatus);
             this.setActiveCard(id);
             this.setModalData(data);
-            // alert(title + " . " + cardStatus + " . " + id + " . " + data);
-            // this.setState({modalData: data}, this.openModalHandler());
+            
             this.openModalHandler();
         };
 
@@ -261,9 +245,8 @@
 
             const deleteIndex = idArray.indexOf(deleteId);
             const activeCardLane = this.getCardLane(deleteId);
-            // alert(this.cardPosInLane(deleteId)); // Could use this instead below
+            
             const indexInLane = laneArray[activeCardLane].indexOf(deleteId);
-
 
             idArray.splice(deleteIndex, 1);
             laneArray[activeCardLane].splice(indexInLane, 1);
@@ -275,7 +258,6 @@
                 this.props.updateDataArray([...dataArray]);
                         
         this.db_deleteItem(deleteId);
-        
             this.closeModalHandler();
 
         };
@@ -334,7 +316,6 @@
             //     this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
             // }
 
-
             this.setState({ laneArray: [...laneArray_temp] },
             this.db_updateCardStatus(id));
         }
@@ -359,7 +340,7 @@
 const status = this.laneNumberToStatus(lane);
 
 // data for each card - WARNING - create properties: don't change order
- const dataToStore = [storeId_string, cardText, status, "No description provided", null, "None", false, [], "None", false, false, -1]
+ const dataToStore = [storeId_string, cardText, status, "No description provided", null, "None", false, [], "None", false, false, -1,]
                 dataArray.push(dataToStore);
                 
                 this.setState({ laneArray: [...laneArray] });
@@ -367,7 +348,6 @@ const status = this.laneNumberToStatus(lane);
                 this.props.updateDataArray([...dataArray]);
                 
                 this.db_createCard(storeId, cardText, status);
-                                  
         }
         
         viewActivityNotes = () => {
@@ -558,7 +538,6 @@ saveAlertHandler = (allowReminder) => { // xyz
 
 //////////////////////////////////// db methods ////////////////////////
         
-
         db_deleteItem(id) {
             const instance = axios.create({
                 baseURL: 'http://localhost:8080',
@@ -576,7 +555,6 @@ saveAlertHandler = (allowReminder) => { // xyz
         }
 
         db_updateCardData(id, data) {
-
             // warning - update properties. Add in axios.patch() below
             const name = data[1];
             const status = data[2];
@@ -622,10 +600,7 @@ saveAlertHandler = (allowReminder) => { // xyz
             });
         }
 
-        
-
         db_createCard(id, cardTitle, status) {
-
               const instance = axios.create({
                 baseURL: 'http://localhost:8080',
                 headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
@@ -634,7 +609,7 @@ saveAlertHandler = (allowReminder) => { // xyz
             instance.post("/bugs", { // WARNING - create properties
               _id: id, name: cardTitle, status: status, description: "No description provided", dueDate: null,
               severity: "None", overdueConfirmed: false, notes: null, bugReproducible: "None", dueDateEnabled: false,
-              allowReminder: false
+              allowReminder: false, reminderTimer: -1
             })
                 .then(function(response) {
                 console.log("success create" + response);
@@ -705,4 +680,3 @@ const mapDispatchToProps = dispatch => {
 }; };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrelloBoard);
-
