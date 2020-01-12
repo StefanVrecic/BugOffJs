@@ -1,0 +1,15 @@
+ => MAIN MODAL DONE!!
+
+activity + deadline + notifications? + 
++ RESPONSIVENESS + FLESHING OUT
+ => done...
+
+react-time-line
+=====================
+
+- reminder
+{enable/disable}
+{listener for hours}
+{store hours if enabled}
+{default=24 hours if disabled then enabled}
+{code backend to take note}

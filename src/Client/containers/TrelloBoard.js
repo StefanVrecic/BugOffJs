@@ -1,3 +1,5 @@
+        // To add a property to what is being tracked in the bug/database, Ctrl+F 'warning' and add new property to list below
+        // necessary for 1) tracking 2) creating locally 3) creating in db 4) reading 5) updating
         import React, { Component } from "react";
         import "./TrelloBoard.css";
         import Card from "../components/Lane/Card";
@@ -10,13 +12,8 @@
         // import Modal from "../components/UI/Modal/Modal";
         // import uniqid from "uniqid";
 
-        // data order: warning
         // id, text, status, [description]
-        // const name = data[1];
-        // const status = data[2];
-        // const description = data[3];
-        // const dueDate = data[4];
-        // const severity = data[5];
+
             // Methods in file
             // db_loadCards(), statusToLaneNumber, // processLoadedCards,db_updateCardStatus,
             // setModalTitle,setModalStatus, // closeModalHandler,getCardStatus,
@@ -47,17 +44,13 @@
             laneArray: [[], [], [], [], []], // required to track lanes
             addCard_laneOpen: "-1", // required *only* locally
             modalData: [] // only required inside modals?
-            // /items
-            // how about providing idArray & laneArray from Panel.js + best way to provide the name?
-            // could make an array containing [ [id,name,status], [id,name,status]] etc. ?
-            // then addCard_laneOpen will remain in the state.
-            // ... what about creating a new card?
+            
         };
 
         titles = ["Open", "In progress", "To be tested", "Re-opened", "Closed"];
         colors = ["open", "progress", "test", "reopened", "closed"];
-        bugProperties = ["id", "name", "status", "description", "dueDate", "severity", "overdueConfirmed",
-        "activity", "bugReproducible", "allow"];
+        // warning - track properties
+        bugProperties = ["id", "name", "status", "description", "dueDate", "severity", "overdueConfirmed", "activity", "bugReproducible", "allow", "allowReminder", "reminderTimer"];
 
         componentDidUpdate(prevProps) {
             // Typical usage (don't forget to compare props):
@@ -131,7 +124,7 @@
                 // name = data[1]; status = [2]; description = [3]; dueDate = [4]; 
                 // severity = [5]; overdueConfirmed = [6]; activity = data[7]; reproducible = data[8]
 
-                // WARNING DO NOT CHANGE ORDER OF dataArrayItem.push
+                // WARNING - read properties - DO NOT CHANGE ORDER OF dataArrayItem.push
                 dataArrayItem.push(dataItem.name);
                 dataArrayItem.push(dataItem.status);
                 dataArrayItem.push(dataItem.description);
@@ -141,6 +134,9 @@
                 dataArrayItem.push(dataItem.activity);
                 dataArrayItem.push(dataItem.bugReproducible);
                 dataArrayItem.push(dataItem.dueDateEnabled);
+                dataArrayItem.push(dataItem.allowReminder);
+                dataArrayItem.push(dataItem.reminderTimer);
+                
                 // alert(dataItem.bugReproducible + "reprod " + dataItem.severity + " severity");
                
                 // alert("... " + dataItem.dueDate);
@@ -273,18 +269,13 @@
             laneArray[activeCardLane].splice(indexInLane, 1);
             dataArray.splice(deleteIndex, 1);
   
-
             this.setState({ laneArray: [...laneArray] });
 
-                // this.setState({ idArray: [...idArray] });
                 this.props.updateIdArray([...idArray]);
-                
-                    // this.setState({ dataArray: [...dataArray] },
-                        this.props.updateDataArray([...dataArray]);
-                        // warning needs call back
-                    //    () => {
+                this.props.updateDataArray([...dataArray]);
+                        
         this.db_deleteItem(deleteId);
-                    //     });  
+        
             this.closeModalHandler();
 
         };
@@ -365,10 +356,10 @@
                 
 // name = data1[];status=2;description=3;dueDate=4;severity=5;overdueConfirmed= 6;activity=7;reproducible=8;
 // dueDateEnabled=9;
-                // data for each card - WARNING: don't change order
-                const status = this.laneNumberToStatus(lane);
+const status = this.laneNumberToStatus(lane);
 
- const dataToStore = [storeId_string, cardText, status, "No description provided", null, "None", false, [], "None", false]
+// data for each card - WARNING - create properties: don't change order
+ const dataToStore = [storeId_string, cardText, status, "No description provided", null, "None", false, [], "None", false, false, -1]
                 dataArray.push(dataToStore);
                 
                 this.setState({ laneArray: [...laneArray] });
@@ -470,6 +461,8 @@
                                                     saveStatus={this.saveStatusHandler}
                                                     saveCalendarEnabled={this.saveAllowCalendar}
                                                     saveNewTitle={this.saveNewTitleHandler}
+                                                    saveAllowAlert={this.saveAlertHandler}
+                                                    setReminder={this.saveReminderHandler}
             ></MainModal>
 
             </div>
@@ -477,6 +470,28 @@
         }
         
 ////////////////////////////////////// Modal save data handlers  ///////////////////////
+saveReminderHandler = (reminderTimer) => { // backend will calculate a date based on x hours before reminder
+    // alert(reminderTimer + " inside handler");
+    const cardId = this.state.activeCard;
+    const cardPos = this.cardPositionInArray(cardId); // get position in index
+    const dataArray = [...this.props.dataArray]; // get relative data
+    if (dataArray == undefined || dataArray[cardPos] == undefined || dataArray.length === 0) { // weird behaviour when escape key is called, no idea why.
+        return;
+    }
+    // alert(dataArray + "exists " + cardPos + " cardPos reminderTimer: " + reminderTimer + " this.p " + this.p("reminderTimer"));
+    dataArray[cardPos][this.p("reminderTimer")] = reminderTimer; // alter specific property
+    this.props.updateDataArray(dataArray); // save to store
+    this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
+}
+    
+saveAlertHandler = (allowReminder) => { // xyz
+        const cardId = this.state.activeCard;
+        const cardPos = this.cardPositionInArray(cardId); // get position in index
+        const dataArray = [...this.props.dataArray]; // get relative data
+        dataArray[cardPos][this.p("allowReminder")] = allowReminder; // alter specific property
+        this.props.updateDataArray(dataArray); // save to store
+        this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
+    }
 
     saveNewTitleHandler = (name) => {
         const cardId = this.state.activeCard;
@@ -562,7 +577,7 @@
 
         db_updateCardData(id, data) {
 
-            // warning
+            // warning - update properties. Add in axios.patch() below
             const name = data[1];
             const status = data[2];
             const description = data[3];
@@ -572,9 +587,11 @@
             const activity = data[7];
             const bugReproducible = data[8];
             const dueDateEnabled = data[9];
+            const allowReminder = data[10];
+            const reminderTimer = data[11];
             axios
             .patch(`http://localhost:8080/bugs/${id}`, {
-                name, description, status, dueDate, severity, overdueConfirmed, activity, bugReproducible, dueDateEnabled
+                name, description, status, dueDate, severity, overdueConfirmed, activity, bugReproducible, dueDateEnabled, allowReminder, reminderTimer
                 
             })
             .then(function(response) {
@@ -614,9 +631,10 @@
                 headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
               });
 
-            instance.post("/bugs", { // WARNING
+            instance.post("/bugs", { // WARNING - create properties
               _id: id, name: cardTitle, status: status, description: "No description provided", dueDate: null,
-              severity: "None", overdueConfirmed: false, notes: null, bugReproducible: "None", dueDateEnabled: false
+              severity: "None", overdueConfirmed: false, notes: null, bugReproducible: "None", dueDateEnabled: false,
+              allowReminder: false
             })
                 .then(function(response) {
                 console.log("success create" + response);

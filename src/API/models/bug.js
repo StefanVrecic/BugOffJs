@@ -36,11 +36,15 @@ const bugSchema = new mongoose.Schema({
         type: Date,
         required: false
     },
-    reminder: {// todo
-        type: Date,
+    reminderTimer: {// todo
+        type: Number,
         required: false
     },
     dueDateEnabled: {// todo
+        type: Boolean,
+        required: false
+    },
+    allowReminder: {
         type: Boolean,
         required: false
     },

@@ -40,15 +40,19 @@ class MainModal extends Component {
       stateNewCard: false,
       newTitleSet: false,
       newTitle: "",
-      oldNoteArea: ""
+      oldNoteArea: "",
+      alertTimer: -1,
+      alertMeChecked: "empty"
     };
 
     this.textInput = React.createRef();
     this.saveNewCardTitle = this.saveNewCardTitle.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+
+    // this.escFunction = this.escFunction.bind(this);
   }
-      bugProperties = ["id", "name", "status", "description", "dueDate", "severity", "overdueConfirmed",
-        "activity", "bugReproducible"];
+  
+    bugProperties = ["id", "name", "status", "description", "dueDate", "severity", "overdueConfirmed", "activity", "bugReproducible", "alertTimer"];
         
         p = title => {
           return this.bugProperties.indexOf(title);
@@ -61,9 +65,16 @@ class MainModal extends Component {
     this.props.addDate(date);
   };
 
-  checkAlert = (event) => {
-    alert("????????????????????????????");
+  changeTimer = (event) => {
+    this.setState({alertTimer: event.target.value});
   }
+
+  checkAlert = (e) => {
+    // alert(e.target.checked + " checked");
+    this.setState({alertMeChecked: e.target.checked});
+    this.props.saveAllowAlert(e.target.checked);
+  }
+
   saveDueDateEnabled = (event) => {
 
   }
@@ -85,6 +96,7 @@ class MainModal extends Component {
   }
 
   saveReproducible = (event) => {
+    // return alert(this.state.alertMeChecked);
     this.setState({reprod: event.target.value});
     this.props.addReproducible(event.target.value);
   }
@@ -104,6 +116,9 @@ class MainModal extends Component {
     if (this.props.data.length > 0 && this.state.reprod === "empty") {
       this.setState({reprod: this.props.data[8]});
     }
+    if (this.props.data.length > 0 && this.state.alertMeChecked === "empty") {
+      // this.setState({alertMeChecked: this.props.data[10]});
+    }
     if (this.props.data.length > 0 && this.state.startAllowCalendar === "empty") {
       if (this.props.data[9] === true) { //  allow calendaar
       
@@ -118,26 +133,29 @@ class MainModal extends Component {
       }
     } 
   }
-
+  
   escFunction = (event) => {
     if(this.state.closed === true && event.keyCode === 27) {
-      this.closeModal();
+      // maybe keylistener doesn't provide latest ?
+    // alert("esc key " + this.state.alertTimer);
+    this.closeModal();
     }
   }
 
   componentDidMount() {
     document.addEventListener("keydown", this.escFunction, false);
+    
   }
 
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value
-    });
-  }
+	handleInputChange(event)  {
+		const target = event.target;
+		const value = target.type === 'checkbox' ? target.checked : target.value;
+		const name = target.name;
+	
+		this.setState({
+		  [name]: value
+		});
+	  }
 
   setSeverity = eventKey => {
     this.setState({ severity: eventKey });
@@ -170,8 +188,12 @@ class MainModal extends Component {
   }
 
   closeModal = () => {
-    this.props.modalClosed();
     // reset properties for next modal
+    
+    // alert(this.state.alertTimer + " about to set reminder");
+    this.props.setReminder(this.state.alertTimer);
+    
+    this.props.modalClosed();
     this.setState({
       closed: true,
       cardText: "",
@@ -180,7 +202,9 @@ class MainModal extends Component {
       option: "empty",
       reprod: "empty",
       sever: "empty",
-      startAllowCalendar: "empty"
+      startAllowCalendar: "empty",
+      alertMeChecked: "empty",
+      alertTimer: -1
     });
     this.setState({ date: "", startDate: new Date(), severity: "" });
   };
@@ -223,14 +247,14 @@ class MainModal extends Component {
     }
     
     let confirmationModal;
-      if (this.state.deleteItemModal) {
+    if (this.state.deleteItemModal) {
         confirmationModal = (
           <ConfirmationModal confirmDelete={this.confirmDeleteItem}
           closeModal={this.rejectDeleteItem} ></ConfirmationModal>
         );
       }
 
-    let viewNotesDisabled = false;
+      let viewNotesDisabled = false;
     if (this.props.data.length === 0 || this.props.data[7].length === 0) {
       viewNotesDisabled = true;
   }
@@ -239,7 +263,7 @@ class MainModal extends Component {
       selectedTime = new Date(this.props.data[4]);
     }    
     let newCard = null;
-
+    
     let notesOrTitle = (
       <textarea
       className="notesTextArea"
@@ -258,8 +282,8 @@ class MainModal extends Component {
     let editOrSave = "Edit";
     let editOrSaveTitle = "Edit";
     let cancelSaveTitle = null;
-
-      if (this.state.stateNewCard) {
+    
+    if (this.state.stateNewCard) {
         editOrSaveTitle = "Save";
         cancelSaveTitle = <span className = "editTitle" onClick={this.cancelNewTitle}> / Cancel </span>
         notesOrTitle = (
@@ -278,9 +302,9 @@ class MainModal extends Component {
         );
       }
 
-    let displayEditing = <p className="displayDescription">{this.props.data[3]}</p>;
+      let displayEditing = <p className="displayDescription">{this.props.data[3]}</p>;
     
-    if (this.state.editing) {
+      if (this.state.editing) {
       editOrSave = "Save";
       displayEditing = (
         <div>
@@ -294,35 +318,37 @@ class MainModal extends Component {
             name="descriptionArea"
             onChange={this.handleInputChange}
             value={this.state.descriptionArea}
-          ></textarea>
+            ></textarea>
         </div>
       );
     }
     let displayCalendar = "";
-
+    
     // if (this.state.startAllowCalendar === true)
 
     let onOffButton = "Off";
-
+    
     if (!this.state.disableCalendar) {
       displayCalendar = (
         <DatePicker
           selected={selectedTime}
             className="calendarComponent"
-              timeIntervals={15}
+            timeIntervals={15}
                   onChange={this.handleCalendarChange}
                     showTimeSelect
                       dateFormat="MMMM d, yyyy h:mm aa"
-        />); 
+                      />); 
       } else {
-      onOffButton = "On";
+        onOffButton = "On";
         displayCalendar = (
           <DatePicker
             disabled
-              placeholderText="Press 'ON' to select deadline"
-                className="calendarComponent greyed"
-      />);
+            placeholderText="Press 'ON' to select deadline"
+            className="calendarComponent greyed"
+            />);
   }
+
+  // alert(this.props.data[10]);
   
     return (
       <Auxiliary>
@@ -373,19 +399,17 @@ class MainModal extends Component {
             <div>
              {displayCalendar}
 
-              {/* <input
-              type="button" value={onOffButton} onClick={this.toggleCalendar} className="disableDate"
-              ></input> */}
                     <button onClick={this.toggleCalendar} className="onOffBtn nopadding disableDate">
                       {onOffButton}
                   </button>
 
             </div>  
             <div>
-							<input className="input-checkbox100" id="ckb2" type="checkbox" name="sign-up" onChange = { this.checkAlert }/>
+              <input className="input-checkbox100" id="ckb2" checked={this.props.data[10]} type="checkbox"
+  name="sign-up" onChange = { this.checkAlert }/>
 							<label className="label-checkbox100" for="ckb2">
               Email me </label>
-                <input type="number" min="1" max="48" step="1" name="alertTimer" />
+                <input type="number" min="1" max="48" step="1" onChange={this.changeTimer} name="alertTimer" />
               <span> hours before due date</span>
             </div>
           </div>

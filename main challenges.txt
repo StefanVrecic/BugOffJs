@@ -1,0 +1,14 @@
+Main challenges I've experienced
+
+Basic syntax errors with arrow functions mainly
+
+Loading default values e.g., checkbox, dropdown etc required lots of work and checkbox doesn't even work correctly...
+
+Removing event listener when unmounting child component would cause a re-render in parent thus re-creating child - need to think of a way to over come this
+
+UI/design/CSS - the CSS and HTML were a massive PITA, I saved myself an hour or two by using a template for landing page, but then I didn't bother to understand it and I spent many hours 'guessing' how it worked when I resused components.
+- Didn't set up modular CSS - bad choice. Limited understanding of how CSS attributes are applied causing lots of trouble. Responsiveness etc. List goes on.
+
+Figuring out how to manage state with the cards and the TrelloBoard was quite tough and took me a long time to figure out.
+
+I couldn't get the drag and drop logic to work for a long time.
