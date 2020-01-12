@@ -671,6 +671,7 @@ const mapStateToProps = state => {
 		modalData: state.modalData
 	};
 };
+// test
 // call via this.props.updateIdArray or this.props.updateDataArray
 const mapDispatchToProps = dispatch => {
 	return {
