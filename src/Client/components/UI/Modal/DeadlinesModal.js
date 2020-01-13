@@ -40,10 +40,10 @@ render() {
     
     let alternate = true;
     for (const o of this.props.overdueTasks) {
-      let clockIcon = null;
-      if (o[11] > 0) {
-        clockIcon = <FontAwesomeIcon icon={faClock} />;
-      }
+      // let clockIcon = null;
+      // if (o[11] > 0 && o[10] === true) {
+      //   clockIcon = <FontAwesomeIcon icon={faClock} />;
+      // }
       // alert(o[11] + " ...");
         const theDate = new Date(o[4]).toLocaleString();
         let classes = "bg-redTemp overflow-auto";
@@ -66,7 +66,7 @@ render() {
              <div className="individTemp-date">
                <b>{theDate}</b>
              </div>
-             <div>&nbsp;{clockIcon}</div>
+             {/* <div>&nbsp;{clockIcon}</div> */}
              <div className="individTemp-content">
                &nbsp;&nbsp;{displayString}
              </div>

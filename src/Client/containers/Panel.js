@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 class Panel extends Component {
 
     componentDidMount() {
-        // alert("check authenticated");
+        
         // check to see if token works?
         this.db_confirmIdentity();
     }
@@ -29,10 +29,10 @@ class Panel extends Component {
         
         instance.post("/users/checkauth", {
         }).then(response => {
-            // alert("success Panel.js");
+            
         })
         .catch(error => {
-            // alert("Please login. You are being redirected to the login page");
+            
             console.log("failure confirming " + error.config.data);
             this.props.history.push( '/login' );
             window.localStorage.removeItem("login-token");
@@ -47,6 +47,8 @@ class Panel extends Component {
     
 
     registerModalHandler = (modalFired) =>  {
+        
+        this.setState({ panelCard: null });
         console.log(modalFired + " modalFired");
         this.setState({currentModal: modalFired});
 
@@ -74,7 +76,7 @@ class Panel extends Component {
             overdueTasks={overdue} upcomingTasks={upcoming}></DeadlinesModal>);
     }
     openDeadLineCard = id => {
-        // alert(id + " id panel");
+        
         this.closeModalPanel();
         this.setState({panelCard: id});
         
@@ -127,7 +129,7 @@ class Panel extends Component {
         // "overdueConfirmed", "activity", "bugReproducible", "allow", "allowReminder", "reminderTimer"];
         for (const d of dataArray) {
             if (d[2] == "Closed") { // status
-                // alert(d[1]);
+                
                 continue; // do not show closed items in Deadlines modal
             }
             if (d[6] == true) { // overdueConfirmed
@@ -142,6 +144,21 @@ class Panel extends Component {
             if (date > now) {
                 upcoming.push(d);
             } else {
+                
+                if (d[10] === true) {
+                  // can't have reminder on over due items -- abort and restart
+                  
+                  // not entirely ry. More important is local state
+                  
+                  const cardId = d[0];
+                  const cardPos = this.props.idArray.indexOf(cardId); // get position in index
+                  const dataArray = [...this.props.dataArray];
+                  dataArray[cardPos][10] = false; // alter specific property
+                  this.props.updateDataArray(dataArray); // save to store
+                  this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
+
+                //   return this.registerModalHandler("Activity");
+                }
                 overdue.push(d);
             }
         }
@@ -180,8 +197,7 @@ class Panel extends Component {
     
     /////////////////////////////////////////// ACTIVITY MODAL /////////////////////////////////////////////////
     openActivityHandler = () => {
-        // alert(this.props.modalData + " panel.js");
-        // alert(this.props.modalData[7] + " panel.js");
+        
         // need to close card modal
         this.registerModalHandler("Activity");
         // this.modalSelectHandler("Activity");
@@ -195,7 +211,7 @@ class Panel extends Component {
         
         const modalItemId = newModalData[0];
         const modalItemIndex = this.props.idArray.indexOf(modalItemId);
-        // alert(modalItemId + " / " + modalItemIndex);
+        
         const dataArray = [...this.props.dataArray]; // get relative data
         dataArray[modalItemIndex] = newModalData;
         this.props.updateDataArray(dataArray); // save to store
@@ -288,7 +304,7 @@ class Panel extends Component {
 
     
 render() {
-    // alert("rendering panel");
+    
     const loadedModal = this.state.loadedModal;
     
     return (
@@ -328,33 +344,34 @@ db_changePass = (currentPass, newPass) => {
             // console.log(error.config.data);
           });
       }
-
-      db_updateCardData(id, data) {
-
-        // warning
-        const name = data[1];
-        const status = data[2];
-        const description = data[3];
-        const dueDate = data[4];
-        const severity = data[5];
-        const overdueConfirmed = data[6];
-        const activity = data[7];
-        const bugReproducible = data[8];
-        const dueDateEnabled = data[9];
-        axios
-        .patch(`http://localhost:8080/bugs/${id}`, {
-            name, description, status, dueDate, severity, overdueConfirmed, activity, bugReproducible, dueDateEnabled
-            
-        })
-        .then(function(response) {
-            console.log("updated status");
-            console.log(response);
-        })
-        .catch(function(error) {
-            console.log("failed status update");
-            console.log(error.config.data);
-        });
-    }
+      
+        db_updateCardData(id, data) {
+            // warning - update properties. Add in axios.patch() below
+            const name = data[1];
+            const status = data[2];
+            const description = data[3];
+            const dueDate = data[4];
+            const severity = data[5];
+            const overdueConfirmed = data[6];
+            const activity = data[7];
+            const bugReproducible = data[8];
+            const dueDateEnabled = data[9];
+            const allowReminder = data[10];
+            const reminderTimer = data[11];
+            axios
+            .patch(`http://localhost:8080/bugs/${id}`, {
+                name, description, status, dueDate, severity, overdueConfirmed, activity, bugReproducible, dueDateEnabled, allowReminder, reminderTimer
+                
+            })
+            .then(function(response) {
+                console.log("updated status");
+                console.log(response);
+            })
+            .catch(function(error) {
+                console.log("failed status update");
+                console.log(error.config.data);
+            });
+        }
 
 
 db_logout = () => {
@@ -366,7 +383,6 @@ db_logout = () => {
       instance.post("/users/logout", {
     }).then(response => {
         console.log("success logout" + response);
-        // alert("loggingout");
         this.props.history.push( '/login' );
         window.localStorage.removeItem("login-token");
     })
@@ -401,14 +417,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(Panel);
     //     const cardPos = this.cardPositionInArray(id);
     //     const data = this.getCardData(cardPos);
     //     this.props.updateModalData(data);
-    //     alert(data);
+    
     //     this.modalSelectHandler("CARD");
     // }
 
 
     // prepareCardModal() {
-    //     alert("prep card modal");
-    //     alert(this.props.modalData);
+        
     //     return (
     //         <CardModal
     //             closeModal={this.closeModalHandler}
@@ -447,7 +462,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Panel);
             // this.setModalStatus(cardStatus);
             // this.setActiveCard(id);
             // this.setModalData(data);
-            // // alert(data);
+            
             // this.openModalHandler();
 
 ///////////////////////////////////////// END CARD MODAL ///////////////////////////////////////////

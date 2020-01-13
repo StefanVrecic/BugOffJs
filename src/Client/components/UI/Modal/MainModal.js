@@ -57,31 +57,122 @@ class MainModal extends Component {
         p = title => {
           return this.bugProperties.indexOf(title);
       }
+
+    getMinReminderTime = () => {
+      const now = new Date();
+      const time = this.state.startDate;
+      const minimumReminder = Math.ceil((time - now) / 3600000) - 2; // explain later
+      return minimumReminder;
+    }
+
   handleCalendarChange = date => {
+    
     this.setState({
       startDate: date
     });
 
     this.props.addDate(date);
+    // if calendar is put to time in past, disable alerts
+        const now = new Date();
+
+        if (date < now) {
+          this.setState({ alertMeChecked: false });
+          this.props.saveAllowAlert(false);
+        } 
+            // cannot have reminders before present moment, now, nor with 1 hour of now -- what's the point?
+    let minTime = this.getMinReminderTime();
+    let setTimer = this.state.alertTimer;
+
+    
+    const nowpt = (now.getTime() + (setTimer * 3600000)) + 3600000 + ((60-now.getMinutes()-1)*60000);
+    const earliestCalendarTime = new Date(nowpt);
+    
+    // as above, factoring in the timer number - alternatively reduce timer instead of disabling
+    if (date < earliestCalendarTime) { 
+                this.setState({ alertMeChecked: false });
+                return this.props.saveAllowAlert(false);
+    }
+
+
+    if (setTimer > minTime) { 
+      setTimer = minTime;
+    }
+    
+
+ 
+    
+      if (minTime < 1) {
+        this.setState({ alertMeChecked: false });
+        setTimer = 0;
+      }
+
+    this.setState({alertTimer: setTimer});
+
+    // due date set in the future. Allow alert => incase item was overdue and user changed duedate to time in future
+    if (date > now) { 
+      // item dueDatePassed => true
+      // db call + state change...
+    }
+
   };
 
   changeTimer = (event) => {
+    
+    // alert(minTime);
     let setTimer = event.target.value;
     if (setTimer > 48) {
       setTimer = 48;
     event.target.value = 48;
     } 
-    if (setTimer < 1) {
-      setTimer = 0;
-      event.target.value = 0;
+
+
+    // cannot have reminders before present moment, now, nor with 1 hour of now -- what's the point?
+    const minTime = this.getMinReminderTime();
+    if (setTimer > minTime) { 
+      setTimer = minTime;
     }
+        if (setTimer < 1) {
+          setTimer = 0;
+          event.target.value = 0;
+        }
     this.setState({alertTimer: setTimer});
   }
 
   checkAlert = (e) => {
-  
-    this.setState({alertMeChecked: e.target.checked});
-    this.props.saveAllowAlert(e.target.checked);
+    if (this.state.disableCalendar) {
+      return;
+    }
+    const minTime = this.getMinReminderTime();
+    if (minTime < 1) { // not enough clearance for a reminder
+      this.setState({ alertMeChecked: false });
+      this.setState({alertTimer: 0}); // cosmetic for UI
+      this.props.saveAllowAlert(false);
+      return;
+    }
+
+        let setTimer = this.state.alertTimer;
+        const now = new Date();
+
+        const nowpt = now.getTime() + setTimer * 3600000 + 3600000 + (60 - now.getMinutes() - 1) * 60000;
+        const earliestCalendarTime = new Date(nowpt);
+        const date = this.state.startDate;
+        // as above, factoring in the timer number - alternatively reduce timer instead of disabling
+        if (date < earliestCalendarTime) {
+          this.setState({ alertMeChecked: false });
+          return this.props.saveAllowAlert(false);
+        }
+    // if calendar is set in past, checkbox = false
+    // if alert is set in past, checkbox = false OR just send a minimum reminder?
+    
+    
+    if (this.state.startDate < now) {
+      this.setState({ alertMeChecked: false});
+      this.props.saveAllowAlert(false);
+    } else {
+      this.setState({alertMeChecked: e.target.checked});
+      this.props.saveAllowAlert(e.target.checked);
+    }
+
   }
 
   saveDueDateEnabled = (event) => {
@@ -265,6 +356,7 @@ class MainModal extends Component {
   
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
   render() {
+
     let titleToDisplay = this.props.title;
     if (this.state.newTitleSet === true) {
       titleToDisplay = this.state.newTitle;

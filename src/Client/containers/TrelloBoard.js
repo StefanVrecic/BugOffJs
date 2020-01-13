@@ -54,8 +54,9 @@
 
         componentDidUpdate(prevProps) {
             // Typical usage (don't forget to compare props):
-            if (this.props.panelCard !== prevProps.panelCard) {
-                // alert("someone opened a card from a modal" + "." + prevProps.panelCard + " . " + this.props.panelCard);
+            if (this.props.panelCard !== null && this.props.panelCard !== prevProps.panelCard) {
+                // issue is the panelCard sticks around after the card is closed and then if the card is opened again
+                // this block never occurs
                 this.cardClickedHandler(this.props.panelCard);
             
             }
@@ -90,12 +91,12 @@
             this.setState({ cardModal: false });
             // don't want any residual data from previous modal. Failsafe.
             this.setModalData([]);
-
-        };
+            // this.
+        }
 
         openModalHandler = () => {
             this.setState({ cardModal: true });
-        };
+        }
 
         cardPosInLane = id => {
             const laneNumber = this.getCardLane(id);
@@ -285,7 +286,7 @@
         }
 
         changeLane(id, destination) {
-            // alert(id + " . " + destination);
+            
             const laneArray_temp = [...this.state.laneArray];
             let c = 0;
             let i = -1;
@@ -340,7 +341,7 @@
 const status = this.laneNumberToStatus(lane);
 
 // data for each card - WARNING - create properties: don't change order
- const dataToStore = [storeId_string, cardText, status, "No description provided", null, "None", false, [], "None", false, false, -1,]
+ const dataToStore = [storeId_string, cardText, status, "No description provided", null, "None", false, [], "None", false, false, 0,]
                 dataArray.push(dataToStore);
                 
                 this.setState({ laneArray: [...laneArray] });
@@ -352,7 +353,7 @@ const status = this.laneNumberToStatus(lane);
         
         viewActivityNotes = () => {
             if (this.props.modalData.length === 0 || this.props.modalData[7].length === 0) {
-                return alert("no data to display");
+                return; //
             }
             this.setState({ cardModal: false });
             this.props.viewActivityNotes();
@@ -451,14 +452,13 @@ const status = this.laneNumberToStatus(lane);
         
 ////////////////////////////////////// Modal save data handlers  ///////////////////////
 saveReminderHandler = (reminderTimer) => { // backend will calculate a date based on x hours before reminder
-    // alert(reminderTimer + " inside handler");
+    
     const cardId = this.state.activeCard;
     const cardPos = this.cardPositionInArray(cardId); // get position in index
     const dataArray = [...this.props.dataArray]; // get relative data
     if (dataArray == undefined || dataArray[cardPos] == undefined || dataArray.length === 0) { // weird behaviour when escape key is called, no idea why.
         return;
     }
-    // alert(dataArray + "exists " + cardPos + " cardPos reminderTimer: " + reminderTimer + " this.p " + this.p("reminderTimer"));
     dataArray[cardPos][this.p("reminderTimer")] = reminderTimer; // alter specific property
     this.props.updateDataArray(dataArray); // save to store
     this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
@@ -499,6 +499,7 @@ saveAlertHandler = (allowReminder) => { // xyz
         this.db_updateCardData(cardId, dataArray[cardPos]); // save to db
     }
     saveDateHandler = (date) => {
+        // check to see if in future, if in future  => duedatePassed = false + onst dueDateEnabled = data[9]
         const cardId = this.state.activeCard;
         const cardPos = this.cardPositionInArray(cardId); // get position in index
         const dataArray = [...this.props.dataArray]; // get relative data
@@ -567,19 +568,36 @@ saveAlertHandler = (allowReminder) => { // xyz
             const dueDateEnabled = data[9];
             const allowReminder = data[10];
             const reminderTimer = data[11];
+
+            let dueDatePassed = false;
+            const now = new Date();
+            if (dueDate<now) {
+                dueDatePassed=true;
+            }
+
             axios
-            .patch(`http://localhost:8080/bugs/${id}`, {
-                name, description, status, dueDate, severity, overdueConfirmed, activity, bugReproducible, dueDateEnabled, allowReminder, reminderTimer
-                
-            })
-            .then(function(response) {
+              .patch(`http://localhost:8080/bugs/${id}`, {
+                name,
+                description,
+                status,
+                dueDate,
+                severity,
+                overdueConfirmed,
+                activity,
+                bugReproducible,
+                dueDateEnabled,
+                allowReminder,
+                reminderTimer,
+                dueDatePassed
+              })
+              .then(function(response) {
                 console.log("updated status");
                 console.log(response);
-            })
-            .catch(function(error) {
+              })
+              .catch(function(error) {
                 console.log("failed status update");
                 console.log(error.config.data);
-            });
+              });
         }
 
         db_updateCardStatus(id) {
@@ -609,7 +627,7 @@ saveAlertHandler = (allowReminder) => { // xyz
             instance.post("/bugs", { // WARNING - create properties
               _id: id, name: cardTitle, status: status, description: "No description provided", dueDate: null,
               severity: "None", overdueConfirmed: false, notes: null, bugReproducible: "None", dueDateEnabled: false,
-              allowReminder: false, reminderTimer: -1
+              allowReminder: false, reminderTimer: 0
             })
                 .then(function(response) {
                 console.log("success create" + response);

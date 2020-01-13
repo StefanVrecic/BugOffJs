@@ -75,7 +75,7 @@ const checkBugOverdue = async () => {
     
 }
 
-setInterval(checkBugOverdue, 5000);
+setInterval(checkBugOverdue, 1000);
 
 
 sgMail.setApiKey();
