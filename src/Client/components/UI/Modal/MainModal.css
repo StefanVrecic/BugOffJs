@@ -61,6 +61,7 @@
     word-break: break-word;
 }
 
+.date-Reminder--toggle,
 .date-Reminder {
     display: flex;
 }
@@ -235,4 +236,8 @@
 
 .zeroWidth {
     width: 0 !important;
+}
+.timerItem {
+    /* width: 10px; */
+    width: 8rem;
 }

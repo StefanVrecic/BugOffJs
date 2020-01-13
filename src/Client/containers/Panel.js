@@ -123,15 +123,18 @@ class Panel extends Component {
         const upcoming = [];
         // gets the from the Redux store
         const dataArray = this.orderByDate();
+        // bugProperties = ["id", "name", "status", "description", "dueDate", "severity", 
+        // "overdueConfirmed", "activity", "bugReproducible", "allow", "allowReminder", "reminderTimer"];
         for (const d of dataArray) {
-            if (d[6] == true) {
-                continue; // don't addd items if user already confirmed that they know it's overdue
-            }
-            if (d[2] == "Closed") {
+            if (d[2] == "Closed") { // status
                 // alert(d[1]);
                 continue; // do not show closed items in Deadlines modal
             }
-            if (d[9] == false) {
+            if (d[6] == true) { // overdueConfirmed
+                continue; // don't addd items if user already confirmed that they know it's overdue
+            }
+          
+            if (d[9] == false) { // allow
                 continue; // do not want items that have had their dates (stored, but) disabled
             }
             

@@ -92,7 +92,7 @@ const sendEmail = async (emailSubject, msg, userId) => {
             text: msg
         })
     } catch (e) {
-        console.log(e + " sendEmail error");
+        console.log(" sendEmail error");
     }
 }
 

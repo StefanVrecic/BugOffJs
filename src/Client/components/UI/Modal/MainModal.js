@@ -72,8 +72,8 @@ class MainModal extends Component {
     event.target.value = 48;
     } 
     if (setTimer < 1) {
-      setTimer = -1;
-      event.target.value = -1;
+      setTimer = 0;
+      event.target.value = 0;
     }
     this.setState({alertTimer: setTimer});
   }
@@ -210,7 +210,7 @@ class MainModal extends Component {
     if (setTimer > 48) {
       setTimer = 48;
     } if (setTimer < 1) {
-      setTimer = -1;
+      setTimer = 0;
     }
     
     this.props.setReminder(setTimer);
@@ -420,7 +420,7 @@ class MainModal extends Component {
           <br></br> */}
         <div className = "bugSettings">
           <div className="date-Reminder">
-            <div>
+            <div className="date-Reminder--toggle"> 
              {displayCalendar}
 
                     <button onClick={this.toggleCalendar} className="onOffBtn nopadding disableDate">
@@ -434,7 +434,7 @@ class MainModal extends Component {
 							<label className="label-checkbox100" for="ckb2">
               Email me </label>
               {/* value={this.props.data[11]} */}
-                <input type="number" min="1"  max="48" value={this.state.alertTimer} step="1" onChange={this.changeTimer} name="alertTimer" />
+                <input className="timerItem" type="number" min="1"  max="48" value={this.state.alertTimer} step="1" onChange={this.changeTimer} name="alertTimer" />
               <span> hours before due date</span>
             </div>
           </div>

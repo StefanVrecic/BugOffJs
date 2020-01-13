@@ -73,6 +73,8 @@
   }
 
   .deleteTimelineItem {
-      color: blue;
-      text-decoration: underline;
+      color: red;
+      cursor: pointer;
+      font-size: 1.4rem;
+      // text-decoration: underline;
   }

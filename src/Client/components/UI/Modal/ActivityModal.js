@@ -3,6 +3,7 @@ import Modal from './Modal';
 // import Timeline from 'react-time-line';
 import Timeline from '../Timeline/Timeline';
 import { connect } from 'react-redux';
+import './ActivityModal.css';
 
 class ActivityModal extends Component {
     state = {
@@ -22,13 +23,18 @@ class ActivityModal extends Component {
 
 render() {
     const events = this.props.events;
+    
     return (
-            <Modal show={this.state.open}
-            modalClosed={this.closeModalHandler}
-            classes="Modal defaultDimensions">
-                ActivityModal
-            <Timeline items={events} deleteItem={this.props.removeNote} /> 
-            </Modal>
+      <Modal
+        show={this.state.open}
+        modalClosed={this.closeModalHandler}
+        classes="Modal defaultDimensions"
+      >
+        
+        <div className="overFlow-events">
+          <Timeline items={events} deleteItem={this.props.removeNote} />
+        </div>
+      </Modal>
     );
 
 }

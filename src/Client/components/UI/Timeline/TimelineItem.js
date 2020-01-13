@@ -1,6 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
+const trashIcon = <FontAwesomeIcon icon={faTrash} />;
 /**
  * @usage
  * <TimelineItem time={time} text={text} />
@@ -15,7 +18,7 @@ const TimelineItem = (props) => {
           <i className="fa fa-clock-o" />
           <i className="fa fa-trash-o" />
           <span onClick={() => props.deleteTimelineItem(props.index)} 
-          className="deleteTimelineItem">delete</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          className="deleteTimelineItem">{trashIcon} </span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
           {props.time} 
         </span>
         
