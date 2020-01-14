@@ -110,7 +110,7 @@ render() {
              <div className="individTemp-date">
                <b>{theDate}</b>
              </div>
-             <div>&nbsp;{clockIcon}</div>
+             {/* <div>&nbsp;{clockIcon}</div> */}
              <div className="individTemp-content">
                &nbsp;&nbsp;{displayString}
              </div>

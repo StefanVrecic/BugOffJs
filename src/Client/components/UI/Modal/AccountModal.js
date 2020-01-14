@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Modal from './Modal';
+import "./AccountModal.css";
 
 class AccountModal extends Component {
 
@@ -48,32 +49,27 @@ render() {
             <Modal show={this.state.open}
             modalClosed={this.closeModalHandler}
             classes="Modal defaultDimensions">
-                <br></br>
-                <br></br>
-                <h1>Change password</h1>
-                <br></br>
-                <br></br>
+                <h1 className="heading-margin">Change password</h1>
                 
                 <div className = "changePassForm">
 
-					<div className="wrap-input50 validate-input" data-validate = "Password is required" >
+					<div className="wrap-input50 validate-input input-margin" data-validate = "Password is required" >
 						<input className="input100" type="password" name="currentPass" value={this.state.currentPass}
 								onChange={this.handleInputChange}/>
 						<span className="focus-input100"></span>
 						<span className="label-input100">Current Password</span>
 					</div>
-                    <br></br>
+                    
 					
 					
-					<div className="wrap-input50 validate-input" data-validate="Password is required">
+					<div className="wrap-input50 validate-input input-margin" data-validate="Password is required">
 						<input className="input100" type="password" name="newPass" value={this.state.newPass}
 								onChange={this.handleInputChange}/>
 						<span className="focus-input100"></span>
-						<span className="label-input100">Password</span>
+						<span className="label-input100">New Password</span>
 					</div>
                     
-                                <br></br>
-                      <div className="wrap-input50 validate-input" data-validate="Password is required">
+                      <div className="wrap-input50 validate-input input-margin" data-validate="Password is required">
                         <input className="input100" type="password" name="passConfirm" value={this.state.passConfirm}
                                 onChange={this.handleInputChange}/>
                         <span className="focus-input100"></span>
@@ -84,7 +80,7 @@ render() {
 
 					<div className="container-login50-form-btn">
 						<button onClick = {this.signUp} className="login100-form-btn">
-							Confirm password change
+							Confirm
 						</button>
 					</div>
 					</div>

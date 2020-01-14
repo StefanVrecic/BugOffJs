@@ -187,7 +187,7 @@ class MainModal extends Component {
     this.setState({deleteItemModal: false});
   }
   deleteItemConfirmation = () => {
-    // return this.props.modalClosed();
+    return this.props.modalClosed();
       this.setState({deleteItemModal: true});
   }
 
@@ -383,16 +383,16 @@ class MainModal extends Component {
     
     let notesOrTitle = (
       <textarea
-        className="NotesContainer__textarea--input"
-        placeholder="Add a new note (250 characters max)"
-        maxlength="250"
-        cols="45"
-        rows="3"
-        wrap="soft"
-        name="noteArea"
-        ref={this.textInput}
-        onChange={this.handleInputChange}
-        value={this.state.noteArea}
+      className="notesTextArea"
+      placeholder="Add a new note (250 characters max)"
+      maxlength="250"
+      cols="45"
+      rows="5"
+      wrap="soft"
+      name="noteArea"
+      ref={this.textInput}
+      onChange={this.handleInputChange}
+      value={this.state.noteArea}
       ></textarea>
     );
     
@@ -405,32 +405,28 @@ class MainModal extends Component {
         cancelSaveTitle = <span className = "editTitle" onClick={this.cancelNewTitle}> / Cancel </span>
         notesOrTitle = (
           <textarea
-            className="NotesContainer__textarea--input"
-            placeholder="Add a new title (81 characters max)"
-            maxlength="81"
-            cols="45"
-            rows="5"
-            wrap="soft"
-            name="noteArea"
-            ref={this.textInput}
-            onChange={this.handleInputChange}
-            value={this.state.noteArea}
+          className="notesTextArea"
+          placeholder="Add a new title (81 characters max)"
+          maxlength="81"
+          cols="45"
+          rows="5"
+          wrap="soft"
+          name="noteArea"
+          ref={this.textInput}
+          onChange={this.handleInputChange}
+          value={this.state.noteArea}
           ></textarea>
         );
       }
 
-      let displayEditing = (
-        <p className="itemDescription__displayDescription">
-          {this.props.data[3]}
-        </p>
-      );
+      let displayEditing = <p className="displayDescription">{this.props.data[3]}</p>;
     
       if (this.state.editing) {
       editOrSave = "Save";
       displayEditing = (
         <div>
           <textarea
-            className="itemDescription__textarea"
+            className="descriptionTextArea"
             placeholder="Add a more detailed description"
             maxlength="1000"
             cols="75"
@@ -439,7 +435,7 @@ class MainModal extends Component {
             name="descriptionArea"
             onChange={this.handleInputChange}
             value={this.state.descriptionArea}
-          ></textarea>
+            ></textarea>
         </div>
       );
     }
@@ -502,7 +498,6 @@ class MainModal extends Component {
               ({this.props.status})
             </span>
           </div>
-
           <div className="modalData-edit">
             <div className="left-modalData">
               <div className="itemDescription">
@@ -515,151 +510,15 @@ class MainModal extends Component {
                 </span>
               </div>
             </div>
+          </div>
+          {/* Left side where the settings are located ------------------------------------- */}
 
-            {/* Left side where the settings are located ------------------------------------- */}
-
-            <div className="right-modalData">
-              <div className="calendarComponent">
-                {displayCalendar}
-                <button onClick={this.toggleCalendar} className="onOffBtn">
-                  {onOffButton}
-                </button>
-              </div>
-              {/* calendar Component */}
-
-              <div className="emailSettings">
-                <input
-                  className="input-checkbox100"
-                  id="ckb2"
-                  checked={this.props.data[10]}
-                  type="checkbox"
-                  name="sign-up"
-                  onChange={this.checkAlert}
-                />
-                <label className="label-checkbox100" for="ckb2">
-                  Email me{" "}
-                </label>
-                {/* value={this.props.data[11]} */}
-                <input
-                  className="emailSettings__timerItem"
-                  type="number"
-                  min="1"
-                  max="48"
-                  value={this.state.alertTimer}
-                  step="1"
-                  onChange={this.changeTimer}
-                  name="alertTimer"
-                />
-                <span> hours before due date</span>
-              </div>
-              {/* emailSettings */}
-              <div className="settings-notes">
-                <div className="dropdownButtons">
-                  <div className="bugReproducibleForm">
-                    <Form>
-                      <Form.Group controlId="exampleForm.ControlSelect1">
-                        <Form.Label>Bug reproducible?</Form.Label>
-                        <Form.Control
-                          value={this.state.reprod}
-                          onChange={this.saveReproducible}
-                          size="sm"
-                          as="select"
-                        >
-                          <option>None</option>
-                          <option>Consistently</option>
-                          <option>Intermittently</option>
-                          <option>Rarely/once</option>
-                        </Form.Control>
-                      </Form.Group>
-                    </Form>
-                  </div>
-                  {/* Bug reproducible drop down form ---------------------- */}
-
-                  <div className="bugSeverityForm">
-                    <Form>
-                      <Form.Group controlId="exampleForm.ControlSelect1">
-                        <Form.Label>Bug severity?</Form.Label>
-                        <Form.Control
-                          value={this.state.sever}
-                          onChange={this.saveSeverity}
-                          size="sm"
-                          as="select"
-                        >
-                          <option>None</option>
-                          <option>High</option>
-                          <option>Medium</option>
-                          <option>Low</option>
-                        </Form.Control>
-                      </Form.Group>
-                    </Form>
-                  </div>
-                  {/* Bug severity drop down form ---------------------- */}
-
-                  <div className="bugStatusForm">
-                    <Form>
-                      <Form.Group controlId="exampleForm.ControlSelect1">
-                        <Form.Label>Change status?</Form.Label>
-                        <Form.Control
-                          value={this.state.option}
-                          onChange={this.saveStatus}
-                          size="sm"
-                          as="select"
-                        >
-                          <option>Open</option>
-                          <option>In progress</option>
-                          <option>To be tested</option>
-                          <option>Re-opened</option>
-                          <option>Closed</option>
-                        </Form.Control>
-                      </Form.Group>
-                    </Form>
-                  </div>
-                  {/* Bug status drop down form ---------------------- */}
-                </div>
-                {/* Group of 3 drop down btns ---------------------- */}
-              </div>
-              <div className="NotesContainer">
-                {/* text area */}
-                <div className="NotesContainer__textarea">{notesOrTitle}</div>
-
-                {/* buttons */}
-                <div className="NotesContainer__buttons">
-                  {/* button 1 */}
-                  <button
-                    disabled={viewNotesDisabled}
-                    onClick={this.props.viewNotes}
-                    className="NotesContainer__buttons-defaultModalBtn NotesContainer__buttons-align "
-                  >
-                    View notes
-                  </button>
-
-                  {/* button 2 */}
-
-                  <button
-                    onClick={this.addNewNote}
-                    className="NotesContainer__buttons-defaultModalBtn NotesContainer__buttons-align "
-                  >
-                    Add note
-                  </button>
-                  {/* Buttons end */}
-                </div>
-                {/* Container ends */}
-              </div>
-              <button
-                onClick={this.deleteItemConfirmation}
-                className="delete-btn"
-              >
-                Delete Item
-              </button>
-
-              {/* End of settings  */}
-            </div>
-
+          <div className="right-modalData">
+            {/* {displayCalendar} */}
             {/* rhs end */}
           </div>
           {/* rhs end */}
         </div>
-
         {confirmationModal}
       </Auxiliary>
     );

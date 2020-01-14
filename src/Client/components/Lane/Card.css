@@ -21,3 +21,22 @@
 .box-contents--card:hover {
     background-color: yellow;
 }
+
+@media screen and (max-width: 768px) {
+.box-contents--card {
+    height: 4.7rem;
+}
+}
+/* ********************************************************** */
+@media screen and (max-width: 576px) {
+.box-contents--card {
+    height: 7.7rem;
+}
+
+.cardContents {
+    font-size: 1.6rem;
+}
+
+
+}
+

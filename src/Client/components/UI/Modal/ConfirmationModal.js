@@ -26,12 +26,12 @@ render() {
         classes={"Modal logoutModal"}
         modalClosed={this.closeModalHandler}>
            <br></br>
-           <h2>Are you sure you want to delete this item</h2>
+           <h2>Delete item?</h2>
            <br></br>
            <div className="logoutBtn-container">
            <div className = "logoutBtnModal" >
             <button onClick={this.props.confirmDelete} className="">
-                  Yes
+                  Delete
               </button>
            </div>
            </div>
@@ -41,7 +41,7 @@ render() {
     <div className="logoutBtn-container">
     <div className = "logoutBtnModal" >
             <button onClick={() => {this.closeModalHandler()} } className="">
-                  No
+                  Cancel
               </button>
            </div>
 </div>

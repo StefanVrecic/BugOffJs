@@ -8,3 +8,66 @@ DEADLINE:
 
 Notifications:
 Copy of deadline but with email reminders described instead
+
+- sometimes incorrect titles display (rarely?)
+
+- if due date passed, disable remindeer option OR due date - alert
+- also update property
+
+===========
+main responsiveness issues
+===========
+
+landing page seems to be ok on desktop
+landing page input heaers overlap when on phone
+laptop responsiveness - photo half too big, login half is cut off on rhs
+
+--
+phone < 576
+--
+logout modal to thin, same with account and deadlines => width and height should be 95-100% and x button
+- dropdown btns not exactly centered in nearing 576px devices (SE landscape)
+-dropdowns not exactly siebyside in smaller devies < 368
+- calendar not center
+- notes a little awkward lookng but position wise ok
+
+
+
+
+exit button!
+optional:
+- logout modal could be optimised (awkwrd on things like iPhone X?)
+- center paragraph vertically in card
+- change pass forms awkward
+
+---
+ipad size
+---
+modal width => 95-100% or x button
+can't see any of the buttons
+can't see sidebar at all
+x button too small
+logout modal cuto ff
+
+---
+ipad pro
+---
+
+issues as above
+logout moda lcut off
+
+---
+laptop (small window)
+---
+
+when minimised, lanes are hidden below sidebar
+modal is broken
+modals are too narrow
+
+
+====== to fix code: ======
+processLoadedCards - fix
+componentDidMount - correct in trello and panel
+fix routing in app.js
+~2 min task
+

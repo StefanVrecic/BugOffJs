@@ -1,0 +1,55 @@
+.input-margin,
+.heading-margin {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media screen and (max-width: 1024px) {
+.wrap-input50 {
+    width: 65% !important;
+    margin-bottom: 0 !important;
+}
+.defaultDimensions {
+    height: 50vh;
+    top: 25vh;
+}
+}
+
+@media screen and (max-height: 429px) {
+    .defaultDimensions {
+            height: 95vh;
+    top: 0;
+}
+
+.input-margin {
+    margin-top:     .5rem !important;
+    margin-bottom: .5rem !important;
+}
+
+.heading-margin {
+    margin-top: 1.25rem;
+    margin-bottom: .75rem;
+}
+
+}
+
+@media screen and (max-width: 768px) {
+.wrap-input50 {
+    width: 65% !important;
+    margin-bottom: 0 !important;
+}
+
+.input-margin {
+    margin-top:     .5rem !important;
+    margin-bottom: .5rem !important;
+}
+
+.heading-margin {
+    margin-top: 1.25rem;
+    margin-bottom: .75rem;
+}
+
+.changePassForm {
+
+}
+}

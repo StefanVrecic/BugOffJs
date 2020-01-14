@@ -24,13 +24,15 @@ render() {
             <Modal show={this.state.open}
             classes={"Modal logoutModal"}
             modalClosed={this.closeModalHandler}>
+                <div className = "logoutItems">
+
                <br></br>
-               <h2>Are you sure you want to log out?</h2>
+               <h2>Logout of app?</h2>
                <br></br>
                <div className="logoutBtn-container">
                <div className = "logoutBtnModal" >
                 <button onClick={this.props.LogoutModal_logout} className="">
-                      Yes
+                      Logout
                   </button>
                </div>
                </div>
@@ -38,11 +40,12 @@ render() {
         <br></br>
 
         <div className="logoutBtn-container">
-        <div className = "logoutBtnModal" >
+            <div className = "logoutBtnModal" >
                 <button onClick={() => {this.closeModalHandler()} } className="">
-                      No
+                      Cancel
                   </button>
                </div>
+                </div>
 </div>
                 </Modal>
     );

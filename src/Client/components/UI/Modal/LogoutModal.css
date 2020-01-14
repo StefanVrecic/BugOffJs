@@ -11,6 +11,7 @@
 }
 
 
+
 .logoutBtnModal {
     display: -webkit-box;
     display: -webkit-flex;
@@ -39,9 +40,79 @@
 .logoutBtn-container {
     width: 50%;
     left: 25%;
-    /* position: fixed; */
-    /* font-size:  */
-
     margin: auto;
     
+}
+
+
+/************************************************************************************************
+*************************************************************************************************/
+@media screen and (max-width: 1024px) {
+.logoutModal {
+    height: 45vh;
+    width: 50vw;
+    left: 25vw;
+    top: 25vh;
+    /* justify-content: center; */
+}
+
+.logoutItems{
+    top: 75%;
+    position: relative;
+}
+
+}
+
+/************************************************************************************************
+*************************************************************************************************/
+@media screen and (max-width: 1024px) {
+.logoutModal {
+    height: 40vh;
+    width: 50vw;
+    left: 25vw;
+    top: 30vh;
+    /* justify-content: center; */
+}
+
+.logoutItems{
+    top: 10%;
+    position: relative;
+}
+
+}
+
+/************************************************************************************************
+*************************************************************************************************/
+@media screen and (max-width: 768px) {
+.logoutModal {
+    height: 80vh;
+    width: 50vw;
+    left: 25vw;
+    top: 15vh;
+    /* justify-content: center; */
+}
+
+.logoutItems{
+    top: 25%;
+    position: relative;
+}
+
+}
+
+/************************************************************************************************
+*************************************************************************************************/
+@media screen and (max-width: 576px) {
+.logoutModal {
+    height: 65vh;
+    width: 90vw;
+    left: 5vw;
+    top: 17.5vh;
+    /* justify-content: center; */
+}
+
+.logoutItems{
+    top: 30%;
+    position: relative;
+}
+
 }

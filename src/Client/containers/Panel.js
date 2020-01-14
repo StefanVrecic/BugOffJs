@@ -18,8 +18,9 @@ class Panel extends Component {
     componentDidMount() {
         
         // check to see if token works?
-        this.db_confirmIdentity();
+        // this.db_confirmIdentity();
     }
+    
     db_confirmIdentity = () => {
 
         const instance = axios.create({

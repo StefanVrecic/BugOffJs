@@ -11,6 +11,8 @@
     transition: all 0.3s ease-out;
 }
 
+
+
 .modalTitle {
     font-size: 1.6rem;
     text-align: left;
@@ -45,3 +47,5 @@
         left: calc(50% - 250px);
     }
 } */
+
+
