@@ -1,8 +1,8 @@
 .overdueTasksGrid {
     display: grid;
             /* border: solid black 1px; */
-        overflow: auto;
-        max-height: calc(50% - 5.5rem);
+        overflow: auto; 
+        max-height: calc(50% - 5.0rem);
 }
 .deadline-h1 {
     font-size: 3rem;
@@ -37,10 +37,21 @@
         height: calc(50% - 5.5rem);
         
     }
-    .defaultDimensions {
+    .dimensions-dead {
     height: 95vh;
-    width: 58%;
+    width: 60vw;
+}
+.deadline-position {
+    top: 2.5vh;
+    left: 20vw;
+}
 
+.exitModalIcon-dl {
+    cursor: pointer;
+    position: fixed;
+    right: 1.625rem;
+    top: 1rem;
+    font-size: 2.5rem;
 }
 
     .singleRow {
@@ -50,11 +61,12 @@
         background-color: #ECECEC; 
     }
     .deadline-contents {
-        height: calc(95vh - 2rem);
+        height: 95vh;
+        /* overflow: auto; */
         /* border: 2px solid red; */
     }
 
-    .bg-redTemp {
+    .row-layout {
         /* border: solid black 1px; */
         display: flex;
         align-items: center;
@@ -79,7 +91,7 @@
         display: table;
     }
 
-    .deadlineModal {
+    .deadline-position {
     padding: 0 !important;
 }
 
@@ -87,61 +99,72 @@
     background-color: #ECECEC;
     height: .2rem;
 }
+/* ****************************************************************************** */
 
-@media screen and (max-width: 768px) {
+/* ****************************************************************************** */
 
-    .deadline-h1 {
-        margin-bottom: 0.5rem;
-        margin-top: .5rem;
-    }
-.defaultDimensions {
-    height: 100vh;
-    width: 100vw;
-    left: 0;
-    top: 10vh;
-}
-.bg-redTemp {
-    /* display: flex; */
-    /* flex-direction: column; */
-    
-} 
-.individTemp-date {
-    color: red;
-}
-.individTemp-notes {
-    /* margin-left: 0 !important;    */
-}
-    
-}
+@media screen and (max-width: 1024px) {
 
-
-@media screen and (max-height: 429px) {
-    .defaultDimensions {
-            height: 100vh;
-            width: 100vw;
-            left: 0;
-            top: 10vh;
-}
-    .deadline-h1 {
-        margin-bottom: 0.5rem;
-        margin-top: .5rem;
-    }
-}
-
-@media screen and (max-width: 576px) {
-.defaultDimensions {
+.dimensions-dead {
     height: 100vh;
     width: 100vw;
     left: 0;
     top: 0;
 }
-.bg-redTemp {
+       .deadline-h1 {
+        margin-bottom: 0.5rem;
+        margin-top: .5rem;
+    }
+    .row-layout {
+    display: flex;
+    flex-direction: row;
+} 
+
+
+    .deadline-h1 {
+        margin-bottom: 0.5rem;
+        margin-top: .5rem;
+    }
+}
+/* ****************************************************************** */
+
+@media screen and (max-width: 768px) {
+       .deadline-h1 {
+        margin-bottom: 0.5rem;
+        margin-top: .5rem;
+    }
+    .row-layout {
+    display: flex;
+    flex-direction: row;
+} 
+
+    .dimensions-dead {
+            height: 100vh;
+            width: 100vw;
+            left: 0;
+            top: 0;
+}
+    .deadline-h1 {
+        margin-bottom: 0.5rem;
+        margin-top: .5rem;
+    }
+}
+
+/* ****************************************************************** */
+
+@media screen and (max-width: 576px) {
+.dimensions-dead {
+    height: 100vh !important;
+    width: 100vw;
+    left: 0;
+    top: 0 !important;
+}
+.row-layout {
     display: flex;
     flex-direction: column;
-    
 } 
 .individTemp-date {
-    color: red;
+    color: teal;
 }
 .individTemp-notes {
     margin-left: 0 !important;   

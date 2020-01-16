@@ -5,7 +5,9 @@ import  '../../UI/Button/Button.css';
 import '../../../../../src/bootstrap.css';
 import './DeadlinesModal.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
+
 class DeadlinesModal extends Component {
     state = {
         open: true
@@ -46,10 +48,10 @@ render() {
       // }
       // alert(o[11] + " ...");
         const theDate = new Date(o[4]).toLocaleString();
-        let classes = "bg-redTemp overflow-auto";
+        let classes = "row-layout overflow-auto";
 
         if (alternate) {
-          classes = "bg-redTemp alternateRow overflow-auto";
+          classes = "row-layout alternateRow overflow-auto";
         }
         alternate = !alternate;
         let displayString = "";
@@ -59,7 +61,9 @@ render() {
             displayString = o[1];
         }
         let color = "red";
-        if (o[5] === "Medium") { color="#FF8C00";} else if (o[5]==="Low" || o[5]==="None") { color="green";}
+        
+        if (o[5] == "Medium") { color="#FF8C00";} else if (o[5]=="Low" || o[5]=="None") { color="green";}
+  
         styleColor = { color: color };
          const item = (
            <div className={classes}>
@@ -89,10 +93,10 @@ render() {
               clockIcon = <FontAwesomeIcon icon={faClock} />;
             }
         const theDate = new Date(o[4]).toLocaleString();
-        let classes = "bg-redTemp overflow-auto";;
+        let classes = "row-layout overflow-auto";;
 
         if (alternate) {
-          classes = "bg-redTemp alternateRow overflow-auto";
+          classes = "row-layout alternateRow overflow-auto";
         }
         alternate = !alternate;
 
@@ -103,7 +107,7 @@ render() {
             displayString = o[1];
         }
         let color = "red";
-        if (o[5] === "Medium") { color="#FF8C00";} else if (o[5]==="Low" || o[5]==="None") { color="green";}
+        if (o[5] == "Medium") { color="#FF8C00";} else if (o[5]=="Low" || o[5]=="None") { color="green";}
         styleColor = { color: color };
          const item = (
            <div className={classes}>
@@ -136,13 +140,21 @@ render() {
     //     );
     //     upcomingTasks.push(item);
     // }
+     const closeIcon = (
+       <FontAwesomeIcon
+         onClick={this.closeModalHandler}
+         className="exitModalIcon-dl"
+         icon={faTimes}
+       />
+     );
 
     return (
       <Modal
         show={this.state.open}
         modalClosed={this.closeModalHandler}
-        classes="Modal deadlineModal defaultDimensions"
+        classes="Modal deadline-position dimensions-dead"
       >
+        {closeIcon}
         <div className="deadline-contents">
           <h1 className="deadline-h1 overdue-h1">Overdue</h1>
           <div className="overdueTasksGrid">{overdueTasks}</div>

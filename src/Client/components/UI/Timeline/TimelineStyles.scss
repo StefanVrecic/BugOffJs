@@ -11,7 +11,7 @@
         bottom: -10px;
         width: 2px;
         background: #3498db;
-        left: 32px;
+        left: 32px; /** query **/
         border-radius: 2px;
       }
       > .time-label {
@@ -37,7 +37,7 @@
           color: #444;
           margin-right: 15px;
           position: relative;
-          margin-left: 50px;
+          margin-left: 50px; /** query **/
           > .time-line-header,
           .time {
             font-size: 14px;
@@ -53,6 +53,7 @@
             color: #555;
             border-bottom: 1px solid #f4f4f4;
             line-height: 1.1;
+            font-size: 1.6rem;
           }
         }
         > .fa {
@@ -62,7 +63,7 @@
           height: 10px;
           color: #666;
           background: #ecf0f1;
-          left: 28px;
+          left: 28px; /** query **/
           top: 9px;
           border: 2px solid #3498db;
           display: inline-block;
@@ -77,4 +78,71 @@
       cursor: pointer;
       font-size: 1.4rem;
       // text-decoration: underline;
+  }
+  @media screen and (max-width: 1400px) {
+      .time-line:before {
+        left:  22px !important;
+      }
+      
+      li {
+        margin-left: -10px !important;
+        margin-right: -10px !important;
+      }
+        .deleteTimelineItem {
+      font-size: 1.6rem;
+    }
+  }
+
+ @media screen and (max-width: 1024px) {
+      .time-line:before {
+        left: 12px !important;
+      }
+      
+      li {
+        margin-left: -20px !important;
+        margin-right: -10px !important;
+      }
+        .deleteTimelineItem {
+      font-size: 1.6rem;
+    }
+      fa {
+        // font-size: 3rem;
+        // left: 28px !important;
+      }
+  }
+     @media screen and (max-width: 768px) {
+      .time-line:before {
+        left: 12px !important;
+      }
+      
+      li {
+        margin-left: -20px !important;
+        margin-right: -10px !important;
+      }
+        .deleteTimelineItem {
+      // 1.6rem
+    }
+      fa {
+        // font-size: 3rem;
+        // left: 28px !important;
+      }
+  }
+
+
+   @media screen and (max-width: 576px) {
+      .time-line:before {
+        left: 12px !important;
+      }
+      
+      li {
+        margin-left: -20px !important;
+        margin-right: -10px !important;
+      }
+        .deleteTimelineItem {
+      // 1.6rem
+    }
+      fa {
+        // font-size: 3rem;
+        // left: 28px !important;
+      }
   }

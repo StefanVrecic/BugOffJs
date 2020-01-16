@@ -31,7 +31,8 @@ logout modal to thin, same with account and deadlines => width and height should
 - calendar not center
 - notes a little awkward lookng but position wise ok
 
-
+> 576
+sidewars acct/logot cut off, deadline awakward, trelloboard okay but would like slightly bigger cards
 
 
 exit button!
@@ -41,13 +42,17 @@ optional:
 - change pass forms awkward
 
 ---
-ipad size
+ipad size 768
 ---
 modal width => 95-100% or x button
 can't see any of the buttons
 can't see sidebar at all
 x button too small
 logout modal cuto ff
+change password kind of awkward
+'deadlines' modal not responing in 95% of area
+ => might be worth it to revert to old list for iPad, need to test with device
+
 
 ---
 ipad pro
@@ -71,3 +76,7 @@ componentDidMount - correct in trello and panel
 fix routing in app.js
 ~2 min task
 
+
+
+ => 332px height
+ => 412px wide * 719px high in portrait

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Modal from './Modal';
 import "./AccountModal.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+
 
 class AccountModal extends Component {
 
@@ -45,49 +48,75 @@ class AccountModal extends Component {
     }
 
 render() {
+    const closeIcon = (
+      <FontAwesomeIcon
+        onClick={this.closeModalHandler}
+        className="exitModalIcon-acct"
+        icon={faTimes}
+      />
+    );
     return (
-            <Modal show={this.state.open}
-            modalClosed={this.closeModalHandler}
-            classes="Modal defaultDimensions">
-                <h1 className="heading-margin">Change password</h1>
-                
-                <div className = "changePassForm">
+      <Modal
+        show={this.state.open}
+        modalClosed={this.closeModalHandler}
+        classes="Modal dimensions-account position-account"
+      >
+        {closeIcon}
+        <h1 className="heading-margin">Change password</h1>
 
-					<div className="wrap-input50 validate-input input-margin" data-validate = "Password is required" >
-						<input className="input100" type="password" name="currentPass" value={this.state.currentPass}
-								onChange={this.handleInputChange}/>
-						<span className="focus-input100"></span>
-						<span className="label-input100">Current Password</span>
-					</div>
-                    
-					
-					
-					<div className="wrap-input50 validate-input input-margin" data-validate="Password is required">
-						<input className="input100" type="password" name="newPass" value={this.state.newPass}
-								onChange={this.handleInputChange}/>
-						<span className="focus-input100"></span>
-						<span className="label-input100">New Password</span>
-					</div>
-                    
-                      <div className="wrap-input50 validate-input input-margin" data-validate="Password is required">
-                        <input className="input100" type="password" name="passConfirm" value={this.state.passConfirm}
-                                onChange={this.handleInputChange}/>
-                        <span className="focus-input100"></span>
-                        <span className="label-input100">Verify password</span>
-                    </div>
-                    <br></br>
+        <div className="changePassForm">
+          <div
+            className="wrap-input50 validate-input input-margin"
+            data-validate="Password is required"
+          >
+            <input
+              className="input100"
+              type="password"
+              name="currentPass"
+              value={this.state.currentPass}
+              onChange={this.handleInputChange}
+            />
+            <span className="focus-input100"></span>
+            <span className="label-input100">Current Password</span>
+          </div>
 
+          <div
+            className="wrap-input50 validate-input input-margin"
+            data-validate="Password is required"
+          >
+            <input
+              className="input100"
+              type="password"
+              name="newPass"
+              value={this.state.newPass}
+              onChange={this.handleInputChange}
+            />
+            <span className="focus-input100"></span>
+            <span className="label-input100">New Password</span>
+          </div>
 
-					<div className="container-login50-form-btn">
-						<button onClick = {this.signUp} className="login100-form-btn">
-							Confirm
-						</button>
-					</div>
-					</div>
-				
+          <div
+            className="wrap-input50 validate-input input-margin"
+            data-validate="Password is required"
+          >
+            <input
+              className="input100"
+              type="password"
+              name="passConfirm"
+              value={this.state.passConfirm}
+              onChange={this.handleInputChange}
+            />
+            <span className="focus-input100"></span>
+            <span className="label-input100">Verify password</span>
+          </div>
 
-      
-            </Modal>
+          <div className="container-login50-form-btn">
+            <button onClick={this.signUp} className="login100-form-btn">
+              Confirm
+            </button>
+          </div>
+        </div>
+      </Modal>
     );
 
 }

@@ -1,16 +1,19 @@
-.logoutModal {
+.dimensions-logout {
     height: 45%;
+    max-height: 300px;
     width: 29%;
     left: 35.5vw;
     top: 27.5vh;
 }
 
-.defaultDimensions {
-    height: 95%;
-    width: 58%;
+
+.exitModalIcon-log {
+    cursor: pointer;
+    position: fixed;
+    right: 1.625rem;
+    top: 1rem;
+    font-size: 2.5rem;
 }
-
-
 
 .logoutBtnModal {
     display: -webkit-box;
@@ -48,8 +51,10 @@
 /************************************************************************************************
 *************************************************************************************************/
 @media screen and (max-width: 1024px) {
-.logoutModal {
+.dimensions-logout {
     height: 45vh;
+    min-height: 256px;
+    max-height: 300px;
     width: 50vw;
     left: 25vw;
     top: 25vh;
@@ -57,25 +62,6 @@
 }
 
 .logoutItems{
-    top: 75%;
-    position: relative;
-}
-
-}
-
-/************************************************************************************************
-*************************************************************************************************/
-@media screen and (max-width: 1024px) {
-.logoutModal {
-    height: 40vh;
-    width: 50vw;
-    left: 25vw;
-    top: 30vh;
-    /* justify-content: center; */
-}
-
-.logoutItems{
-    top: 10%;
     position: relative;
 }
 
@@ -84,16 +70,17 @@
 /************************************************************************************************
 *************************************************************************************************/
 @media screen and (max-width: 768px) {
-.logoutModal {
-    height: 80vh;
+.dimensions-logout {
+    height: 90vh;
+    max-height: 300px;
     width: 50vw;
     left: 25vw;
-    top: 15vh;
+    top: 10 2vh;
     /* justify-content: center; */
 }
 
 .logoutItems{
-    top: 25%;
+    /* top: 20%; */
     position: relative;
 }
 
@@ -102,17 +89,33 @@
 /************************************************************************************************
 *************************************************************************************************/
 @media screen and (max-width: 576px) {
-.logoutModal {
-    height: 65vh;
+.dimensions-logout {
+    height: 45vh;
+    /* 568 * .45 =  256 */
+    min-height: 256px;
     width: 90vw;
     left: 5vw;
-    top: 17.5vh;
+    top: 20vh;
     /* justify-content: center; */
 }
 
 .logoutItems{
-    top: 30%;
+    top: 0%;
     position: relative;
 }
 
 }
+
+/** iPhone 6 landscape -- width styles above still apply! **/
+
+@media screen and (max-height: 375px) {
+
+}
+
+/** iPhone SE landscape -- above styles apply!**/
+
+@media screen and (max-height: 320px) {
+ 
+    
+}
+

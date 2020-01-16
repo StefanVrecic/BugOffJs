@@ -5,6 +5,9 @@ import Timeline from '../Timeline/Timeline';
 import { connect } from 'react-redux';
 import './ActivityModal.css';
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+
 class ActivityModal extends Component {
     state = {
         open: true
@@ -23,14 +26,24 @@ class ActivityModal extends Component {
 
 render() {
     const events = this.props.events;
-    
+         const closeIcon = (
+       <FontAwesomeIcon
+         onClick={this.closeModalHandler}
+         className="exitModalIcon-notes"
+         icon={faTimes}
+       />
+       );
     return (
       <Modal
-        show={this.state.open}
-        modalClosed={this.closeModalHandler}
-        classes="Modal defaultDimensions"
+      show={this.state.open}
+      modalClosed={this.closeModalHandler}
+      classes="Modal dimensions-activity position-activity"
       >
         
+      
+            {closeIcon}
+
+      
         <div className="overFlow-events">
           <Timeline items={events} deleteItem={this.props.removeNote} />
         </div>

@@ -1,14 +1,19 @@
 .Modal {
     position: fixed;
-    z-index: 500;
+    z-index: 100;
     background-color: lightgrey;
     border: 1px solid #ccc;
     box-shadow: 1px 1px 1px black;
     padding: 1rem;
-    left: 21vw;
-    top: 2.5vh;
+
     box-sizing: border-box;
     transition: all 0.3s ease-out;
+    /* overflow: auto; */
+}
+
+.Modal-location {
+    left: 21vw;
+    top: 2.5vh;
 }
 
 

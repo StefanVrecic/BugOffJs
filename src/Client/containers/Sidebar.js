@@ -16,8 +16,8 @@ class Sidebar extends Component {
             {/* <input className = "top" type="button" value={this.buttons[1]} 
                 onClick={() => { this.props.registerModal(this.buttons[1])}} ></input> */}
 
-            {/* <input className = "top" type="button" value={this.buttons[2]} 
-                onClick={() => { this.props.registerModal(this.buttons[2])}} ></input> */}
+            <input className = "top" type="button" value={this.buttons[2]} 
+                onClick={() => { this.props.registerModal(this.buttons[2])}} ></input>
             
             <input className = "top" type="button" value={this.buttons[3]} 
                 onClick={() => { this.props.registerModal(this.buttons[3])}} ></input>

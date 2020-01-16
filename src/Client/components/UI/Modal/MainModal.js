@@ -4,13 +4,18 @@ import Auxiliary from "../../../hoc/Auxiliary";
 import Backdrop from "../Backdrop/Backdrop";
 import "../../../../bootstrap.css";
 
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+
+import DateTime from 'react-datetime';
+import './rdt.css';
 
 import Form from "react-bootstrap/Form";
 
 import "./MainModal.css";
 import ConfirmationModal from "./ConfirmationModal";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+
 
 class MainModal extends Component {
   // shouldComponentUpdate (nextProps, nextState) {
@@ -42,7 +47,8 @@ class MainModal extends Component {
       newTitle: "",
       oldNoteArea: "",
       alertTimer: "empty",
-      alertMeChecked: "empty"
+      alertMeChecked: "empty",
+      emailFormBehind: ""
     };
 
     this.textInput = React.createRef();
@@ -51,212 +57,253 @@ class MainModal extends Component {
 
     // this.escFunction = this.escFunction.bind(this);
   }
-  
-    bugProperties = ["id", "name", "status", "description", "dueDate", "severity", "overdueConfirmed", "activity", "bugReproducible", "alertTimer"];
-        
-        p = title => {
-          return this.bugProperties.indexOf(title);
-      }
 
-    getMinReminderTime = () => {
-      const now = new Date();
-      const time = this.state.startDate;
-      const minimumReminder = Math.ceil((time - now) / 3600000) - 2; // explain later
-      return minimumReminder;
-    }
+  bugProperties = [
+    "id",
+    "name",
+    "status",
+    "description",
+    "dueDate",
+    "severity",
+    "overdueConfirmed",
+    "activity",
+    "bugReproducible",
+    "alertTimer"
+  ];
+
+  p = title => {
+    return this.bugProperties.indexOf(title);
+  };
+
+  getMinReminderTime = () => {
+    const now = new Date();
+    const time = this.state.startDate;
+    const minimumReminder = Math.ceil((time - now) / 3600000) - 2; // explain later
+    return minimumReminder;
+  };
+
+  calendarOpened = () => {
+   this.setState({ emailFormBehind: "email-form--behind" });
+  }
+  calendarClosed = () => {
+    this.setState({ emailFormBehind: "" });
+  }
 
   handleCalendarChange = date => {
-    
+
     this.setState({
       startDate: date
     });
 
     this.props.addDate(date);
     // if calendar is put to time in past, disable alerts
-        const now = new Date();
+    const now = new Date();
 
-        if (date < now) {
-          this.setState({ alertMeChecked: false });
-          this.props.saveAllowAlert(false);
-        } 
-            // cannot have reminders before present moment, now, nor with 1 hour of now -- what's the point?
+    if (date < now) {
+      this.setState({ alertMeChecked: false });
+      this.props.saveAllowAlert(false);
+    }
+    // cannot have reminders before present moment, now, nor with 1 hour of now -- what's the point?
     let minTime = this.getMinReminderTime();
     let setTimer = this.state.alertTimer;
 
-    
-    const nowpt = (now.getTime() + (setTimer * 3600000)) + 3600000 + ((60-now.getMinutes()-1)*60000);
+    const nowpt =
+      now.getTime() +
+      setTimer * 3600000 +
+      3600000 +
+      (60 - now.getMinutes() - 1) * 60000;
     const earliestCalendarTime = new Date(nowpt);
-    
+
     // as above, factoring in the timer number - alternatively reduce timer instead of disabling
-    if (date < earliestCalendarTime) { 
-                this.setState({ alertMeChecked: false });
-                return this.props.saveAllowAlert(false);
+    if (date < earliestCalendarTime) {
+      this.setState({ alertMeChecked: false });
+      return this.props.saveAllowAlert(false);
     }
 
-
-    if (setTimer > minTime) { 
+    if (setTimer > minTime) {
       setTimer = minTime;
     }
-    
 
- 
-    
-      if (minTime < 1) {
-        this.setState({ alertMeChecked: false });
-        setTimer = 0;
-      }
+    if (minTime < 1) {
+      this.setState({ alertMeChecked: false });
+      setTimer = 0;
+    }
 
-    this.setState({alertTimer: setTimer});
+    this.setState({ alertTimer: setTimer });
 
     // due date set in the future. Allow alert => incase item was overdue and user changed duedate to time in future
-    if (date > now) { 
+    if (date > now) {
       // item dueDatePassed => true
       // db call + state change...
     }
-
   };
 
-  changeTimer = (event) => {
-    
-    // alert(minTime);
+  changeTimer = event => {
+    if (!this.props.show) {
+      return; // mobile failsafe
+    }
+
     let setTimer = event.target.value;
     if (setTimer > 48) {
       setTimer = 48;
-    event.target.value = 48;
-    } 
-
+      event.target.value = 48;
+    }
 
     // cannot have reminders before present moment, now, nor with 1 hour of now -- what's the point?
     const minTime = this.getMinReminderTime();
-    if (setTimer > minTime) { 
+    if (setTimer > minTime) {
       setTimer = minTime;
     }
-        if (setTimer < 1) {
-          setTimer = 0;
-          event.target.value = 0;
-        }
-    this.setState({alertTimer: setTimer});
-  }
+    if (setTimer < 1) {
+      setTimer = 0;
+      event.target.value = 0;
+    }
+    this.setState({ alertTimer: setTimer });
+  };
 
-  checkAlert = (e) => {
+  checkAlert = e => {
+    if (!this.props.show) {
+      return; // mobile failsafe
+    }
+
     if (this.state.disableCalendar) {
       return;
     }
+
     const minTime = this.getMinReminderTime();
-    if (minTime < 1) { // not enough clearance for a reminder
+    if (minTime < 1) {
+      // not enough clearance for a reminder
       this.setState({ alertMeChecked: false });
-      this.setState({alertTimer: 0}); // cosmetic for UI
+      this.setState({ alertTimer: 0 }); // cosmetic for UI
       this.props.saveAllowAlert(false);
       return;
     }
 
-        let setTimer = this.state.alertTimer;
-        const now = new Date();
+    let setTimer = this.state.alertTimer;
+    const now = new Date();
 
-        const nowpt = now.getTime() + setTimer * 3600000 + 3600000 + (60 - now.getMinutes() - 1) * 60000;
-        const earliestCalendarTime = new Date(nowpt);
-        const date = this.state.startDate;
-        // as above, factoring in the timer number - alternatively reduce timer instead of disabling
-        if (date < earliestCalendarTime) {
-          this.setState({ alertMeChecked: false });
-          return this.props.saveAllowAlert(false);
-        }
+    const nowpt =
+      now.getTime() +
+      setTimer * 3600000 +
+      3600000 +
+      (60 - now.getMinutes() - 1) * 60000;
+    const earliestCalendarTime = new Date(nowpt);
+    const date = this.state.startDate;
+    // as above, factoring in the timer number - alternatively reduce timer instead of disabling
+    if (date < earliestCalendarTime) {
+      this.setState({ alertMeChecked: false });
+      return this.props.saveAllowAlert(false);
+    }
     // if calendar is set in past, checkbox = false
     // if alert is set in past, checkbox = false OR just send a minimum reminder?
-    
-    
+
     if (this.state.startDate < now) {
-      this.setState({ alertMeChecked: false});
+      this.setState({ alertMeChecked: false });
       this.props.saveAllowAlert(false);
     } else {
-      this.setState({alertMeChecked: e.target.checked});
+      this.setState({ alertMeChecked: e.target.checked });
       this.props.saveAllowAlert(e.target.checked);
     }
+  };
 
-  }
-
-  saveDueDateEnabled = (event) => {
-
-  }
+  saveDueDateEnabled = event => {};
 
   confirmDeleteItem = () => {
-    this.setState({deleteItemModal: false});
+    this.setState({ deleteItemModal: false });
     this.props.deleteItemModal();
-  }
+  };
   rejectDeleteItem = () => {
-    this.setState({deleteItemModal: false});
-  }
+    this.setState({ deleteItemModal: false });
+  };
   deleteItemConfirmation = () => {
+    if (!this.props.show) {
+      return; // mobile failsafe
+    }
     // return this.props.modalClosed();
-      this.setState({deleteItemModal: true});
-  }
+    this.setState({ deleteItemModal: true });
+  };
 
-  saveSeverity = (event) => {
-    this.setState({sever: event.target.value});
+  saveSeverity = event => {
+    if (!this.props.show) {
+      return; // mobile failsafe
+    }
+    this.setState({ sever: event.target.value });
     this.props.addSeverity(event.target.value);
-  }
+  };
 
-  saveReproducible = (event) => {
-    
-    this.setState({reprod: event.target.value});
+  saveReproducible = event => {
+    if (!this.props.show) {
+      return; // mobile failsafe
+    }
+
+    this.setState({ reprod: event.target.value });
     this.props.addReproducible(event.target.value);
-  }
+  };
 
-  saveStatus = (event) => {
-    this.setState({option: event.target.value});
+  saveStatus = event => {
+    if (!this.props.show) {
+      return; // mobile failsafe
+    }
+    this.setState({ option: event.target.value });
     this.props.saveStatus(this.props.data[0], event.target.value);
-  }
+  };
   componentDidUpdate() {
     if (this.props.data.length > 0 && this.state.alertTimer === "empty") {
-      this.setState({alertTimer: this.props.data[11]});
+      this.setState({ alertTimer: this.props.data[11] });
     }
     if (this.props.data.length > 0 && this.state.option === "empty") {
-      this.setState({option: this.props.status});
+      this.setState({ option: this.props.status });
     }
     if (this.props.data.length > 0 && this.state.sever === "empty") {
-      this.setState({sever: this.props.data[5]});
+      this.setState({ sever: this.props.data[5] });
     }
     if (this.props.data.length > 0 && this.state.reprod === "empty") {
-      this.setState({reprod: this.props.data[8]});
+      this.setState({ reprod: this.props.data[8] });
     }
     if (this.props.data.length > 0 && this.state.alertMeChecked === "empty") {
       // this.setState({alertMeChecked: this.props.data[10]});
     }
-    if (this.props.data.length > 0 && this.state.startAllowCalendar === "empty") {
-      if (this.props.data[9] === true) { //  allow calendaar
-      
-      this.setState({disableCalendar: false});
-      this.setState({startAllowCalendar: false});
-      
-    } else { // don't allow calendar
-    this.setState({disableCalendar: true});
-    this.setState({startAllowCalendar: true});
+    if (
+      this.props.data.length > 0 &&
+      this.state.startAllowCalendar === "empty"
+    ) {
+      if (this.props.data[9] === true) {
+        //  allow calendaar
+
+        this.setState({ disableCalendar: false });
+        this.setState({ startAllowCalendar: false });
+      } else {
+        // don't allow calendar
+        this.setState({ disableCalendar: true });
+        this.setState({ startAllowCalendar: true });
       }
-    } 
-  }
-  
-  escFunction = (event) => {
-    if(this.state.closed === true && event.keyCode === 27) {
-      // maybe keylistener doesn't provide latest ?
-      // this is partly broken. Settings transfer to the next modal that shows up.
-    this.closeModal();
     }
   }
 
+  escFunction = event => {
+    if (this.state.closed === true && event.keyCode === 27) {
+      // maybe keylistener doesn't provide latest ?
+      // this is partly broken. Settings transfer to the next modal that shows up.
+      this.closeModal();
+    }
+  };
+
   componentDidMount() {
     // document.addEventListener("keydown", this.escFunction, false);
-    
   }
 
-	handleInputChange(event)  {
-		const target = event.target;
-		const value = target.type === 'checkbox' ? target.checked : target.value;
-		const name = target.name;
-	
-		this.setState({
-		  [name]: value
-		});
-	  }
+  handleInputChange(event) {
+    if (!this.props.show) {
+      return; // mobile failsafe
+    }
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
 
   setSeverity = eventKey => {
     this.setState({ severity: eventKey });
@@ -264,10 +311,12 @@ class MainModal extends Component {
   };
 
   addNewNote = () => {
+    if (!this.props.show) {
+      return; // mobile failsafe
+    }
     const note = this.state.noteArea;
-    if (note !== "")
-      this.props.postNewNote(note);
-    this.setState({ noteArea: ""});
+    if (note !== "") this.props.postNewNote(note);
+    this.setState({ noteArea: "" });
   };
 
   setEditing = () => {
@@ -280,33 +329,39 @@ class MainModal extends Component {
   };
 
   toggleCalendar = () => {
+    if (!this.props.show) {
+      return; // mobile failsafe
+    }
     this.props.saveCalendarEnabled(this.state.disableCalendar); // !!this.state.disableCalendar
     // if calendar is disabled=true => dueDateEnabled => false
     // if we toggle it => calendar is enabled=false => dueDateEnabled = true
     // thus if calendar is disabled=true and we hit toggle, we set dueDateEnabled = true;
-    // thus at current time dueDateEnabled = (!!) disabled 
-    if (this.state.disableCalendar === false) { // === true as not yet toggled
-      this.setState({alertMeChecked: false});
+    // thus at current time dueDateEnabled = (!!) disabled
+    if (this.state.disableCalendar === false) {
+      // === true as not yet toggled
+      this.setState({ alertMeChecked: false });
       this.props.saveAllowAlert(false);
     }
-    this.setState({disableCalendar: !this.state.disableCalendar});
-  }
+    this.setState({ disableCalendar: !this.state.disableCalendar });
+  };
 
   closeModal = () => {
+    if (!this.props.show) {
+      return; // mobile failsafe
+    }
     // reset properties for next modal
-    
-    
+
     let setTimer = this.state.alertTimer;
-    // alert("hr: " + setTimer);
-    
+
     if (setTimer > 48) {
       setTimer = 48;
-    } if (setTimer < 1) {
+    }
+    if (setTimer < 1) {
       setTimer = 0;
     }
-    
+
     this.props.setReminder(setTimer);
-    
+
     this.setState({
       closed: true,
       cardText: "",
@@ -321,66 +376,72 @@ class MainModal extends Component {
       stateNewCard: false
     });
     this.setState({ date: "", startDate: new Date(), severity: "" });
-    
+
     this.props.modalClosed();
   };
 
   cancelNewTitle = () => {
-    this.setState({stateNewCard: !this.state.stateNewCard});
-    this.setState({noteArea: this.state.oldNoteArea});
-  }
+    if (!this.props.show) {
+      return; // mobile failsafe
+    }
+    this.setState({ stateNewCard: !this.state.stateNewCard });
+    this.setState({ noteArea: this.state.oldNoteArea });
+  };
 
   saveNewCardTitle = () => {
+    if (!this.props.show) {
+      return; // mobile failsafe
+    }
     let currentTitle = this.props.title;
     if (this.state.newTitleSet === true) {
       currentTitle = this.state.newTitle;
     }
-    
-    this.setState({stateNewCard: !this.state.stateNewCard});
+
+    this.setState({ stateNewCard: !this.state.stateNewCard });
     if (!this.state.stateNewCard === true) {
       // edit
       this.textInput.current.focus();
-      this.setState({oldNoteArea: this.state.noteArea});
-      this.setState({noteArea: currentTitle});
+      this.setState({ oldNoteArea: this.state.noteArea });
+      this.setState({ noteArea: currentTitle });
     }
     if (!this.state.stateNewCard === false) {
       // save
-      
+
       this.props.saveNewTitle(this.state.noteArea);
-      this.setState({newTitleSet: true});
-      this.setState({newTitle: this.state.noteArea});
-      this.setState({noteArea: this.state.oldNoteArea});
+      this.setState({ newTitleSet: true });
+      this.setState({ newTitle: this.state.noteArea });
+      this.setState({ noteArea: this.state.oldNoteArea });
     }
-    
-  }
+  };
 
-  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
   render() {
-
+    
     let titleToDisplay = this.props.title;
     if (this.state.newTitleSet === true) {
       titleToDisplay = this.state.newTitle;
     }
-    
+
     let confirmationModal;
     if (this.state.deleteItemModal) {
-        confirmationModal = (
-          <ConfirmationModal confirmDelete={this.confirmDeleteItem}
-          closeModal={this.rejectDeleteItem} ></ConfirmationModal>
-        );
-      }
+      confirmationModal = (
+        <ConfirmationModal
+          confirmDelete={this.confirmDeleteItem}
+          closeModal={this.rejectDeleteItem}
+        ></ConfirmationModal>
+      );
+    }
 
-      let viewNotesDisabled = false;
+    let viewNotesDisabled = false;
     if (this.props.data.length === 0 || this.props.data[7].length === 0) {
       viewNotesDisabled = true;
-  }
+    }
     let selectedTime = new Date();
     if (this.props.data[4] != undefined) {
       selectedTime = new Date(this.props.data[4]);
-    }    
+    }
     let newCard = null;
-    
+
     let notesOrTitle = (
       <textarea
         className="NotesContainer__textarea--input"
@@ -395,37 +456,42 @@ class MainModal extends Component {
         value={this.state.noteArea}
       ></textarea>
     );
-    
+
     let editOrSave = "Edit";
     let editOrSaveTitle = "Edit";
     let cancelSaveTitle = null;
-    
-    if (this.state.stateNewCard) {
-        editOrSaveTitle = "Save";
-        cancelSaveTitle = <span className = "editTitle" onClick={this.cancelNewTitle}> / Cancel </span>
-        notesOrTitle = (
-          <textarea
-            className="NotesContainer__textarea--input"
-            placeholder="Add a new title (81 characters max)"
-            maxlength="81"
-            cols="45"
-            rows="5"
-            wrap="soft"
-            name="noteArea"
-            ref={this.textInput}
-            onChange={this.handleInputChange}
-            value={this.state.noteArea}
-          ></textarea>
-        );
-      }
 
-      let displayEditing = (
-        <p className="itemDescription__displayDescription">
-          {this.props.data[3]}
-        </p>
+    if (this.state.stateNewCard) {
+      editOrSaveTitle = "Save";
+      cancelSaveTitle = (
+        <span className="editTitle" onClick={this.cancelNewTitle}>
+          {" "}
+          / Cancel{" "}
+        </span>
       );
-    
-      if (this.state.editing) {
+      notesOrTitle = (
+        <textarea
+          className="NotesContainer__textarea--input"
+          placeholder="Add a new title (81 characters max)"
+          maxlength="81"
+          cols="45"
+          rows="5"
+          wrap="soft"
+          name="noteArea"
+          ref={this.textInput}
+          onChange={this.handleInputChange}
+          value={this.state.noteArea}
+        ></textarea>
+      );
+    }
+
+    let displayEditing = (
+      <p className="itemDescription__displayDescription">
+        {this.props.data[3]}
+      </p>
+    );
+
+    if (this.state.editing) {
       editOrSave = "Save";
       displayEditing = (
         <div>
@@ -444,45 +510,44 @@ class MainModal extends Component {
       );
     }
     let displayCalendar = "";
-    
-    // if (this.state.startAllowCalendar === true)
-
     let onOffButton = "Off";
-    
+
     if (!this.state.disableCalendar) {
       displayCalendar = (
-        <DatePicker
-          selected={selectedTime}
-            className="calendarComponent"
-            timeIntervals={15}
-                  onChange={this.handleCalendarChange}
-                    showTimeSelect
-                      dateFormat="MMMM d, yyyy h:mm aa"
-                      />); 
-      } else {
-        onOffButton = "On";
-        displayCalendar = (
-          <DatePicker
-            disabled
-            placeholderText="Press 'ON' to select deadline"
-            className="calendarComponent greyed"
-            />);
-  }
+        <DateTime
+          onFocus={this.calendarOpened}
+          onBlur={this.calendarClosed}
+          onChange={this.handleCalendarChange}
+        />
+      );
+    } else {
+      onOffButton = "On";
+      displayCalendar = (
+        <DateTime inputProps={{ placeholder: "N/A", disabled: true }} />
+      );
+    }
 
-  
-  
+    const closeIcon = (
+      <FontAwesomeIcon
+        onClick={this.closeModal}
+        className="exitModalIcon"
+        icon={faTimes}
+      />
+    );
+
     return (
       <Auxiliary>
         <Backdrop show={this.props.show} clicked={this.closeModal} />
         <div
-          className="Modal defaultDimensions"
+          className="modal-main dimensions-main"
           style={{
-            transform: this.props.show ? "translateY(0)" : "translateY(-100vh)",
+            transform: this.props.show ? "translateY(0)" : "translateY(-200vh)",
             opacity: this.props.show ? "1" : "0"
           }}
         >
           {/* Item Title */}
           <div className="modalTitle">
+            {closeIcon}
             <span className="modalTitle-header">
               <b>{titleToDisplay}</b>{" "}
               <span onClick={this.saveNewCardTitle} className="editTitle">
@@ -525,9 +590,8 @@ class MainModal extends Component {
                   {onOffButton}
                 </button>
               </div>
-              {/* calendar Component */}
-
-              <div className="emailSettings">
+              {/* emailFormBehind */}
+              <div className={`emailSettings ${this.state.emailFormBehind}`}>
                 <input
                   className="input-checkbox100"
                   id="ckb2"
@@ -552,9 +616,15 @@ class MainModal extends Component {
                 />
                 <span> hours before due date</span>
               </div>
+
               {/* emailSettings */}
+
               <div className="settings-notes">
-                <div className="dropdownButtons">
+                {/* emailFormBehind */}
+                {/* <div className="dropdownButtons"> */}
+                <div
+                  className={`dropdownButtons ${this.state.emailFormBehind}`}
+                >
                   <div className="bugReproducibleForm">
                     <Form>
                       <Form.Group controlId="exampleForm.ControlSelect1">

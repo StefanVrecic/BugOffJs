@@ -4,6 +4,9 @@ import Auxiliary from '../../../hoc/Auxiliary';
 import Backdrop from '../Backdrop/Backdrop';
 import '../../../../bootstrap.css';
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+
     // Put this code in componentDidUpdate() in the higher Modal
 
     // if(this.state.open === false) {
@@ -54,21 +57,22 @@ class Modal extends Component {
     
 
     render()  {
+                
         return (
-            <Auxiliary>
-                <Backdrop show = {this.props.show} clicked = { this.props.modalClosed } />
-                <div 
-                    className = {this.props.classes}
-                    style = {{
-                        transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)', 
-                        opacity: this.props.show ? '1' : '0'
-                    }}>
-                        <p>
-                            {this.props.children}
-                        </p>
-
-                </div>
-            </Auxiliary>
+          <Auxiliary>
+            <Backdrop show={this.props.show} clicked={this.props.modalClosed} />
+            <div
+              className={this.props.classes}
+              style={{
+                transform: this.props.show
+                  ? "translateY(0)"
+                  : "translateY(-150vh)",
+                opacity: this.props.show ? "1" : "0"
+              }}
+            >
+              <p>{this.props.children}</p>
+            </div>
+          </Auxiliary>
         );
         }
     }

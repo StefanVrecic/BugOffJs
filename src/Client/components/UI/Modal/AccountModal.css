@@ -1,55 +1,136 @@
-.input-margin,
-.heading-margin {
+.position-account {
+        left: 10vw;
+    top: 2.5vh;
+}
+.dimensions-account {
+    height: 95vh;
+    width: 80vw;
+    max-height: 500px;
+    /* max-width:   700px; */
+    position: fixed;
+}
+.login100-form-btn {
+    margin-top: 2rem !important;
+}
+
+.input-margin {
     margin-top: 2rem;
     margin-bottom: 2rem;
 }
+.heading-margin {
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+}
+
+.exitModalIcon-acct {
+    cursor: pointer;
+    position: fixed;
+    right: 1.625rem;
+    top: 2rem;
+    font-size: 2.5rem;
+}
+
+/* ********************************************************************* */
 
 @media screen and (max-width: 1024px) {
+
+        .dimensions-account {
+            height: 90vh !important;
+    top: 5vh !important;
+    max-height: 440px;
+}
 .wrap-input50 {
     width: 65% !important;
     margin-bottom: 0 !important;
 }
-.defaultDimensions {
-    height: 50vh;
-    top: 25vh;
-}
-}
-
-@media screen and (max-height: 429px) {
-    .defaultDimensions {
-            height: 95vh;
-    top: 0;
+.login100-form-btn {
+    margin-top: 2rem !important;
 }
 
 .input-margin {
-    margin-top:     .5rem !important;
-    margin-bottom: .5rem !important;
+    margin-top:     1rem !important;
+    margin-bottom: 1rem !important;
 }
+
 
 .heading-margin {
-    margin-top: 1.25rem;
-    margin-bottom: .75rem;
+    color: teal;
+    margin-top: 20px;
+    margin-bottom: 0;
+    font-size: 2rem;
 }
 
 }
-
+/* ********************************************************************* */
+/* 429 */
 @media screen and (max-width: 768px) {
-.wrap-input50 {
-    width: 65% !important;
-    margin-bottom: 0 !important;
+    .dimensions-account {
+            height: 85vh !important;
+    top: 10vh !important;
+    max-height: 440px;
 }
 
 .input-margin {
     margin-top:     .5rem !important;
-    margin-bottom: .5rem !important;
+    margin-bottom: 1rem !important;
 }
 
 .heading-margin {
-    margin-top: 1.25rem;
+    color: yellow;
+    margin-top: 0;
     margin-bottom: .75rem;
+    font-size: 2rem;
 }
 
-.changePassForm {
+}
+/* ********************************************************************* */
+
+@media screen and (max-width: 576px) {
+
+.dimensions-account {
+    height: 60vh !important;
+    min-height: 320px;
+    max-height: 440px;
+    width: 100vw !important;
+    top: 20vh !important;
+    left: 0 !important;
+    /* top: 30vh !important; */
+}
+
+.wrap-input50 {
+    width: 65% !important;
+    margin-bottom: 0 !important;
+    height: 4rem !important;
+}
+
+.input-margin {
+    margin-top:     1.5rem !important;
+    margin-bottom: 1rem !important;
+    font-size: 2rem;
+}
+
+.heading-margin {
+    margin-top: 1rem;
+    margin-bottom: .75rem;
+    font-size: 3rem;
+}
+
 
 }
+
+/** iPhone 6 landscape -- width styles above still apply! **/
+
+@media screen and (max-height: 375px) {
+
+.login100-form-btn {
+    margin-top: 0 !important;
+}
+}
+
+/** iPhone SE landscape -- above styles apply!**/
+
+@media screen and (max-height: 320px) {
+    .dimensions-account {
+        top: 0vh !important;
+    }
 }

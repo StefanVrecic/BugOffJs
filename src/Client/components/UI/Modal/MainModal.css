@@ -5,7 +5,34 @@
     
 }
 
+.dimensions-main {
+    height: 95%;
+    width: 60%;
+}
 
+.modal-main {
+        position: fixed;
+    z-index: 100;
+    background-color: lightgrey;
+    border: 1px solid #ccc;
+    box-shadow: 1px 1px 1px black;
+    padding: 1rem;
+    left: 20vw;
+    top: 2.5vh;
+    box-sizing: border-box;
+    transition: all 0.3s ease-out;
+    overflow: auto;
+}
+
+
+
+.exitModalIcon {
+    cursor: pointer;
+    position: fixed;
+    right: 1.625rem;
+    top: 1rem;
+    font-size: 2.5rem;
+}
 .modalTitle {
     max-width: 100%;
     display: inline-block;
@@ -20,6 +47,7 @@
 
 .itemDescription {
     
+        font-weight: bold;
     height: 100%;
 }
 
@@ -44,11 +72,17 @@
 }
 .calendarComponent {
     display: flex;
+    max-width: 90%;
     padding-top: 2rem;
     margin-bottom: 1rem;
-    /* margin-top: 1rem; */
+
+        display: flex;
+        justify-content: center;
 }
 
+.label-checkbox100 {
+    z-index: 1;
+}
 .emailSettings{
     margin-bottom: 2rem;
 }
@@ -56,9 +90,18 @@
 .dropdownButtons {
     width: 100%;
     display: flex;
-    left: 4%;
+    justify-content: center;
+    /* left: 4%; */
     position: relative;
+    z-index: 1;
+    padding-right: 0;
+    /* z-index: -10; */
     /* border: solid yellow 3px; */
+}
+/* hack solution, add this class when the calendar is open */
+.email-form--behind {
+    z-index: -10;
+    position: relative;
 }
 
 .NotesContainer {
@@ -71,6 +114,7 @@
 
 .NotesContainer__textarea--input {
     height: 15rem;
+    width: 100%;
     resize: none;
     
 }
@@ -99,7 +143,7 @@
     justify-content: center;
     align-items: center;
     padding: 0 20px;
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
     /* width: 100%; */
     /* height: 50px; */
     border-radius: 10px;
@@ -119,7 +163,8 @@
   }
   
   .delete-btn {
-      margin: 3rem auto;
+      margin: 2rem auto;
+      /* padding: 3rem; */
   }
 
 /*  * * * * * * * * * * * * * * * * * ** * * * * * * ** * */
@@ -180,6 +225,8 @@
 /* Override packaage specifications */
 .react-datepicker {
     font-size: 1.5rem !important;
+    /* transform: scale(1.2) !important; */
+    z-index: 100;
 }
 .editTitle:hover {
     cursor: pointer;
@@ -223,8 +270,8 @@
     -moz-transition: all 0.4s;
     transition: all 0.4s;
 
-    margin-right: 1rem;
-    margin-left: 1rem;
+    /* margin-right: 1rem; */
+    margin-left: 3rem;
     
 }
 
@@ -235,31 +282,81 @@
 .newEditBtn {
     /* visibility: hidden; */
 }
+/* *************************************************************************** */
 
-
-@media screen and (max-width: 768px) {
-  .dropdownButtons {
-        left: 0;
-    }
-    .onOffBtn {
-        transform: translateX(-2rem);
+@media screen and (max-width: 1024px) {
+       .onOffBtn {
         padding-left: 2rem;
         padding-right: 2rem;
-        margin-left: 0; 
+        margin-left: 3rem; 
     }
     .calendarComponent {
-        transform: scale(0.9) translateX(-1rem);
-        /* margin: 0; */
+        max-width: 90%;
+    }
+ .delete-btn {
+      margin-top: 2rem;
+      margin-bottom: 5rem;
+      /* padding-bottom: 3rem; */
+      
+  }
+.dimensions-main {
+    height: 100vh;
+    width: 100vw;
+    left: 0;
+    top: 0vh !important;
+}
+
+    .dimensions-main {
+            height: 100vh;
+            width: 100vw;
+            left: 0;
+            top: 0
+}
+}
+
+/* *************************************************************************** */
+
+@media screen and (max-width: 768px) {
+ .delete-btn {
+          margin-top: 2rem;
+      margin-bottom: 4rem;
+  }
+        .dimensions-main {
+            height: 100vh;
+            width: 100vw;
+            left: 0;
+            top: 0
+}
+
+
+      .dropdownButtons {
+        left: 0;
+        z-index: 10;
+    }
+    .bugReproducibleForm {
+        margin-left: auto;
+    }
+    .bugStatusForm {
+        margin-right: auto;
+    }
+    .onOffBtn {
+        padding-left: 2rem;
+        padding-right: 2rem;
+        margin-left: 3rem; 
+    }
+    .calendarComponent {
         padding: 0;
+        z-index: 1000;
+        position: relative;
     }
     .modalTitle {
         display: flex;
-        background-color: lightsalmon;
+        /* background-color: lightsalmon; */
         position: relative;
         top: 0;
     }
     .modalTitle-status-container {
-        background-color: lightpink;
+        /* background-color: lightpink; */
         /* display: flex; */
         /* position: absolute; */
     }
@@ -274,7 +371,7 @@
         width: 100%;
         /* height: 100%; */
         padding-bottom: 4rem;
-        background-color: lightcyan;
+        /* background-color: lightcyan; */
         /* position: absolute; */
         height: 100%;
     }
@@ -283,34 +380,42 @@
         /* height: 100%; */
         position: relative;
         height: 100%;
-        background-color: lightcyan;
+        /* background-color: cyan; */
         padding-bottom: 4rem;
     }
 }
 /* *************************************************************************** */
 @media screen and (max-width: 576px) {
+    .dimensions-main {
+    height: 100vh !important;
+    width: 100vw;
+    left: 0 ;
+    top: 0 !important;
+}
+    .react-datepicker {
+        
+        z-index: 100
+    }
     .dropdownButtons {
         left: 0;
+        z-index: 10;
     }
     .onOffBtn {
-        transform: translateX(-2rem);
-        padding-left: 2rem;
-        padding-right: 2rem;
-        margin-left: 0; 
+        margin-left: 3rem !important; 
     }
     .calendarComponent {
-        transform: scale(0.9) translateX(-1rem);
+        /* transform: scale(0.9) translateX(-1rem); */
         /* margin: 0; */
         padding: 0;
     }
     .modalTitle {
         display: flex;
-        background-color: lightsalmon;
+        /* background-color: lightsalmon; */
         position: relative;
         top: 0;
     }
     .modalTitle-status-container {
-        background-color: lightpink;
+        /* background-color: lightpink; */
         /* display: flex; */
         /* position: absolute; */
     }
@@ -325,7 +430,7 @@
         width: 100%;
         /* height: 100%; */
         padding-bottom: 4rem;
-        background-color: lightcyan;
+        /* background-color: lightcyan; */
         /* position: absolute; */
         height: 100%;
     }
@@ -334,15 +439,23 @@
         /* height: 100%; */
         position: relative;
         height: 100%;
-        background-color: lightcyan;
+        /* background-color: cyan; */
         padding-bottom: 4rem;
     }
 
 
     
 }
+/** iPhone SE landscape -- above styles apply!**/
 
-@media screen and (max-width: 329px) {
+@media screen and (max-width: 320px) {
+    .dropdownButtons {
+        width: 99%;
+    }
+}
+
+
+@media screen and (max-height: 329px) {
     .onOffBtn {
         transform: translateX(-2rem);
         padding-left: 10px;

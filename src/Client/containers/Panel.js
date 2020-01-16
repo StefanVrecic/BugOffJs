@@ -204,6 +204,7 @@ class Panel extends Component {
         // this.modalSelectHandler("Activity");
     }
     removeNoteFromData = (index) => {
+        return alert(index);
         // from RHS of array
         const newModalData = [...this.props.modalData];
         const RHS_index = this.props.modalData[7].length - index - 1;
@@ -222,16 +223,44 @@ class Panel extends Component {
     }
 
     prepareActivityModal = () => {
-        if (this.props.modalData.length === 0 || this.props.modalData[7].length === 0) {
-            return;
-        }
-        const cleansed = this.cleanseActivity(this.props.modalData[7]).reverse();
-        let events = cleansed;
+        // if (this.props.modalData.length === 0 || this.props.modalData[7].length === 0) {
+        //     return;
+        // }
+        // const cleansed = this.cleanseActivity(this.props.modalData[7]).reverse();
+        // let events = cleansed;
+
+        const mobile_test_events = [
+          { ts: "2017-09-17T12:22:46.587Z", text: "Logged in" },
+          {
+            ts: "2017-09-17T12:21:46.587Z",
+            text:
+              "Clicked Home Page Clicked Home Page Clicked Home Page Clicked Home Page Clicked Home Page Clicked Home Page Clicked Home Page Clicked Home Page"
+          },
+          { ts: "2017-09-17T12:20:46.587Z", text: "Edited Profile" },
+          { ts: "2017-09-16T12:22:46.587Z", text: "Registred" },
+          { ts: "2017-09-16T12:21:46.587Z", text: "Clicked Cart" },
+          { ts: "2017-09-16T12:20:46.587Z", text: "Clicked Checkout" },
+          { ts: "2017-09-17T12:20:46.587Z", text: "Edited Profile" },
+          { ts: "2017-09-16T12:22:46.587Z", text: "Registred" },
+          { ts: "2017-09-16T12:21:46.587Z", text: "Clicked Cart" },
+          { ts: "2017-09-17T12:20:46.587Z", text: "Edited Profile" },
+          { ts: "2017-09-16T12:22:46.587Z", text: "Registred" },
+          { ts: "2017-09-16T12:21:46.587Z", text: "Clicked Cart" },
+          { ts: "2017-09-16T12:20:46.587Z", text: "Clicked Checkout" },
+          { ts: "2017-09-17T12:20:46.587Z", text: "Edited Profile" },
+          { ts: "2017-09-16T12:22:46.587Z", text: "Registred" },
+          { ts: "2017-09-16T12:21:46.587Z", text: "Clicked Cart" },
+          { ts: "2017-09-16T12:20:46.587Z", text: "Clicked Checkout" },
+          { ts: "2017-09-17T12:20:46.587Z", text: "Edited Profile" },
+          { ts: "2017-09-16T12:22:46.587Z", text: "Registred" },
+          { ts: "2017-09-16T12:21:46.587Z", text: "Clicked Cart" },
+          { ts: "2017-09-16T12:20:46.587Z", text: "Clicked Checkout" }
+        ];
    
 
         return (<ActivityModal 
             closeModal={this.closeModalPanel}
-            events={events}
+            events={mobile_test_events}
             removeNote={this.removeNoteFromData}
             ></ActivityModal> );
     }

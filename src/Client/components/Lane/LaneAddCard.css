@@ -32,7 +32,8 @@ input {
 }
 
 .closeAddCard {
-    margin-left: 5px;
+    font-size: 2.4rem;
+    margin-left: 1rem;
     padding-right: 10rem;
 }
 
@@ -61,13 +62,48 @@ input {
     margin-left: 1rem;
 }
 
+
+/* *********************************************** */
+@media screen and (max-width: 1024px) {
+        .addCardButton {
+            height: 8rem;
+            font-size: 1.5rem;
+        }
+        .btn-success {
+            /* width: 15rem; */
+            height: 4.5rem;
+        }
+        .closeAddCard {
+            font-size: 2.8rem;
+            margin-left: 2.5rem;
+        }
+}
+
+/* *********************************************** */
+@media screen and (max-width: 768px) {
+        .addCardButton {
+            height: 8rem;
+            font-size: 2.5rem;
+        }
+        .btn-success {
+            /* width: 10rem; */
+            height: 4.5rem;
+        }
+        .closeAddCard {
+            font-size: 4rem;
+            margin-left: 2.5rem;
+        }
+}
+
+/* *********************************************** */
+
 @media screen and (max-width: 576px) {
         .addCardButton {
             height: 8rem;
             font-size: 2.5rem;
         }
         .btn-success {
-            width: 15rem;
+            width: 10rem;
             height: 4.5rem;
         }
         .closeAddCard {
