@@ -8,7 +8,8 @@
         import axios from "axios";
         import mongoose from 'mongoose';
         import { connect } from 'react-redux';
-        const port = process.env.PORT;
+        // const port = process.env.PORT;
+const port = "0.0.0.0";
         
         // import Modal from "../components/UI/Modal/Modal";
         // import uniqid from "uniqid";

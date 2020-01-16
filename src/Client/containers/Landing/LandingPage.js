@@ -7,7 +7,8 @@ import './css/shake.css'
 
 import '../../../bootstrap.css';
 import axios from "axios";
-const port = process.env.PORT;
+// const port = process.env.PORT;
+const port = "0.0.0.0";
 
 // I was going to split this into two components LandingPage and Auth
 // I originally did that, but there was a UX weakness which I attempted to resolve

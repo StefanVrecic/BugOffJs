@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+    import React, { Component } from 'react';
 import TrelloBoard from './TrelloBoard';
 import Sidebar from './Sidebar';
 import axios from "axios";
@@ -12,7 +12,8 @@ import LogoutModal from '../components/UI/Modal/LogoutModal';
 import MainModal from '../components/UI/Modal/MainModal';
 import CardModal from '../components/UI/Modal/CardModal';
 import { connect } from 'react-redux';
-const port = process.env.PORT;
+// const port = process.env.PORT;
+const port = "0.0.0.0";
 
 class Panel extends Component {
 
