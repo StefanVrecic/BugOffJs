@@ -8,6 +8,7 @@
         import axios from "axios";
         import mongoose from 'mongoose';
         import { connect } from 'react-redux';
+        const port = process.env.PORT;
         
         // import Modal from "../components/UI/Modal/Modal";
         // import uniqid from "uniqid";
@@ -601,7 +602,7 @@
 
           db_deleteItem(id) {
             const instance = axios.create({
-              baseURL: "http://localhost:8080",
+              baseURL: port,
               headers: {
                 Authorization:
                   "Bearer " + window.localStorage.getItem("login-token")
@@ -639,7 +640,7 @@
             }
 
             axios
-              .patch(`http://localhost:8080/bugs/${id}`, {
+              .patch(port+`/bugs/${id}`, {
                 name,
                 description,
                 status,
@@ -667,7 +668,7 @@
             const status_string = this.getCardStatus(id);
 
             axios
-              .patch(`http://localhost:8080/bugs/${id}`, {
+              .patch(port+`/bugs/${id}`, {
                 status: status_string
               })
               .then(function(response) {
@@ -682,7 +683,7 @@
 
           db_createCard(id, cardTitle, status) {
             const instance = axios.create({
-              baseURL: "http://localhost:8080",
+              baseURL: port,
               headers: {
                 Authorization:
                   "Bearer " + window.localStorage.getItem("login-token")
@@ -717,7 +718,7 @@
 
           db_loadCards() {
             axios
-              .get("http://localhost:8080/bugs/", {
+              .get(port+"/bugs/", {
                 headers: {
                   Authorization:
                     "Bearer " + window.localStorage.getItem("login-token")

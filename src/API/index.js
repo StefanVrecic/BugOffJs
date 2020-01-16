@@ -69,10 +69,10 @@ const checkBugOverdue = async () => {
     
 }
 
-setInterval(checkBugOverdue, 1000);
+setInterval(checkBugOverdue, 100000);
 
 
-sgMail.setApiKey();
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 
 const sendEmail = async (emailSubject, msg, userId) => {

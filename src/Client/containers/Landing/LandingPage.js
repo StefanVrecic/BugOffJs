@@ -7,6 +7,7 @@ import './css/shake.css'
 
 import '../../../bootstrap.css';
 import axios from "axios";
+const port = process.env.PORT;
 
 // I was going to split this into two components LandingPage and Auth
 // I originally did that, but there was a UX weakness which I attempted to resolve
@@ -190,7 +191,7 @@ render() {
 
   // logic could be merged with below, may reduce managability though
   db_createUser = (user, userPassword) => {
-    axios.post("http://localhost:8080/users", {
+    axios.post(port+"users", {
         email: user,
         password: userPassword
       })
@@ -209,7 +210,7 @@ render() {
   }
 
   db_login = (user, userPassword) =>  {
-    axios.post("http://localhost:8080/users/login", {
+    axios.post(port + "/users/login", {
         email: user,
         password: userPassword
       })
@@ -244,7 +245,7 @@ render() {
   db_confirmIdentity = () => {
 
 	const instance = axios.create({
-		baseURL: 'http://localhost:8080',
+		baseURL: port,
 		headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
 	});
 	

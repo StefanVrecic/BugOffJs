@@ -12,6 +12,7 @@ import LogoutModal from '../components/UI/Modal/LogoutModal';
 import MainModal from '../components/UI/Modal/MainModal';
 import CardModal from '../components/UI/Modal/CardModal';
 import { connect } from 'react-redux';
+const port = process.env.PORT;
 
 class Panel extends Component {
 
@@ -24,7 +25,7 @@ class Panel extends Component {
     db_confirmIdentity = () => {
 
         const instance = axios.create({
-            baseURL: 'http://localhost:8080',
+            baseURL: port,
             headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
         });
         
@@ -354,7 +355,7 @@ render() {
 
 db_changePass = (currentPass, newPass) => {
  const instance = axios.create({
-        baseURL: 'http://localhost:8080',
+        baseURL: port,
         headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
       });
       const sendEmail = window.localStorage.getItem("email");
@@ -390,7 +391,7 @@ db_changePass = (currentPass, newPass) => {
             const allowReminder = data[10];
             const reminderTimer = data[11];
             axios
-            .patch(`http://localhost:8080/bugs/${id}`, {
+            .patch(port+`/bugs/${id}`, {
                 name, description, status, dueDate, severity, overdueConfirmed, activity, bugReproducible, dueDateEnabled, allowReminder, reminderTimer
                 
             })
@@ -407,7 +408,7 @@ db_changePass = (currentPass, newPass) => {
 
 db_logout = () => {
     const instance = axios.create({
-        baseURL: 'http://localhost:8080',
+        baseURL: port,
         headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
       });
 
