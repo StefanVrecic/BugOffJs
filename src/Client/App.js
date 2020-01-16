@@ -20,9 +20,8 @@ function App() {
       <div className="App" > 
       {/* <Route path = "/auth" exact component = {Auth} /> */}
       <Route path = "/panel" exact component = {Panel} />
-      {/* <Route path="/login" exact component = {LandingPage} /> */}
-      {/* <Route path="*"><Redirect to="/login" /></Route> */}
-      <Route path="*"><Redirect to="/panel" /></Route>
+      <Route path="/login" exact component = {LandingPage} />
+      <Route path="*"><Redirect to="/login" /></Route>
     </div>
     </AuthProvider>
     

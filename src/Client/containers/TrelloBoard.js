@@ -82,8 +82,8 @@
           }
 
           componentDidMount() {
-            // this.db_loadCards();
-            this.processLoadedCards();
+            this.db_loadCards();
+            // this.processLoadedCards();
           }
 
           p = title => {
@@ -136,51 +136,51 @@
             const laneArray = [[], [], [], [], []];
             let dataArray = [];
             var dataArrayItem = [];
-            const loadedData2 = this.generateMobileTestData();
+            // const loadedData2 = this.generateMobileTestData();
 
-            for (const dataItem of loadedData2) {
+            for (const dataItem of loadedData) {
                 // alert(dataItem + " ... loop");
               dataArrayItem = [];
-            //   dataArrayItem.push(dataItem._id);
+              dataArrayItem.push(dataItem._id);
 
               // name = data[1]; status = [2]; description = [3]; dueDate = [4];
               // severity = [5]; overdueConfirmed = [6]; activity = data[7]; reproducible = data[8]
 
               // WARNING - read properties - DO NOT CHANGE ORDER OF dataArrayItem.push
-            //   dataArrayItem.push(dataItem.name);
-            //   dataArrayItem.push(dataItem.status);
-            //   dataArrayItem.push(dataItem.description);
-            //   dataArrayItem.push(dataItem.dueDate);
-            //   dataArrayItem.push(dataItem.severity);
-            //   dataArrayItem.push(dataItem.overdueConfirmed);
-            //   dataArrayItem.push(dataItem.activity);
-            //   dataArrayItem.push(dataItem.bugReproducible);
-            //   dataArrayItem.push(dataItem.dueDateEnabled);
-            //   dataArrayItem.push(dataItem.allowReminder);
-            //   dataArrayItem.push(dataItem.reminderTimer);
-                      dataArrayItem.push(dataItem[0]+"");
-                      dataArrayItem.push(dataItem[1] + "");
-                      dataArrayItem.push(dataItem[2] + "");
-                      dataArrayItem.push(dataItem[3]);
-                      dataArrayItem.push(dataItem[4] + "");
-                      dataArrayItem.push(dataItem[5]);
-                      dataArrayItem.push(dataItem[6]);
-                      dataArrayItem.push(dataItem[7] + "");
-                      dataArrayItem.push(dataItem[8]);
-                      dataArrayItem.push(dataItem[9]);
-                      dataArrayItem.push(dataItem[10]);
-                      dataArrayItem.push(dataItem[11]);
-              console.log(dataArrayItem);
+              dataArrayItem.push(dataItem.name);
+              dataArrayItem.push(dataItem.status);
+              dataArrayItem.push(dataItem.description);
+              dataArrayItem.push(dataItem.dueDate);
+              dataArrayItem.push(dataItem.severity);
+              dataArrayItem.push(dataItem.overdueConfirmed);
+              dataArrayItem.push(dataItem.activity);
+              dataArrayItem.push(dataItem.bugReproducible);
+              dataArrayItem.push(dataItem.dueDateEnabled);
+              dataArrayItem.push(dataItem.allowReminder);
+              dataArrayItem.push(dataItem.reminderTimer);
+              //         dataArrayItem.push(dataItem[0]+"");
+              //         dataArrayItem.push(dataItem[1] + "");
+              //         dataArrayItem.push(dataItem[2] + "");
+              //         dataArrayItem.push(dataItem[3]);
+              //         dataArrayItem.push(dataItem[4] + "");
+              //         dataArrayItem.push(dataItem[5]);
+              //         dataArrayItem.push(dataItem[6]);
+              //         dataArrayItem.push(dataItem[7] + "");
+              //         dataArrayItem.push(dataItem[8]);
+              //         dataArrayItem.push(dataItem[9]);
+              //         dataArrayItem.push(dataItem[10]);
+              //         dataArrayItem.push(dataItem[11]);
+              // console.log(dataArrayItem);
 
-            //   const lane = this.statusToLaneNumber(dataItem.status);
-                const lane = this.statusToLaneNumber(dataItem[2])
+              const lane = this.statusToLaneNumber(dataItem.status);
+                // const lane = this.statusToLaneNumber(dataItem[2])
                 
-            //   idArray.push(dataItem._id);
-            idArray.push(dataItem[0]+"");
-            //   dataArray.push(dataArrayItem);
-            dataArray.push(dataArrayItem);
-            //   laneArray[lane].push(dataItem._id);
-              laneArray[lane].push(dataItem[0]);
+              idArray.push(dataItem._id);
+            // idArray.push(dataItem[0]+"");
+              dataArray.push(dataArrayItem);
+            // dataArray.push(dataArrayItem);
+              laneArray[lane].push(dataItem._id);
+              // laneArray[lane].push(dataItem[0]);
             }
 
             
