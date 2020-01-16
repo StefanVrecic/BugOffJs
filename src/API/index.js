@@ -9,22 +9,16 @@ const sgMail = require('@sendgrid/mail')
 const app = express();
 
 app.use(express.static('public'))
-
 app.use(bodyParser.urlencoded({ extended: false }))
-
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: false }))
 
-// app.use(cookieParser())
 
 app.use(bugRouter);
 app.use(userRouter);
-
 app.use(cors());
 
 const port = process.env.PORT;
-// const app = require('./app');
 
 app.listen(port, () => {
     console.log('Server is up on port ' + port)

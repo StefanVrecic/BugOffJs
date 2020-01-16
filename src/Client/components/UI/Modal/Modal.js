@@ -4,8 +4,7 @@ import Auxiliary from '../../../hoc/Auxiliary';
 import Backdrop from '../Backdrop/Backdrop';
 import '../../../../bootstrap.css';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+
 
     // Put this code in componentDidUpdate() in the higher Modal
 

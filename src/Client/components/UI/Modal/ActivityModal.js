@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Modal from './Modal';
 // import Timeline from 'react-time-line';
 import Timeline from '../Timeline/Timeline';
-import { connect } from 'react-redux';
 import './ActivityModal.css';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
