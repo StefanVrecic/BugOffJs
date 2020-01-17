@@ -9,7 +9,7 @@
         import mongoose from 'mongoose';
         import { connect } from 'react-redux';
         // const port = process.env.PORT;
-const port = "0.0.0.0";
+const port = "http://vrecic-bugsquash-project.herokuapp.com/";
         
         // import Modal from "../components/UI/Modal/Modal";
         // import uniqid from "uniqid";
