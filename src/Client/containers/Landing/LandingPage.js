@@ -212,7 +212,7 @@ render() {
   }
 
   db_login = (user, userPassword) =>  {
-	  alert(this.port + "this port");
+	//   alert(this.port + "this port");
 	  alert(port + "port");
 	  alert(port+"/users/login");
     axios.post(port + "/users/login", {
