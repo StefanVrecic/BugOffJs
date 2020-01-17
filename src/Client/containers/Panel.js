@@ -13,7 +13,6 @@ import MainModal from '../components/UI/Modal/MainModal';
 import CardModal from '../components/UI/Modal/CardModal';
 import { connect } from 'react-redux';
 // const port = process.env.PORT;
-// const port = "http://vrecic-bugsquash-project.herokuapp.com"
 // const port = "http://localhost:8080";
 const port = "https://vrecic-bugoff-api.herokuapp.com";
 class Panel extends Component {

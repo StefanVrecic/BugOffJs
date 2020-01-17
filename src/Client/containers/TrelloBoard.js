@@ -9,7 +9,6 @@
         import mongoose from 'mongoose';
         import { connect } from 'react-redux';
         // const port = process.env.PORT;
-// const port = "http://vrecic-bugsquash-project.herokuapp.com/";
 // const port = "http://localhost:8080"
 const port = "https://vrecic-bugoff-api.herokuapp.com";
         

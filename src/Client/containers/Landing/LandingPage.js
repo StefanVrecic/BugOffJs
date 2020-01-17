@@ -8,7 +8,6 @@ import './css/shake.css'
 import '../../../bootstrap.css';
 import axios from "axios";
 // const port = process.env.PORT;
-// const port = "http://vrecic-bugsquash-project.herokuapp.com/";
 // const port = "http://localhost:8080"
 const port = "https://vrecic-bugoff-api.herokuapp.com";
 
@@ -49,7 +48,7 @@ class LandingPage extends Component {
 
 	}
 
-	signUp = (e) =>  {
+	signUp = (e) =>  {f
 		e.preventDefault();
 		
 		if (this.state.newUser && this.state.pass !== this.state.passConfirm) {
@@ -194,7 +193,7 @@ render() {
 
   // logic could be merged with below, may reduce managability though
   db_createUser = (user, userPassword) => {
-    axios.post(port+"users", {
+    axios.post(port+"/users", {
         email: user,
         password: userPassword
       })
@@ -213,6 +212,8 @@ render() {
   }
 
   db_login = (user, userPassword) =>  {
+	  alert(this.port + "this port");
+	  alert(port + "port");
 	  alert(port+"/users/login");
     axios.post(port + "/users/login", {
         email: user,
