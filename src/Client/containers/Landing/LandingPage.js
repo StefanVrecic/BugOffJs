@@ -30,7 +30,6 @@ class LandingPage extends Component {
 	  }
 
 	  componentDidMount() {
-		//   alert("comp mount");
 		  this.db_confirmIdentity();
 	  }
 	
@@ -204,22 +203,19 @@ render() {
       })
       .then(() => {
           this.handleLoginSuccess();
-        }).catch(() => {
+        }).catch((error) => {
         console.log("fail login");
-        // console.log(error.config.data);
+		// console.log(error.config.data);
         this.handleLoginFail();
       });
   }
 
   db_login = (user, userPassword) =>  {
-	  alert(user + ' ... ' + userPassword);
-	  alert(port+"/users/login");
     axios.post(port + "/users/login", {
         email: user,
         password: userPassword
       })
       .then(function(response) {
-		  alert("fulfill")
         console.log("success login - call loadCards()");
         // need to store this token
         window.localStorage.setItem("login-token", response.data.token);
@@ -235,9 +231,8 @@ render() {
   }
 
   handleLoginSuccess() {
-	  alert("loginsuccess");
+	  
 	//   set auth context here.
-	// alert("success LandingPage.js");
     this.props.history.push( '/panel' );
   }
 
