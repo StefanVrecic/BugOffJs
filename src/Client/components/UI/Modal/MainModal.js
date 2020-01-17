@@ -437,9 +437,11 @@ class MainModal extends Component {
       viewNotesDisabled = true;
     }
     let selectedTime = new Date();
+    
     if (this.props.data[4] != undefined) {
       selectedTime = new Date(this.props.data[4]);
     }
+    
     let newCard = null;
 
     let notesOrTitle = (
@@ -515,6 +517,8 @@ class MainModal extends Component {
     if (!this.state.disableCalendar) {
       displayCalendar = (
         <DateTime
+        inputProps={{ placeholder: selectedTime }}
+          value={selectedTime}
           onFocus={this.calendarOpened}
           onBlur={this.calendarClosed}
           onChange={this.handleCalendarChange}
@@ -523,7 +527,7 @@ class MainModal extends Component {
     } else {
       onOffButton = "On";
       displayCalendar = (
-        <DateTime inputProps={{ placeholder: "N/A", disabled: true }} />
+        <DateTime inputProps={{ placeholder: "Click button to enable", disabled: true }} />
       );
     }
 
