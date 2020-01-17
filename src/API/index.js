@@ -19,9 +19,9 @@ app.use(userRouter);
 app.use(cors());
 
 const port = process.env.PORT;
-const host = "0.0.0.0";
+// const host = "0.0.0.0";
 
-app.listen(port, host, () => {
+app.listen(port, () => {
     console.log('Server is up on port ' + port)
 })
 

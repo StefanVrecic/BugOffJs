@@ -8,7 +8,9 @@ import './css/shake.css'
 import '../../../bootstrap.css';
 import axios from "axios";
 // const port = process.env.PORT;
-const port = "http://vrecic-bugsquash-project.herokuapp.com/";
+// const port = "http://vrecic-bugsquash-project.herokuapp.com/";
+// const port = "http://localhost:8080"
+const port = "https://vrecic-bugoff-api.herokuapp.com";
 
 // I was going to split this into two components LandingPage and Auth
 // I originally did that, but there was a UX weakness which I attempted to resolve
@@ -211,6 +213,7 @@ render() {
   }
 
   db_login = (user, userPassword) =>  {
+	  alert(port+"/users/login");
     axios.post(port + "/users/login", {
         email: user,
         password: userPassword

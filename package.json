@@ -40,7 +40,7 @@
     "validator": "^12.1.0"
   },
   "scripts": {
-    "start": "react-scripts start env-cmd -f ./config/dev.env node src/API/index.js",
+    "start": "react-scripts start & npm run dev",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
