@@ -13,13 +13,13 @@ import MainModal from '../components/UI/Modal/MainModal';
 import CardModal from '../components/UI/Modal/CardModal';
 import { connect } from 'react-redux';
 // const port = process.env.PORT;
-// const port = "http://localhost:8080";
-const port = "https://vrecic-bugoff-api.herokuapp.com";
+const port = "http://localhost:8080";
+// const port = "https://vrecic-bugoff-api.herokuapp.com";
 class Panel extends Component {
 
     componentDidMount() {
         
-        if (this.props.isGuest) { return; } // disable database calls in guest mode
+        // if (this.props.isGuest) { return; } // disable database calls in guest mode
         
         // check to see if token works?
         this.db_confirmIdentity();
@@ -424,7 +424,7 @@ db_logout = () => {
         baseURL: port,
         headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
       });
-
+      
       instance.post("/users/logout", {
     }).then(response => {
         console.log("success logout" + response);
