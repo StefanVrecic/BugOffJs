@@ -19,6 +19,8 @@ class Panel extends Component {
 
     componentDidMount() {
         
+        if (this.props.isGuest) { return; } // disable database calls in guest mode
+        
         // check to see if token works?
         this.db_confirmIdentity();
     }
@@ -355,30 +357,39 @@ render() {
 }
 
 db_changePass = (currentPass, newPass) => {
- const instance = axios.create({
-        baseURL: port,
-        headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
-      });
-      const sendEmail = window.localStorage.getItem("email");
-      console.log(sendEmail + " sendEmail");
-      console.log(currentPass + " / " + newPass);
-        instance.patch("/users/changepass", {
-            email: sendEmail,
-            password: currentPass,
-            newPassword: newPass
-          })
-          .then(() =>  {
-            console.log("success changing pass");
-          })
-          .then(() => {
-                console.log("suc change pass")
-            }).catch(() => {
-            console.log("fail change");
-            // console.log(error.config.data);
-          });
-      }
+  if (this.props.isGuest) {
+    return;
+  } // disable database calls in guest mode
+  const sendEmail = window.localStorage.getItem("email");
+  const instance = axios.create({
+    baseURL: port,
+    headers: {
+      Authorization: "Bearer " + window.localStorage.getItem("login-token")
+    }
+  });
+  console.log(sendEmail + " sendEmail");
+  console.log(currentPass + " / " + newPass);
+  instance
+    .patch("/users/changepass", {
+      email: sendEmail,
+      password: currentPass,
+      newPassword: newPass
+    })
+    .then(() => {
+      console.log("success changing pass");
+    })
+    .then(() => {
+      console.log("suc change pass");
+    })
+    .catch(() => {
+      console.log("fail change");
+      // console.log(error.config.data);
+    });
+};
       
         db_updateCardData(id, data) {
+            
+if (this.props.isGuest) { return; } // disable database calls in guest mode
             // warning - update properties. Add in axios.patch() below
             const name = data[1];
             const status = data[2];
@@ -408,6 +419,7 @@ db_changePass = (currentPass, newPass) => {
 
 
 db_logout = () => {
+
     const instance = axios.create({
         baseURL: port,
         headers: {'Authorization': "Bearer " + window.localStorage.getItem("login-token")}
@@ -432,7 +444,8 @@ db_logout = () => {
             return {
                 idArray: state.idArray,
                 dataArray: state.dataArray,
-                modalData: state.modalData
+                modalData: state.modalData,
+                isGuest: state.isGuest
             };
         };
 
@@ -445,57 +458,3 @@ db_logout = () => {
     }; };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Panel);
-/////////////////////////////////////////   CARD MODAL       ///////////////////////////////////////////
-    // clickedCardHandler = (id) => {
-    //     const cardPos = this.cardPositionInArray(id);
-    //     const data = this.getCardData(cardPos);
-    //     this.props.updateModalData(data);
-    
-    //     this.modalSelectHandler("CARD");
-    // }
-
-
-    // prepareCardModal() {
-        
-    //     return (
-    //         <CardModal
-    //             closeModal={this.closeModalHandler}
-    //             // show={this.state.cardModal}
-    //             // status={this.state.modalStatus}
-    //             // title={this.state.modalTitle}
-    //             // data={this.state.modalData}
-    //             // color={this.state.modalStatusNumber}
-    //             // deleteItemModal={this.deleteItem}
-    //             // addDescription={this.addDescriptionHandler}
-    //             // addDate={this.saveDateHandler}
-    //             // addSeverity={this.saveSeverityHandler}
-    //             // postNewNote={this.saveNewNote}
-    //         ></CardModal>
-    //     );
-    // }
-
-    // getCardData(pos) {
-    //     const dataArray = [...this.props.dataArray];
-    //     return dataArray[pos];
-    // }
-
-    // cardPositionInArray(id) {
-    //     const idArray = [...this.props.idArray];
-    //     const index = idArray.indexOf(id);
-    //     return index;
-    // }
-
-            // const cardPos = this.cardPositionInArray(id);
-            // const title = this.getCardTitle(cardPos);
-            // const cardStatus = this.getCardStatus(id);
-
-            // const data = this.getCardData(cardPos);
-
-            // this.setModalTitle(title);
-            // this.setModalStatus(cardStatus);
-            // this.setActiveCard(id);
-            // this.setModalData(data);
-            
-            // this.openModalHandler();
-
-///////////////////////////////////////// END CARD MODAL ///////////////////////////////////////////

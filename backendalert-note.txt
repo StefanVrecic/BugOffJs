@@ -1,6 +1,0 @@
-Order the tasks by due date
-
-Every minute, check the the first in the array. If it is at or past the time, pop it, send an email and check the next one. Continue checking until there is no items left to check.
-
-Every time new tasks are added, order it in the list?
-100,000 tasks => 5mb of processing / 1 or 5 or 15 mins?

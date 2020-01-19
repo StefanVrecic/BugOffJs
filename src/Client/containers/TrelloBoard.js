@@ -9,8 +9,8 @@
         import mongoose from 'mongoose';
         import { connect } from 'react-redux';
         // const port = process.env.PORT;
-// const port = "http://localhost:8080"
-const port = "https://vrecic-bugoff-api.herokuapp.com";
+const port = "http://localhost:8080";
+// const port = "https://vrecic-bugoff-api.herokuapp.com";
         
         // import Modal from "../components/UI/Modal/Modal";
         // import uniqid from "uniqid";
@@ -139,7 +139,7 @@ const port = "https://vrecic-bugoff-api.herokuapp.com";
             const laneArray = [[], [], [], [], []];
             let dataArray = [];
             var dataArrayItem = [];
-            // const loadedData2 = this.generateMobileTestData();
+            // const loadedData2 = this.generateGuestTestData();
 
             for (const dataItem of loadedData) {
                 // alert(dataItem + " ... loop");
@@ -603,6 +603,8 @@ const port = "https://vrecic-bugoff-api.herokuapp.com";
           //////////////////////////////////// db methods ////////////////////////
 
           db_deleteItem(id) {
+            
+if (this.props.isGuest) { return; } // disable database calls in guest mode
             const instance = axios.create({
               baseURL: port,
               headers: {
@@ -622,6 +624,8 @@ const port = "https://vrecic-bugoff-api.herokuapp.com";
           }
 
           db_updateCardData(id, data) {
+            
+if (this.props.isGuest) { return; } // disable database calls in guest mode
             // warning - update properties. Add in axios.patch() below
             const name = data[1];
             const status = data[2];
@@ -667,6 +671,8 @@ const port = "https://vrecic-bugoff-api.herokuapp.com";
           }
 
           db_updateCardStatus(id) {
+            
+if (this.props.isGuest) { return; } // disable database calls in guest mode
             const status_string = this.getCardStatus(id);
 
             axios
@@ -684,6 +690,8 @@ const port = "https://vrecic-bugoff-api.herokuapp.com";
           }
 
           db_createCard(id, cardTitle, status) {
+            
+if (this.props.isGuest) { return; } // disable database calls in guest mode
             const instance = axios.create({
               baseURL: port,
               headers: {
@@ -759,8 +767,8 @@ const port = "https://vrecic-bugoff-api.herokuapp.com";
             // const newWindow = window.open(uriContent, 'Document');
           }
 
-          generateMobileTestData = () => {
-            // delete on deployment
+          generateGuestTestData = () => {
+            // use as guest data
             const i0 = [
               ["5e1c6d7025a4c5000017c038"],
               ["Check this one out now for testing"],
@@ -946,7 +954,8 @@ const mapStateToProps = state => {
 	return {
 		idArray: state.idArray,
 		dataArray: state.dataArray,
-		modalData: state.modalData
+    modalData: state.modalData,
+    isGuest: state.isGuest,
 	};
 };
 // test

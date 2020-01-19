@@ -18,8 +18,8 @@ app.use(bugRouter);
 app.use(userRouter);
 app.use(cors());
 
-const port = process.env.PORT;
-// const host = "0.0.0.0";
+// const port = process.env.PORT;
+const port = 8080; // config not loading properly
 
 app.listen(port, () => {
     console.log('Server is up on port ' + port)

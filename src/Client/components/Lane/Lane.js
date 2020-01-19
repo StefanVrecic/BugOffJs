@@ -4,7 +4,6 @@ import LaneContents from './LaneContents';
 import LaneTitle from './LaneTitle';
 import Space from './Space';
 import LaneAddCard from './LaneAddCard';
-// import { AuthConsumer } from '../../Auth-Context';
 import AuthContext from '../../Auth-Context';
 
  class Lane extends Component {
@@ -33,15 +32,12 @@ import AuthContext from '../../Auth-Context';
 
     componentDidMount() {
         this.setState({ columnNumber: this.props.columnNumber });   
-        const user = this.context;
-        // alert(user.loggedIn);
     }
 
     componentDidUpdate() {
     }
 
     addCard = (cardText) =>  {
-        // alert("inside lane.js!");
         this.props.addCardMethod(cardText, this.state.columnNumber);
     }
 

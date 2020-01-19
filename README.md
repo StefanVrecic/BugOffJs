@@ -1,3 +1,37 @@
+1) In the bugoffjs directory, create a directory named 'config' and a file named 'dev.env' inside of 'config'
+2) In 'dev.env' copy and paste the following
+
+PORT=8080
+MONGODB_URL=mongodb://127.0.0.1:27017/bugoff
+JWT_SECRET=secret
+SENDGRID_API_KEY=Your_API_Key
+
+3) In panel.js, trelloboard.js and landingpage.js , ctrl+f "const port =" and  comment that out, and uncomment the line shown here:
+
+// const port = "http://localhost:8080" 
+
+4) In one terminal do "npm start". In a second terminal you need to run your database e.g.,
+/users/user/mongodb/bin/mongod.exe --dbpath=/users/user/mongodb-data
+In a third terminal, do: "npm run dev"
+
+5) Should be ready to view from localhost:3000 in your browser
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

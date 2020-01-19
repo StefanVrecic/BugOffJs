@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import logo from './images/bugzilla.png';
+        import { connect } from 'react-redux';
 
 import './css/util.css';
 import './css/main.css';
@@ -8,8 +9,8 @@ import './css/shake.css'
 import '../../../bootstrap.css';
 import axios from "axios";
 // const port = process.env.PORT;
-// const port = "http://localhost:8080"
-const port = "https://vrecic-bugoff-api.herokuapp.com";
+const port = "http://localhost:8080";
+// const port = "https://vrecic-bugoff-api.herokuapp.com";
 
 // I was going to split this into two components LandingPage and Auth
 // I originally did that, but there was a UX weakness which I attempted to resolve
@@ -23,7 +24,8 @@ class LandingPage extends Component {
 		this.myRef = React.createRef();
 		this.state = {
 		  isGoing: true,
-		  numberOfGuests: 2
+		  numberOfGuests: 2,
+		  email: 'guest'
 		};
 	
 		this.handleInputChange = this.handleInputChange.bind(this);
@@ -58,6 +60,9 @@ class LandingPage extends Component {
 		if (this.state.newUser) {
 			this.db_createUser(this.state.email, this.state.pass);
 		} else {
+			if (this.state.email == 'guest' ) {
+				return this.db_login('guest@gmail.com', 'guest123');
+			}
 			
 			this.db_login(this.state.email, this.state.pass);
 			// this.db_login(this.props.history.location.state.email, this.props.history.location.state.pass);
@@ -202,6 +207,7 @@ render() {
         window.localStorage.setItem("login-token", response.data.token);
       })
       .then(() => {
+
           this.handleLoginSuccess();
         }).catch((error) => {
         console.log("fail login");
@@ -222,6 +228,11 @@ render() {
         window.localStorage.setItem("email", user);
       })
       .then(() => {
+		  		if (this.state.email == "guest" || this.state.email == "guest@gmail.com") {
+            this.props.setGuest(true);
+          } else {
+            this.props.setGuest(false);
+          }
           this.handleLoginSuccess();
         }).catch(() => {
         console.log("fail login");
@@ -231,8 +242,6 @@ render() {
   }
 
   handleLoginSuccess() {
-	  
-	//   set auth context here.
     this.props.history.push( '/panel' );
   }
 
@@ -252,6 +261,7 @@ render() {
 	
 	instance.post("/users/checkauth", {
 	}).then(response => {
+
 		this.handleLoginSuccess();
 	})
 	.catch(error => {
@@ -260,5 +270,12 @@ render() {
 }
   
 }
+const mapDispatchToProps = dispatch => {
+	return {
+		setGuest: (isGuest) => dispatch({type: 'isGuest', payload: isGuest}),
+	};
+	
 
-export default LandingPage;
+}
+
+export default connect(null, mapDispatchToProps)(LandingPage);
